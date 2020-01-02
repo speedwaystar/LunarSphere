@@ -22,7 +22,7 @@ if (not Lunar.Button) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Button.version = 1.40;
+Lunar.Button.version = 1.41;
 
 -- Create post WOW 2.2 bug fix, if Stage 5 comes out before 2.2 comes out.
 -- Otherwise, I will rename GetActionFromMacroText in this code to SecureCmdOptionParse
@@ -2587,27 +2587,20 @@ function Lunar.Button:ButtonTypeClick(buttonType)
 	if (buttonType == 95) then OpenAllBags(); return; end;
 	if (buttonType == 96) then ToggleKeyRing(); return; end;
 	if (buttonType == 100) then ToggleCharacter("PaperDollFrame"); return; end;
+
+	-- The Spellbook is dealt in AssignByType with the macro /click SpellbookMicroButton
 	if (buttonType == 101) then return; end;
-		-- Can't use ToggleSpellBook, it introduces taint and doesn't work with securecall ...
---[[
-		if (SpellBookFrame:IsVisible()) then
-			SpellBookFrame:Hide();
-		else
-			SpellBookFrame:Show();
-		end
-		return;
-	end
---]]
 
 	if (buttonType == 102) then ToggleTalentFrame(); return; end;
--- Croq Updated 	if (buttonType == 103) then ToggleFrame(QuestLogFrame); return; end;
-	if (buttonType == 104) then ToggleGuildFrame(); return; end; --ToggleFriendsFrame(); return; end;
+	if (buttonType == 103) then ToggleFrame(QuestLogFrame); return; end;
+
+--	if (buttonType == 104) then ToggleGuildFrame(); return; end; --ToggleFriendsFrame(); return; end;
+	if (buttonType == 104) then ToggleFriendsFrame(3); return; end;
+
 	if (buttonType == 105) then ToggleLFDParentFrame(); return; end;
 	if (buttonType == 106) then ToggleFrame(GameMenuFrame); return; end;
 	if (buttonType == 107) then ToggleHelpFrame(); return; end;
 	if (buttonType == 108) then ToggleAchievementFrame(); return; end;
---	if (buttonType == 109) then TogglePVPFrame(); return; end;
-	-- Croq Updated to PVEFrame_ToggleFrame("PVPUIFrame", HonorFrame)
 	if (buttonType == 109) then PVEFrame_ToggleFrame("PVPUIFrame", HonorFrame); return; end;
 
 	-- Trade clicks
@@ -3561,11 +3554,6 @@ function Lunar.Button:Assign(self, clickType, stance)
 			-- Get the name of the item, what it can stack as, and its texture
 			objectName, _, _, _, _, objectMainType, objectType, stackTotal, _, objectTexture = GetItemInfo(objectData);
 			
-			if C_ToyBox.GetToyInfo(objectID) then
-				--print(objectName.." is a toy")
-				--print("/usetoy ".. objectID)	
-			end
-
 			-- NEW code for item names (item link for weapons/armor, to remember their "of the bear" and other animal
 			-- modifiers, all other items is JUST the item ID)
 			if (objectMainType == LunarSphereGlobal.searchData.armor) or (objectMainType == LunarSphereGlobal.searchData.weapon) then
@@ -5355,8 +5343,10 @@ function Lunar.Button:Update(self, countOnly)
 			self:RegisterEvent("PLAYER_TARGET_CHANGED");
 --			self:RegisterEvent("MODIFIER_STATE_CHANGED");
 			self:RegisterEvent("ACTIONBAR_SLOT_CHANGED");
-			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+			if ( Lunar.API:IsVersionRetail() == true ) then
+				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+			end
 --			self:RegisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --			if (this.actionType == "spell") then
@@ -5449,8 +5439,10 @@ function Lunar.Button:Update(self, countOnly)
 		self:UnregisterEvent("TRADE_SKILL_CLOSE");
 		self:UnregisterEvent("PET_BAR_UPDATE");
 		self:UnregisterEvent("PET_BAR_UPDATE_COOLDOWN");
-		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+		if ( Lunar.API:IsVersionRetail() == true ) then
+			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+		end
 --		self:UnregisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --		self:UnregisterEvent("PLAYER_ENTER_COMBAT");

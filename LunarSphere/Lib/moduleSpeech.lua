@@ -25,7 +25,7 @@ if (not Lunar.Speech) then
 	Lunar.Speech = {};
 end
 
-Lunar.Speech.version = 1.40;
+Lunar.Speech.version = 1.41;
 
 -- The speech module uses the speechDatabase table and the LunarSphereGlobal.speechLibrary table
 -- for tracking and storing scripts and speeches. Below is the description of what each table
@@ -189,12 +189,9 @@ function Lunar.Speech.OnEvent(self, event, arg1, arg2, arg3, arg4)
 	-- order to catch spells that have a cast time.
 
 	if (event == "UNIT_SPELLCAST_SENT") then
-		self.spellName = arg2;
-		self.spellRank = arg3;
-		self.spellTarget = arg4;
-
-		-- If the target data doesn't exist, grab it from the player target if possible
-		if ((not arg4 or (arg4 == "")) and UnitName("target")) then
+		self.spellName = GetSpellInfo(arg4);
+		-- Grab target from the player target if possible
+		if UnitName("target") then
 			self.spellTarget = UnitName("target") or ("");
 		end
 	end

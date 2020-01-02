@@ -35,7 +35,7 @@ if (not Lunar.Items) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Items.version = 1.40;
+Lunar.Items.version = 1.41;
 
 -- Create our database settings
 Lunar.Items.RunInitialize = false;
@@ -368,9 +368,10 @@ function Lunar.Items:OnUpdate(elapsed)
 
 	-- Add support for spell mounts (when you learn a new one ... very rare)
 	Lunar.Items.eventFrame:RegisterEvent("LEARNED_SPELL_IN_TAB");
-	Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
-	Lunar.Items:ScanForSpellMounts();
-
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
+		Lunar.Items:ScanForSpellMounts();
+	end
 
 	-- Now, setup bag watching functions, so we can check our counts when we receive a new
 	-- item or lose one
@@ -728,12 +729,16 @@ function Lunar.Items:UpdateLowHighItems()
 	local lowCooldown, highCooldown, lowNoCooldown, highNoCooldown, usableItem, bestRange;
 	local cooldown, isFavourite, minLevel;
 --	local hasEpicGroundMount, hasEpicFlyingMount, hasEpicFlyingMount310;
-	local canFly = IsFlyableArea()
+	local canFly = false
 	local inAQ = Lunar.API:IsInAQ();
 	local Lunar_Seahorse = 0;
     local Lunar_AbyssalMount_Name, _ = GetSpellInfo(75207);
 
 	local playerLevel = UnitLevel("player");
+
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		canFly = IsFlyableArea()
+	end
 
 	bestRange = 100;
 	if (playerLevel < 40) then
@@ -1350,8 +1355,7 @@ function Lunar.Items:ScanForSpellMounts()
 
 	--local locKalimdor, locEastern, locOutland, locNorthrend, locMaelstrom, locPandaren, locDreanor = GetMapContinents();
 
-      local name, description, standingID, _ = GetFactionInfoByID(1271)
-	local LunarProfValue = Lunar.API:UserGetProfession();
+	local name, description, standingID, _ = GetFactionInfoByID(1271)
 	local mountIDs;
 
 -- Mount Stuff is Here.

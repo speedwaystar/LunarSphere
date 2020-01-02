@@ -20,7 +20,7 @@ end
 Lunar.Sphere = {};
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Sphere.version = 1.40;
+Lunar.Sphere.version = 1.41;
 
 -- Set some settings for Lunar
 Lunar.combatLockdown = false;		-- Tracks if we're in combat
@@ -475,7 +475,10 @@ function Lunar.Sphere:Initialize()
 	sphereData.background:RegisterEvent("PLAYER_ENTERING_WORLD");
 --	sphereData.background:RegisterEvent("ZONE_CHANGED");
 	sphereData.background:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-	sphereData.background:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		sphereData.background:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+	end
 
 	-- Item/Spell/Macro pick-up events
 	sphereData.background:RegisterEvent("ACTIONBAR_SHOWGRID");

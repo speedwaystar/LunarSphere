@@ -23,7 +23,7 @@ if (not Lunar.Settings) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Settings.version = 1.40;
+Lunar.Settings.version = 1.41;
 
 local GetCursorInfo = GetCursorInfo;
 

@@ -26,7 +26,7 @@ if (not Lunar.API) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.API.version = 1.40;
+Lunar.API.version = 1.41;
 
 -- Set our default chat printing colors
 Lunar.API.chatRed	= 0.3;
@@ -1374,7 +1374,7 @@ function Lunar.API:Load()
 					-- Do the repair and format the cost of the repair into a formatted string (##g, ##s, ##c)
 
 					-- This function is defined in MerchantFrame.lua
-					if (CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
+					if (Lunar.API:IsVersionRetail() and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
 
 						-- Get our bank funds and withdraw max. 
 
@@ -2839,4 +2839,10 @@ end
 --
 function Lunar.API:UserHasProfession(val_Value, bit_Value)
     return bit.band(val_Value, bit_Value);
+end
+
+-- Returns true if the game version is Classic
+function Lunar.API:IsVersionRetail()
+	_, _, _, t = GetBuildInfo();
+	return (t > 20000);
 end

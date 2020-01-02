@@ -24,7 +24,7 @@ if (not Lunar.Object) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Object.version = 1.40;
+Lunar.Object.version = 1.41;
 
 -- Create our dropdown data if it doesn't exist yet
 if (not Lunar.Object.dropdownData) then
@@ -734,7 +734,15 @@ function Lunar.Object.DropdownInitialize(self, dropdownObject, listName, modifyS
 					-- Next, hacked code to make sure we can't assign menus on anything other than stance 0
 					if (Lunar.Button.currentStance) and (Lunar.Settings.buttonEdit) then
 						if not ((Lunar.Button.currentStance > Lunar.Button.defaultStance) and (Lunar.Settings.buttonEdit <= 10) and (i == 5) ) then
-							UIDropDownMenu_AddButton(dropInfo);
+
+							-- Hide mount menu from Classic
+							-- Lua is a brain-dead language, has a 'goto' statement but not a 'continue' statement. So we
+							-- have to apply De Morgan here. Tinha que ser coisa de brasileiro.
+							if (Lunar.API:IsVersionRetail() == false and listName == "Button_Type" and dropInfo.notCheckable == 1 and Lunar.Object.dropdownData[listName][i][3] == "BUTTON_MOUNT") then
+--								print(Lunar.Object.dropdownData[listName][i][0], Lunar.Object.dropdownData[listName][i][1], Lunar.Object.dropdownData[listName][i][2], Lunar.Object.dropdownData[listName][i][3]);
+							else
+								UIDropDownMenu_AddButton(dropInfo);
+							end
 						end
 					else
 						UIDropDownMenu_AddButton(dropInfo);
@@ -770,7 +778,19 @@ function Lunar.Object.DropdownInitialize(self, dropdownObject, listName, modifyS
 			dropInfo.checked = nil;
 			dropInfo.func = Lunar.Object.SubmenuFunction
 			dropInfo.arg1 = listName;
-			UIDropDownMenu_AddButton(dropInfo, UIDROPDOWNMENU_MENU_LEVEL);
+
+			-- Hide some options that don't make sense in Classic
+			if( Lunar.API:IsVersionRetail() == true ) then
+				UIDropDownMenu_AddButton(dropInfo, UIDROPDOWNMENU_MENU_LEVEL);
+			elseif( dropInfo.text == Lunar.Locale["BUTTON_MENUBAR9"] ) then
+				-- Hide the Achievement menu option
+			elseif ( dropInfo.text == Lunar.Locale["BUTTON_MENUBAR6"] ) then 
+				-- Hide the Dungeon Finder menu option
+			elseif ( dropInfo.text == Lunar.Locale["BUTTON_MENUBAR10"] ) then 
+				-- Hide the PVP menu option
+			else
+				UIDropDownMenu_AddButton(dropInfo, UIDROPDOWNMENU_MENU_LEVEL);
+			end
 
 			i = i + 1;
 		end

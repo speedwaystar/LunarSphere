@@ -71,7 +71,13 @@
 -- Fix Author		: Toludin-Stormrage
 --
 -- v1.40 Fixed		: July 24, 2018 - initial BfA compatibility release
-
+--
+---------------------------------------------------
+--
+-- Fix Author		: Fullmoon-Sulfuras
+--
+-- v1.41 Fixed		: December 26, 2019 - initial WoW Classic compatibility release
+--
 -- /***********************************************
 
 -- Fun LDB support if I want to add it to the buttons. This will show the tooltip of a LDB addon that's loaded. This
@@ -87,7 +93,7 @@
 
 LUNARSPHERE_CHAT = "|cFF82B8E1Lunar|cFFA1CAE8Sph|cFFC7DFF1ere: |r";
 LUNAR_ICON_PREFIX = "Interface\\Icons\\"
-LUNAR_CURRENT_VERSION = 1.40;
+LUNAR_CURRENT_VERSION = 1.41;
 
 -- Define built-in texture counts
 Lunar.includedButtons = 38;
@@ -1492,8 +1498,10 @@ function LunarSphere_BackwardsCompatibility()
 		Lunar.showStartupMessage = Lunar.showStartupMessage or LunarSphereSettings.showStartupMessage;
 		Lunar.startupMessage = Lunar.startupMessage or LunarSphereSettings.startupMessage;
 		LunarSphereSettings.showStartupMessage = true;
-		LunarSphereSettings.startupMessage =
-				"Welcome to Legion";
+		LunarSphereSettings.startupMessage = "Welcome to Battle For Azeroth";
+		if( Lunar.API:IsVersionRetail() == false ) then
+			LunarSphereSettings.startupMessage = "Welcome to Classic";
+		end
 	end
 end
 

@@ -1,4 +1,13 @@
 LunarSphere Public Release 
+
+Version 1.41 Changelog:
+
+==================================
+Classic compatability
+==================================
+
+*  LS now works with Classic as well.
+
 Version 1.40 Changelog:
 
 ==================================

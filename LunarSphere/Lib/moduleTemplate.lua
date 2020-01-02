@@ -19,7 +19,7 @@ Lunar = Lunar or {};
 -- Create our Template module
 Lunar.Template = {};
 
-Lunar.Template.version = 1.40;
+Lunar.Template.version = 1.41;
 
 -- Create our template database
 Lunar.Template.template = {};
@@ -8021,31 +8021,33 @@ function Lunar.Template:ParseTemplateData()
 
 												end
 											end
---Here
-											-- If no spell was found, check if it was a spell mount
-											-- (Spell mounts are saved with just the spell ID for the name)
-											if not newName and companionCheck then
-												local mountIDs = C_MountJournal.GetMountIDs()
-												for key, value in pairs(mountIDs) do	
-													scanName, spellID, scanTexture = C_MountJournal.GetMountInfoByID(value);
-													scanTexture = string.lower(scanTexture);
-													if (scanName == spellID) then
-														newName = spellID;
-														break;
+
+											if ( Lunar.API:IsVersionRetail() == true ) then
+												-- If no spell was found, check if it was a spell mount
+												-- (Spell mounts are saved with just the spell ID for the name)
+												if not newName and companionCheck then
+													local mountIDs = C_MountJournal.GetMountIDs()
+													for key, value in pairs(mountIDs) do	
+														scanName, spellID, scanTexture = C_MountJournal.GetMountInfoByID(value);
+														scanTexture = string.lower(scanTexture);
+														if (scanName == spellID) then
+															newName = spellID;
+															break;
+														end
 													end
 												end
-											end
 
-											-- If no spell was found, check if it was a companion pet
-											if not newName and companionCheck then
-												numPets, numOwned = C_PetJournal.GetNumPets()
- 												for i = 1, numPets do 
-													_, _, _, _, _, _, _, scanName, scanTexture = C_PetJournal.GetPetInfoByIndex(index)
-													_, _, scanName = GetCompanionInfo("critter", i);
-													scanTexture = string.lower(scanTexture);
-													if (scanName == spellID) then
-														newName = spellID;
-														break;
+												-- If no spell was found, check if it was a companion pet
+												if not newName and companionCheck then
+													numPets, numOwned = C_PetJournal.GetNumPets()
+	 												for i = 1, numPets do 
+														_, _, _, _, _, _, _, scanName, scanTexture = C_PetJournal.GetPetInfoByIndex(index)
+														_, _, scanName = GetCompanionInfo("critter", i);
+														scanTexture = string.lower(scanTexture);
+														if (scanName == spellID) then
+															newName = spellID;
+															break;
+														end
 													end
 												end
 											end
@@ -8091,28 +8093,30 @@ function Lunar.Template:ParseTemplateData()
 										end
 									end
 								
-									-- If no spell was found, check if it was a spell mount
-									-- (Spell mounts are saved with just the spell ID for the name)
-									if not newName and not isNotLearned then
-										local mountIDs = C_MountJournal.GetMountIDs()
-										for key, value in pairs(mountIDs) do	
-											scanName, spellID, scanTexture = C_MountJournal.GetMountInfoByID(value);
-											scanTexture = string.lower(scanTexture);
-											if (scanTexture == objectTexture) then
-												newName = scanName;
-												break;
+									if ( Lunar.API:IsVersionRetail() == true ) then
+										-- If no spell was found, check if it was a spell mount
+										-- (Spell mounts are saved with just the spell ID for the name)
+										if not newName and not isNotLearned then
+											local mountIDs = C_MountJournal.GetMountIDs()
+											for key, value in pairs(mountIDs) do	
+												scanName, spellID, scanTexture = C_MountJournal.GetMountInfoByID(value);
+												scanTexture = string.lower(scanTexture);
+												if (scanTexture == objectTexture) then
+													newName = scanName;
+													break;
+												end
 											end
 										end
-									end
 
-									-- If no spell was found, check if it was a companion pet
-									if not newName and not isNotLearned then
-										for i = 1, GetNumCompanions("critter") do 
-											_, _, scanName, scanTexture = GetCompanionInfo("critter", i);
-											scanTexture = string.lower(scanTexture);
-											if (scanTexture == objectTexture) then
-												newName = scanName;
-												break;
+										-- If no spell was found, check if it was a companion pet
+										if not newName and not isNotLearned then
+											for i = 1, GetNumCompanions("critter") do 
+												_, _, scanName, scanTexture = GetCompanionInfo("critter", i);
+												scanTexture = string.lower(scanTexture);
+												if (scanTexture == objectTexture) then
+													newName = scanName;
+													break;
+												end
 											end
 										end
 									end
