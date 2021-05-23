@@ -35,7 +35,7 @@ if (not Lunar.Items) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Items.version = 1.41;
+Lunar.Items.version = 1.50;
 
 -- Create our database settings
 Lunar.Items.RunInitialize = false;
@@ -220,7 +220,8 @@ Lunar.Items.updateButton = {
 --]]
 
 -- Create our tooltip sniffer
-Lunar.Items.tooltip = CreateFrame("GameTooltip", "LunarItemsTooltip", UIParent, "GameTooltipTemplate");
+Lunar.Items.tooltip = CreateFrame("GameTooltip", "LunarItemsTooltip", UIParent, "BackdropTemplate, GameTooltipTemplate");
+
 Lunar.Items.tooltip:SetOwner(UIParent, "ANCHOR_NONE");
 Lunar.Items.tooltip:ClearAllPoints();
 Lunar.Items.tooltip:SetPoint("Center");
@@ -242,7 +243,7 @@ Lunar.Items.tooltip:Hide();
 function Lunar.Items:Initialize()
 
 	-- Create our event frame
-	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent);
+	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent, "BackdropTemplate, GameTooltipTemplate");
 
 	-- Register the events we'll be tracking, and then set our frame's scripting
 --	Lunar.Items.eventFrame:RegisterEvent("PLAYER_LOGIN");
@@ -368,10 +369,9 @@ function Lunar.Items:OnUpdate(elapsed)
 
 	-- Add support for spell mounts (when you learn a new one ... very rare)
 	Lunar.Items.eventFrame:RegisterEvent("LEARNED_SPELL_IN_TAB");
-	if ( Lunar.API:IsVersionRetail() == true ) then
-		Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
-		Lunar.Items:ScanForSpellMounts();
-	end
+	Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
+	Lunar.Items:ScanForSpellMounts();
+
 
 	-- Now, setup bag watching functions, so we can check our counts when we receive a new
 	-- item or lose one
@@ -558,7 +558,7 @@ function Lunar.Items:BuildLookupStrings()
 			if (searchData[itemTableNames[index]] == nil) then
 
 				if (itemTableNames[index] == "smallPet") then
-					searchData[itemTableNames[index]] = select(3, GetAuctionItemSubClasses(11));
+					searchData[itemTableNames[index]] = select(3, C_AuctionHouse.GetAuctionItemSubClasses(11));
 				else
 
 					-- Add our current item spell type to the search table
@@ -584,9 +584,9 @@ function Lunar.Items:BuildLookupStrings()
 	end
 
 	local tempWeapon, tempArmor, tempConsume = LSAUCCLASSES1, LSAUCCLASSES2, LSAUCCLASSES3
-	local _, tempReagent = GetAuctionItemSubClasses(12);
+	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(12);
 --	local tempWeapon,tempArmor,_,tempConsume;
---	local _, tempReagent = GetAuctionItemSubClasses(10);
+--	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(10);
 
 	if (not searchData.weapon) or (searchData.weapon == "") then
 		searchData.weapon = tempWeapon;
@@ -633,6 +633,7 @@ function Lunar.Items:BuildLookupStrings()
 	end
 	if (not LunarSphereGlobal.searchData[GetLocale()]) then
 		LunarSphereGlobal.searchData[GetLocale()] = {};
+
 	end
 
 	-- Save our standard data
@@ -729,16 +730,13 @@ function Lunar.Items:UpdateLowHighItems()
 	local lowCooldown, highCooldown, lowNoCooldown, highNoCooldown, usableItem, bestRange;
 	local cooldown, isFavourite, minLevel;
 --	local hasEpicGroundMount, hasEpicFlyingMount, hasEpicFlyingMount310;
-	local canFly = false
+	local canFly = IsFlyableArea()
+--	local canFly = Lunar.API:CanFly()
 	local inAQ = Lunar.API:IsInAQ();
 	local Lunar_Seahorse = 0;
     local Lunar_AbyssalMount_Name, _ = GetSpellInfo(75207);
 
 	local playerLevel = UnitLevel("player");
-
-	if ( Lunar.API:IsVersionRetail() == true ) then
-		canFly = IsFlyableArea()
-	end
 
 	bestRange = 100;
 	if (playerLevel < 40) then
@@ -1355,7 +1353,8 @@ function Lunar.Items:ScanForSpellMounts()
 
 	--local locKalimdor, locEastern, locOutland, locNorthrend, locMaelstrom, locPandaren, locDreanor = GetMapContinents();
 
-	local name, description, standingID, _ = GetFactionInfoByID(1271)
+      local name, description, standingID, _ = GetFactionInfoByID(1271)
+	local LunarProfValue = Lunar.API:UserGetProfession();
 	local mountIDs;
 
 -- Mount Stuff is Here.

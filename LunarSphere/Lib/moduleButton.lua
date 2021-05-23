@@ -22,7 +22,7 @@ if (not Lunar.Button) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.Button.version = 1.41;
+Lunar.Button.version = 1.50;
 
 -- Create post WOW 2.2 bug fix, if Stage 5 comes out before 2.2 comes out.
 -- Otherwise, I will rename GetActionFromMacroText in this code to SecureCmdOptionParse
@@ -229,7 +229,7 @@ function Lunar.Button:Initialize()
 
 	Lunar.Button.enabledButtons = LunarSphereSettings.buttonEditMode;
 
-	_, Lunar.Items.reagentString = GetAuctionItemSubClasses(10);
+--	_, Lunar.Items.reagentString = GetAuctionItemSubClasses(10);
 
 	-- Create our locals
 	local newButton, menuHeader, parentButton, xLoc, yLoc, radians, index, subIndex, menuIndex;
@@ -250,6 +250,7 @@ function Lunar.Button:Initialize()
 	end
 
 	sphereMainHeader = CreateFrame("Frame", "LunarSphereMainButtonHeader", UIParent, "SecureHandlerStateTemplate")
+
 	sphereMainHeader:SetWidth(1);
 	sphereMainHeader:SetHeight(1);
 	sphereMainHeader:SetPoint("Topleft");
@@ -271,6 +272,7 @@ function Lunar.Button:Initialize()
 	_G["LSmain"]:SetParent(sphereMainHeader);
 
 	sphereHeader = CreateFrame("Frame", "LunarSphereButtonHeader", UIParent, "SecureHandlerStateTemplate")
+
 	sphereHeader:SetWidth(64);
 	sphereHeader:SetHeight(64);
 	sphereHeader:SetPoint("Topleft");
@@ -693,12 +695,13 @@ menuHeader:SetAttribute('_onclick',
 	-- assigning a button a new action. This method prevents the player
 	-- from automatically using an item that they place on the button when
 	-- they are assigning it)
-	Lunar.Button.updateFrame = CreateFrame("Frame", "LunarButtonUpdates", UIParent);
+	Lunar.Button.updateFrame = CreateFrame("Frame", "LunarButtonUpdates", UIParent, "BackdropTemplate, GameTooltipTemplate");
 
 	-- Create the update counter frame. This will run at all times and when a set amount
 	-- of time passes, it will run through all active buttons with a "canUpdate" flag
 	-- and run their OnUpdate code.
-	Lunar.Button.updateCounterFrame = CreateFrame("Frame", "LunarButtonUpdateTimer", UIParent);
+	Lunar.Button.updateCounterFrame = CreateFrame("Frame", "LunarButtonUpdateTimer", UIParent, "BackdropTemplate, GameTooltipTemplate");
+
 	Lunar.Button.updateCounterFrame.elapsed = 0;
 	Lunar.Button.updateCounterFrame.elapsedCooldown = 0;
 	Lunar.Button.updateCounterFrame.updateHighLowItems = 0
@@ -1300,6 +1303,7 @@ function Lunar.Button:Create(name, parent, includeHeader)
 	else
 		button = CreateFrame("CheckButton", name, parent, "SecureActionButtonTemplate, ActionButtonTemplate"); --, SecureHandlerClickTemplate, SecureHandlerEnterLeaveTemplate, SecureHandlerShowHideTemplate, ActionButtonTemplate")
 	end
+
 	-- Make our new button accept mouse clicks
 	button:RegisterForClicks("LeftButtonUp", "MiddleButtonUp", "RightButtonUp", "Button4Up", "Button5Up");
 	button:RegisterForDrag("LeftButton", "MiddleButton", "RightButton", "Button4", "Button5")
@@ -2587,20 +2591,27 @@ function Lunar.Button:ButtonTypeClick(buttonType)
 	if (buttonType == 95) then OpenAllBags(); return; end;
 	if (buttonType == 96) then ToggleKeyRing(); return; end;
 	if (buttonType == 100) then ToggleCharacter("PaperDollFrame"); return; end;
-
-	-- The Spellbook is dealt in AssignByType with the macro /click SpellbookMicroButton
 	if (buttonType == 101) then return; end;
+		-- Can't use ToggleSpellBook, it introduces taint and doesn't work with securecall ...
+--[[
+		if (SpellBookFrame:IsVisible()) then
+			SpellBookFrame:Hide();
+		else
+			SpellBookFrame:Show();
+		end
+		return;
+	end
+--]]
 
 	if (buttonType == 102) then ToggleTalentFrame(); return; end;
-	if (buttonType == 103) then ToggleFrame(QuestLogFrame); return; end;
-
---	if (buttonType == 104) then ToggleGuildFrame(); return; end; --ToggleFriendsFrame(); return; end;
-	if (buttonType == 104) then ToggleFriendsFrame(3); return; end;
-
+-- Croq Updated 	if (buttonType == 103) then ToggleFrame(QuestLogFrame); return; end;
+	if (buttonType == 104) then ToggleGuildFrame(); return; end; --ToggleFriendsFrame(); return; end;
 	if (buttonType == 105) then ToggleLFDParentFrame(); return; end;
 	if (buttonType == 106) then ToggleFrame(GameMenuFrame); return; end;
 	if (buttonType == 107) then ToggleHelpFrame(); return; end;
 	if (buttonType == 108) then ToggleAchievementFrame(); return; end;
+--	if (buttonType == 109) then TogglePVPFrame(); return; end;
+	-- Croq Updated to PVEFrame_ToggleFrame("PVPUIFrame", HonorFrame)
 	if (buttonType == 109) then PVEFrame_ToggleFrame("PVPUIFrame", HonorFrame); return; end;
 
 	-- Trade clicks
@@ -3554,6 +3565,11 @@ function Lunar.Button:Assign(self, clickType, stance)
 			-- Get the name of the item, what it can stack as, and its texture
 			objectName, _, _, _, _, objectMainType, objectType, stackTotal, _, objectTexture = GetItemInfo(objectData);
 			
+			if C_ToyBox.GetToyInfo(objectID) then
+				--print(objectName.." is a toy")
+				--print("/usetoy ".. objectID)	
+			end
+
 			-- NEW code for item names (item link for weapons/armor, to remember their "of the bear" and other animal
 			-- modifiers, all other items is JUST the item ID)
 			if (objectMainType == LunarSphereGlobal.searchData.armor) or (objectMainType == LunarSphereGlobal.searchData.weapon) then
@@ -5343,10 +5359,8 @@ function Lunar.Button:Update(self, countOnly)
 			self:RegisterEvent("PLAYER_TARGET_CHANGED");
 --			self:RegisterEvent("MODIFIER_STATE_CHANGED");
 			self:RegisterEvent("ACTIONBAR_SLOT_CHANGED");
-			if ( Lunar.API:IsVersionRetail() == true ) then
-				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
-			end
+			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
 --			self:RegisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --			if (this.actionType == "spell") then
@@ -5439,10 +5453,8 @@ function Lunar.Button:Update(self, countOnly)
 		self:UnregisterEvent("TRADE_SKILL_CLOSE");
 		self:UnregisterEvent("PET_BAR_UPDATE");
 		self:UnregisterEvent("PET_BAR_UPDATE_COOLDOWN");
-		if ( Lunar.API:IsVersionRetail() == true ) then
-			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
-		end
+		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
 --		self:UnregisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --		self:UnregisterEvent("PLAYER_ENTER_COMBAT");
@@ -6865,7 +6877,7 @@ function Lunar.Button:TooltipOnShow()
 	if (LunarSphereSettings.skinTooltips == true) and ((Lunar.Button.tooltipCalled == true) or (LunarSphereSettings.skinAllTooltips == true)) then
 		if not (Lunar.Button.tooltipSkinned) then
 			Lunar.Button.tooltipSkinned = true;
-			GameTooltip:SetBackdrop(backdrop);
+			GameTooltip:SetBackdrop(LS_backdropTemplate);
 			GameTooltip:SetBackdropBorderColor(unpack(LunarSphereSettings.tooltipBorder));
 			GameTooltip:SetBackdropColor(unpack(LunarSphereSettings.tooltipBackground));
 		end
@@ -6882,6 +6894,7 @@ function Lunar.Button:TooltipOnShow()
 			if (Lunar.Button.tooltipCalled ~= true) then
 				Lunar.Button.tooltipSetOwner = true;
 				GameTooltip:SetOwner(GameTooltip:GetOwner(), "ANCHOR_NONE");
+
 				local pos = LunarSphereSettings.anchorCorner +  1;
 				GameTooltip:ClearAllPoints();
 				GameTooltip:SetPoint(Lunar.Button.tooltipPos[9 - pos], _G["LSSettingsAnchor"], Lunar.Button.tooltipPos[pos]);
