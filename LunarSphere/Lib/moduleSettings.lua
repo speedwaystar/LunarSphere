@@ -1769,7 +1769,7 @@ function Lunar.Settings:Initialize()
 							end
 						end);
 
-						tempObject = CreateFrame("PlayerModel", "LSSettingsSkin3D", tempFrameContainer, "BackdropTemplate");
+						tempObject = CreateFrame("PlayerModel", "LSSettingsSkin3D", tempFrameContainer, BackdropTemplateMixin and "BackdropTemplate");
 
 						tempObject:SetWidth(32);
 						tempObject:SetHeight(32);
@@ -2336,7 +2336,7 @@ function Lunar.Settings:Initialize()
 				end);
 				tempObject:Disable();
 
-				tempObject = CreateFrame("Button", "LSSettingsDualSpecWarning", _G["LSSettingstemplatePrimary"], "BackdropTemplate");
+				tempObject = CreateFrame("Button", "LSSettingsDualSpecWarning", _G["LSSettingstemplatePrimary"], BackdropTemplateMixin and "BackdropTemplate");
 
 				tempObject:SetWidth(216);
 				tempObject:SetHeight(20);

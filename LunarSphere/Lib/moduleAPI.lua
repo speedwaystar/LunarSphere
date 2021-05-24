@@ -44,13 +44,13 @@ Lunar.API.BlankFunction = function () end;
 --Lunar.Items.UpdateBagContents = Lunar.API.BlankFunction;
 
 -- Create our money tracker
-Lunar.API.moneyTracker = CreateFrame("GameTooltip", "LunarAPIMoneyTracker", UIParent, "BackdropTemplate, GameTooltipTemplate");
+Lunar.API.moneyTracker = CreateFrame("GameTooltip", "LunarAPIMoneyTracker", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 Lunar.API.moneyTracker:SetScript("OnTooltipAddMoney", function(self, arg1) Lunar.API.sellPrice = arg1 end)
 Lunar.API.sellPrice = nil;
 
 -- Create our mail event watcher
-Lunar.API.eventWatcher = CreateFrame("Frame", "LunarAPIEventWatcher", UIParent, "BackdropTemplate");
+Lunar.API.eventWatcher = CreateFrame("Frame", "LunarAPIEventWatcher", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 Lunar.API.eventWatcher:SetWidth(1);
 Lunar.API.eventWatcher:SetHeight(1);
@@ -72,9 +72,9 @@ LUNAR_EXTRA_SPHERE_ICON_COUNT = 14;
 -- Create our debug tooltip
 Lunar.API.debugFrameOver = _G["LSmain"];
 Lunar.API.debugTooltipTimer = 0;
-Lunar.API.debugTooltip = CreateFrame("GameTooltip", "LunarAPIDebugTooltip", UIParent, "BackdropTemplate, GameTooltipTemplate");
+Lunar.API.debugTooltip = CreateFrame("GameTooltip", "LunarAPIDebugTooltip", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
  
-Lunar.API.debugTooltipUpdater = CreateFrame("Frame", "LunarAPIDebugTooltipUpdater", UIParent, "BackdropTemplate");
+Lunar.API.debugTooltipUpdater = CreateFrame("Frame", "LunarAPIDebugTooltipUpdater", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 Lunar.API.debugTooltipUpdater:SetScript("OnUpdate", function(self, arg1)
 	if not (LunarSphereSettings.showDebugTooltip == true) then
@@ -205,7 +205,7 @@ function Lunar.API:CreateFrame(frameType, frameName, frameParent, width, height,
 	end
 
 	-- Create a frame with the details provided
-	tempFrame = CreateFrame(frameType, frameName, frameParent, "BackdropTemplate");
+	tempFrame = CreateFrame(frameType, frameName, frameParent, BackdropTemplateMixin and "BackdropTemplate");
 
 	tempFrame:SetWidth(width);
 	tempFrame:SetHeight(height);
@@ -513,113 +513,6 @@ function Lunar.API:GetSpellID(spellName)
 	-- Return our results
 	return spellID, spellRank;
 	
-end
-
-
---function Lunar.API:CanFly()
--- Replaced with IsFlyableArea()
-function Lunar.API:CanFly()
-
-	-- If the flyzone tables don't exist, create them now
-	--
-	if (not Lunar.API.flyzonePandaria) then
-		Lunar.API.flyzoneKalimdor = { GetMapZones(1) } ;
-		Lunar.API.flyzoneEasternKingdom = { GetMapZones(2) } ;
-		Lunar.API.flyzoneOutland = { GetMapZones(3) } ;
-		Lunar.API.flyzoneNorthrend = { GetMapZones(4) } ;
-		Lunar.API.flyzonePandaria = { GetMapZones(6) } ;
-		Lunar.API.flyzoneDraenor = { GetMapZones(7) } ;
-	end
-
-	local result = IsFlyableArea();
-
-	-- If we can fly, check to see if we the various Passive flying
-	-- spells.
-	--
-	if (result == true) then
-		-- Check for flight requirement spells
-		local hasExpertLicense = GetSpellLink(34090)
-		local hasFlightMastersLicense = GetSpellLink(90267)
-		local hasColdFlying = GetSpellLink(54197);
-		local hasWisdomoftheFourWinds = GetSpellLink(115913)
-		local draenorPathfinder = GetAchievementLink(10018)
-
-		-- Grab our current zone and compare it to all zones in the
-		-- flyzone table. If this zone is found, we can fly.
-
-		local currentZone = GetRealZoneText();
-
-		-- Check for Expert, then check if the zone you're in
-		-- is from Outland.
-		for index = 1, table.getn(Lunar.API.flyzoneOutland) do 
-			if (currentZone == Lunar.API.flyzoneOutland[index]) then
-				result = false;
-				if hasExpertLicense then
-					result = true;
-				end
-				break;
-			end
-		end
-
-		-- Check for Wisdom of the Four Winds, then check if the zone you're in
-		-- is from Pandaria.
-		for index = 1, table.getn(Lunar.API.flyzonePandaria) do 
-			if (currentZone == Lunar.API.flyzonePandaria[index]) then
-				result = false;
-				if hasWisdomoftheFourWinds then
-					result = true;
-				end
-				break;
-			end
-		end
-
-		-- Check for cold weather flying, then check if the zone you're in
-		-- is from Northrend.
-		for index = 1, table.getn(Lunar.API.flyzoneNorthrend) do 
-			if (currentZone == Lunar.API.flyzoneNorthrend[index]) then
-				result = false;
-				if hasColdFlying then
-					result = true;
-				end
-				break;
-			end
-		end
-
-		-- Check for Draenor Pathfinder, then check if the zone you're in
-		-- is from Dreanor.
-		for index = 1, table.getn(Lunar.API.flyzoneDraenor) do 
-			if (currentZone == Lunar.API.flyzoneDraenor[index]) then
-				result = false;
-				if draenorPathfinder then
-					result = true;
-				end
-				break;
-			end
-		end
-
-		-- Check for flight master's license, then check if the zone you're in
-		-- is from Azeroth.
-		for index = 1, table.getn(Lunar.API.flyzoneKalimdor) do 
-			if (currentZone == Lunar.API.flyzoneKalimdor[index]) then
-				result = false;
-				if hasFlightMastersLicense then
-					result = true;
-				end
-				break;
-			end
-		end
-		for index = 1, table.getn(Lunar.API.flyzoneEasternKingdom) do 
-			if (currentZone == Lunar.API.flyzoneEasternKingdom[index]) then
-				result = false;
-				if hasFlightMastersLicense then
-					result = true;
-				end
-				break;
-			end
-		end
-	end
-
-	return result;
 end
 
 
@@ -1482,7 +1375,7 @@ function Lunar.API:Load()
 					-- Do the repair and format the cost of the repair into a formatted string (##g, ##s, ##c)
 
 					-- This function is defined in MerchantFrame.lua
-					if (CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
+					if (Lunar.API:IsVersionClassic() == false and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
 
 						-- Get our bank funds and withdraw max. 
 
@@ -1986,7 +1879,7 @@ function Lunar.API:Load()
 		function Lunar.API:HideExpBars(toggle, loading)
 
 		--[[	if not _G["LSHideEXP"] then
-				local frame = CreateFrame("Frame", "LSHideEXP", UIParent, "BackdropTemplate, GameTooltipTemplate");
+				local frame = CreateFrame("Frame", "LSHideEXP", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 				frame:SetPoint("Center");
 				MainMenuExpBar:SetParent(frame);
@@ -2051,7 +1944,7 @@ function Lunar.API:Load()
 		function Lunar.API:HideMenus(toggle, loading)
 
 		--[[	if not _G["LSHideMenus"] then
-				local frame = CreateFrame("Frame", "LSHideMenus", UIParent, "BackdropTemplate, GameTooltipTemplate");
+				local frame = CreateFrame("Frame", "LSHideMenus", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 				frame:SetPoint("Center");
 				frame:SetFrameLevel(MainMenuBar:GetFrameLevel() + 1);
@@ -2084,7 +1977,7 @@ function Lunar.API:Load()
 		function Lunar.API:HideBags(toggle, loading)
 
 		--[[	if not _G["LSHideBags"] then
-				local frame = CreateFrame("Frame", "LSHideBags", UIParent, "BackdropTemplate, GameTooltipTemplate");
+				local frame = CreateFrame("Frame", "LSHideBags", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 				frame:SetPoint("Center");
 				frame:SetFrameLevel(MainMenuBar:GetFrameLevel() + 1);
@@ -2112,7 +2005,7 @@ function Lunar.API:Load()
 		function Lunar.API:HideBottomBar(toggle, loading)
 
 		--[[	if not _G["LSHideBottomArt"] then
-				local frame = CreateFrame("Frame", "LSHideBottomArt", UIParent, "BackdropTemplate, GameTooltipTemplate");
+				local frame = CreateFrame("Frame", "LSHideBottomArt", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 				frame:SetPoint("Center");
 				frame:SetFrameLevel(MainMenuBar:GetFrameLevel());
@@ -2400,7 +2293,7 @@ function Lunar.API:Load()
 		function Lunar.API:CreateMinimapText()
 
 			-- Create our new frame, set its anchors, and make sure it doesn't have mouse input
-			Lunar.API.MinimapTextUpdater = CreateFrame("Frame", "LSMinimapTextUpdater", UIParent, "BackdropTemplate");
+			Lunar.API.MinimapTextUpdater = CreateFrame("Frame", "LSMinimapTextUpdater", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 			Lunar.API.MinimapTextUpdater:Show();
 			Lunar.API.MinimapTextUpdater:SetPoint("TopLeft", MinimapZoneTextButton, "TopLeft");
@@ -2954,7 +2847,51 @@ function Lunar.API:UserHasProfession(val_Value, bit_Value)
     return bit.band(val_Value, bit_Value);
 end
 
+--
+-- Lunar.API:IsVersionRetail()
+-- 
+-- Returns `true` if the current `Interface` is over `30000`.
+--
+-- Returns :
+--    true - Client is Retail
+--   false - Client is BCC or Classic
+--
 function Lunar.API:IsVersionRetail()
-       _, _, _, t = GetBuildInfo();
-       return (t > 30000);
+	_, _, _, t = GetBuildInfo();
+    return (t > 30000);
+end
+
+--
+-- Lunar.API:IsVersionClassic()
+-- 
+-- Returns `true` if the current `Interface` is under `20000`.
+--
+-- Returns :
+--    true - Client is Classic
+--   false - Client is Retail or BCC
+--
+function Lunar.API:IsVersionClassic()
+	_, _, _, t = GetBuildInfo();
+    return (t < 20000);
+end
+
+--
+-- Lunar.API:IsFlyableArea()
+-- 
+-- Checks whether the player's current location is classified as being a 
+-- flyable area. Wrapper around `IsFlyableArea()` because the Classic 
+-- client doesn't support it.
+--
+-- Returns :
+-- canFly 
+--    1 if the area is classified as flyable, nil otherwise.
+--
+function Lunar.API:IsFlyableArea()
+	_, _, _, t = GetBuildInfo();
+	-- Retail or BCC
+    if (t > 20000) then
+    	return IsFlyableArea()
+    else
+    	return nil
+    end
 end

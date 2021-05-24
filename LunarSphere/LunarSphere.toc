@@ -44,5 +44,7 @@ lib\moduleObject.lua
 lib\moduleSettings.lua
 lib\moduleSpeech.lua
 lib\templatesObject.xml
+#lib\templatesObject-Classic.xml
 LunarSphere.lua
 LunarSphere.xml
+#LunarSphere-Classic.xml

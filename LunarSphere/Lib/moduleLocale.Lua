@@ -1198,7 +1198,7 @@ elseif (locale == "deDE") then
 
 	-- Aucttion Classes contents
 	LSAUCCLASSES1 = "Waffe";
-	LSAUCCLASSES2 = "Rüstung";
+	LSAUCCLASSES2 = "R?stung";
 	LSAUCCLASSES3 = "Verbrauchs";
 
 	Lunar.Locale = {

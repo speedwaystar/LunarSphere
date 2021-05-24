@@ -345,7 +345,7 @@ function Lunar.Sphere:Initialize()
 	sphereData.gaugeOuterBorder = Lunar.API:CreateFrame("Button", "LSgaugeOuterBorder", sphereData.main, 44, 44, "$addon\\art\\gaugeBorder_1", false, 0)
 	sphereData.gaugeInnerBorder = Lunar.API:CreateFrame("Button", "LSgaugeInnerBorder", sphereData.main, 30, 30, "$addon\\art\\gaugeBorder_1", false, 0)
 
-	sphereData.sphereTexture2 = CreateFrame("PlayerModel", "LSsphere2", sphereData.main, "BackdropTemplate");
+	sphereData.sphereTexture2 = CreateFrame("PlayerModel", "LSsphere2", sphereData.main, BackdropTemplateMixin and "BackdropTemplate");
 
 	sphereData.sphereTexture2:SetWidth(64);
 	sphereData.sphereTexture2:SetHeight(64);

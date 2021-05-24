@@ -220,7 +220,7 @@ Lunar.Items.updateButton = {
 --]]
 
 -- Create our tooltip sniffer
-Lunar.Items.tooltip = CreateFrame("GameTooltip", "LunarItemsTooltip", UIParent, "BackdropTemplate, GameTooltipTemplate");
+Lunar.Items.tooltip = CreateFrame("GameTooltip", "LunarItemsTooltip", UIParent, BackdropTemplateMixin and "BackdropTemplate, GameTooltipTemplate");
 
 Lunar.Items.tooltip:SetOwner(UIParent, "ANCHOR_NONE");
 Lunar.Items.tooltip:ClearAllPoints();
@@ -243,7 +243,7 @@ Lunar.Items.tooltip:Hide();
 function Lunar.Items:Initialize()
 
 	-- Create our event frame
-	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent, "BackdropTemplate");
+	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 	-- Register the events we'll be tracking, and then set our frame's scripting
 --	Lunar.Items.eventFrame:RegisterEvent("PLAYER_LOGIN");
@@ -732,7 +732,7 @@ function Lunar.Items:UpdateLowHighItems()
 	local lowCooldown, highCooldown, lowNoCooldown, highNoCooldown, usableItem, bestRange;
 	local cooldown, isFavourite, minLevel;
 --	local hasEpicGroundMount, hasEpicFlyingMount, hasEpicFlyingMount310;
-	local canFly = IsFlyableArea()
+	local canFly = Lunar.API:IsFlyableArea()
 --	local canFly = Lunar.API:CanFly()
 	local inAQ = Lunar.API:IsInAQ();
 	local Lunar_Seahorse = 0;
@@ -1790,7 +1790,11 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 					Lunar.Items.tooltip:ClearLines();
 					Lunar.Items.tooltip:SetOwner(UIParent, "ANCHOR_NONE");
 					Lunar.Items.tooltip:SetHyperlink(itemLink);
-					searchText = _G[Lunar.Items.tooltip:GetName() .. "TextLeft2"]:GetText();
+					if( Lunar.API:IsVersionClassic() == false ) then
+						searchText = _G[Lunar.Items.tooltip:GetName() .. "TextLeft2"]:GetText();
+					else
+						searchText = nil
+					end
 					if (searchText) then
 						if string.find(searchText, ITEM_CONJURED) then
 							itemLevel = itemLevel + 1000;

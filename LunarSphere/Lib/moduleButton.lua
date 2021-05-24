@@ -695,12 +695,12 @@ menuHeader:SetAttribute('_onclick',
 	-- assigning a button a new action. This method prevents the player
 	-- from automatically using an item that they place on the button when
 	-- they are assigning it)
-	Lunar.Button.updateFrame = CreateFrame("Frame", "LunarButtonUpdates", UIParent, "BackdropTemplate");
+	Lunar.Button.updateFrame = CreateFrame("Frame", "LunarButtonUpdates", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 	-- Create the update counter frame. This will run at all times and when a set amount
 	-- of time passes, it will run through all active buttons with a "canUpdate" flag
 	-- and run their OnUpdate code.
-	Lunar.Button.updateCounterFrame = CreateFrame("Frame", "LunarButtonUpdateTimer", UIParent, "BackdropTemplate");
+	Lunar.Button.updateCounterFrame = CreateFrame("Frame", "LunarButtonUpdateTimer", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
 	Lunar.Button.updateCounterFrame.elapsed = 0;
 	Lunar.Button.updateCounterFrame.elapsedCooldown = 0;
@@ -5359,8 +5359,10 @@ function Lunar.Button:Update(self, countOnly)
 			self:RegisterEvent("PLAYER_TARGET_CHANGED");
 --			self:RegisterEvent("MODIFIER_STATE_CHANGED");
 			self:RegisterEvent("ACTIONBAR_SLOT_CHANGED");
-			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-			self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+			if( Lunar.API:IsVersionClassic() == false ) then
+				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+				self:RegisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+			end
 --			self:RegisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --			if (this.actionType == "spell") then
@@ -5453,8 +5455,10 @@ function Lunar.Button:Update(self, countOnly)
 		self:UnregisterEvent("TRADE_SKILL_CLOSE");
 		self:UnregisterEvent("PET_BAR_UPDATE");
 		self:UnregisterEvent("PET_BAR_UPDATE_COOLDOWN");
-		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
-		self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+		if( Lunar.API:IsVersionClassic() == false ) then
+			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_SHOW");
+			self:UnregisterEvent("SPELL_ACTIVATION_OVERLAY_GLOW_HIDE");
+		end
 --		self:UnregisterEvent("CURRENT_SPELL_CAST_CHANGED");
 
 --		self:UnregisterEvent("PLAYER_ENTER_COMBAT");
