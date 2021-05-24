@@ -345,7 +345,7 @@ function Lunar.Sphere:Initialize()
 	sphereData.gaugeOuterBorder = Lunar.API:CreateFrame("Button", "LSgaugeOuterBorder", sphereData.main, 44, 44, "$addon\\art\\gaugeBorder_1", false, 0)
 	sphereData.gaugeInnerBorder = Lunar.API:CreateFrame("Button", "LSgaugeInnerBorder", sphereData.main, 30, 30, "$addon\\art\\gaugeBorder_1", false, 0)
 
-	sphereData.sphereTexture2 = CreateFrame("PlayerModel", "LSsphere2", sphereData.main, "BackdropTemplate, GameTooltipTemplate");
+	sphereData.sphereTexture2 = CreateFrame("PlayerModel", "LSsphere2", sphereData.main, "BackdropTemplate");
 
 	sphereData.sphereTexture2:SetWidth(64);
 	sphereData.sphereTexture2:SetHeight(64);
@@ -477,7 +477,9 @@ function Lunar.Sphere:Initialize()
 	sphereData.background:RegisterEvent("PLAYER_ENTERING_WORLD");
 --	sphereData.background:RegisterEvent("ZONE_CHANGED");
 	sphereData.background:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-	sphereData.background:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		sphereData.background:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+	end
 
 	-- Item/Spell/Macro pick-up events
 	sphereData.background:RegisterEvent("ACTIONBAR_SHOWGRID");

@@ -243,7 +243,7 @@ Lunar.Items.tooltip:Hide();
 function Lunar.Items:Initialize()
 
 	-- Create our event frame
-	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent, "BackdropTemplate, GameTooltipTemplate");
+	Lunar.Items.eventFrame = CreateFrame("Frame", "LunarItemsEvents", UIParent, "BackdropTemplate");
 
 	-- Register the events we'll be tracking, and then set our frame's scripting
 --	Lunar.Items.eventFrame:RegisterEvent("PLAYER_LOGIN");
@@ -369,9 +369,10 @@ function Lunar.Items:OnUpdate(elapsed)
 
 	-- Add support for spell mounts (when you learn a new one ... very rare)
 	Lunar.Items.eventFrame:RegisterEvent("LEARNED_SPELL_IN_TAB");
-	Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
-	Lunar.Items:ScanForSpellMounts();
-
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
+		Lunar.Items:ScanForSpellMounts();
+	end
 
 	-- Now, setup bag watching functions, so we can check our counts when we receive a new
 	-- item or lose one
@@ -584,7 +585,8 @@ function Lunar.Items:BuildLookupStrings()
 	end
 
 	local tempWeapon, tempArmor, tempConsume = LSAUCCLASSES1, LSAUCCLASSES2, LSAUCCLASSES3
-	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(12);
+	--local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(12);
+	local _, tempReagent = GetAuctionItemSubClasses(12);
 --	local tempWeapon,tempArmor,_,tempConsume;
 --	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(10);
 

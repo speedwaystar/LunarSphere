@@ -1,10 +1,14 @@
-﻿## Interface: 90000
+﻿## Interface: 90005
+# Interface-Retail: 90005
+# Interface-Classic: 11307
+# Interface-BCC: 20501
 ##
 ## Version: v1.50
 ##
 ## Author: Moongaze (Twisting Nether)
 ## Fixer:  Shaun Voysey
 ## Fixer#2: Toludin (Stormrage)
+## Fixer#3: Fullmoon (Sulfuras)
 ##
 ## Title: LunarSphere v.1.50
 ##

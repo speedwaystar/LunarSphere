@@ -50,7 +50,7 @@ Lunar.API.moneyTracker:SetScript("OnTooltipAddMoney", function(self, arg1) Lunar
 Lunar.API.sellPrice = nil;
 
 -- Create our mail event watcher
-Lunar.API.eventWatcher = CreateFrame("Frame", "LunarAPIEventWatcher", UIParent, "BackdropTemplate, GameTooltipTemplate");
+Lunar.API.eventWatcher = CreateFrame("Frame", "LunarAPIEventWatcher", UIParent, "BackdropTemplate");
 
 Lunar.API.eventWatcher:SetWidth(1);
 Lunar.API.eventWatcher:SetHeight(1);
@@ -74,7 +74,7 @@ Lunar.API.debugFrameOver = _G["LSmain"];
 Lunar.API.debugTooltipTimer = 0;
 Lunar.API.debugTooltip = CreateFrame("GameTooltip", "LunarAPIDebugTooltip", UIParent, "BackdropTemplate, GameTooltipTemplate");
  
-Lunar.API.debugTooltipUpdater = CreateFrame("Frame", "LunarAPIDebugTooltipUpdater", UIParent, "BackdropTemplate, GameTooltipTemplate");
+Lunar.API.debugTooltipUpdater = CreateFrame("Frame", "LunarAPIDebugTooltipUpdater", UIParent, "BackdropTemplate");
 
 Lunar.API.debugTooltipUpdater:SetScript("OnUpdate", function(self, arg1)
 	if not (LunarSphereSettings.showDebugTooltip == true) then
@@ -183,7 +183,6 @@ function Lunar.Debug(text)
 	if (LunarSphereGlobal.debugModeOn == true) and (text) then
 		DEFAULT_CHAT_FRAME:AddMessage("LS Debug: |cFFFFFFFF" .. text, 0.3, 0.3, 0.7);
 	end
-
 end
 
 -- /***********************************************
@@ -206,7 +205,7 @@ function Lunar.API:CreateFrame(frameType, frameName, frameParent, width, height,
 	end
 
 	-- Create a frame with the details provided
-	tempFrame = CreateFrame(frameType, frameName, frameParent, "BackdropTemplate, GameTooltipTemplate");
+	tempFrame = CreateFrame(frameType, frameName, frameParent, "BackdropTemplate");
 
 	tempFrame:SetWidth(width);
 	tempFrame:SetHeight(height);
@@ -2401,7 +2400,7 @@ function Lunar.API:Load()
 		function Lunar.API:CreateMinimapText()
 
 			-- Create our new frame, set its anchors, and make sure it doesn't have mouse input
-			Lunar.API.MinimapTextUpdater = CreateFrame("Frame", "LSMinimapTextUpdater", UIParent, "BackdropTemplate, GameTooltipTemplate");
+			Lunar.API.MinimapTextUpdater = CreateFrame("Frame", "LSMinimapTextUpdater", UIParent, "BackdropTemplate");
 
 			Lunar.API.MinimapTextUpdater:Show();
 			Lunar.API.MinimapTextUpdater:SetPoint("TopLeft", MinimapZoneTextButton, "TopLeft");
@@ -2953,4 +2952,9 @@ end
 --
 function Lunar.API:UserHasProfession(val_Value, bit_Value)
     return bit.band(val_Value, bit_Value);
+end
+
+function Lunar.API:IsVersionRetail()
+       _, _, _, t = GetBuildInfo();
+       return (t > 30000);
 end
