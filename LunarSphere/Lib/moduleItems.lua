@@ -585,8 +585,12 @@ function Lunar.Items:BuildLookupStrings()
 	end
 
 	local tempWeapon, tempArmor, tempConsume = LSAUCCLASSES1, LSAUCCLASSES2, LSAUCCLASSES3
-	--local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(12);
-	local _, tempReagent = GetAuctionItemSubClasses(12);
+
+	if( Lunar.API:IsVersionRetail() ) then
+		local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(12);
+	else
+		local _, tempReagent = GetAuctionItemSubClasses(12);
+	end
 --	local tempWeapon,tempArmor,_,tempConsume;
 --	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(10);
 

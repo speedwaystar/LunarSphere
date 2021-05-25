@@ -8151,3 +8151,38 @@ function Lunar.Template:ParseTemplateData()
 		end
 	end
 end
+
+function OnLoadCheckMixin(self)
+	if BackdropTemplateMixin then -- if this is NOT a Classic type frame, add the backdrop mixin
+		Mixin(self, BackdropTemplateMixin)
+	end
+end
+
+function LunarOnLoadSetBackdrop(self, backdrop)
+	OnLoadCheckMixin(self)
+	self:SetBackdrop(backdrop)
+end
+
+BACKDROP_LUNARWINDOW = {
+	bgFile = "Interface\\AddOns\\LunarSphere\\art\\Window-Background",
+	edgeFile = "Interface\\Addons\\LunarSphere\\art\\Window-Border",
+	tile = true,
+	tileEdge = true,
+	tileSize = 128,
+	edgeSize = 16,
+	insets = { left = 5, right = 5, top = 5, bottom = 5 }
+}
+
+BACKDROP_LUNARCONTAINER = {
+	edgeFile = "Interface\\Addons\\LunarSphere\\art\\Window-Border",
+	edgeSize = 16
+}
+
+BACKDROP_LUNARVERTICALSLIDER = {
+	bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+	edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+	tile = true,
+	tileSize = 8,
+	edgeSize = 8,
+	insets = { left = 3, right = 3, top = 6, bottom = 6 }
+}
