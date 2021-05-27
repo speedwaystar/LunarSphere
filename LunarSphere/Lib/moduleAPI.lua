@@ -1480,10 +1480,9 @@ function Lunar.API:Load()
 					Lunar.API.moneyCache = GetMoney() - repairAllCost;
 
 					-- Do the repair and format the cost of the repair into a formatted string (##g, ##s, ##c)
-
-					-- This function is defined in MerchantFrame.lua
-					if (CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
-
+					-- Guild Banks were added in patch 2.3.0. Hopefully Blizzard
+					-- will keep the API versioning consistent for BCC
+					if (Lunar.API:GetBuildInfo() >= 23000 and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
 						-- Get our bank funds and withdraw max. 
 
 						local withdrawMax = GetGuildBankWithdrawMoney();
@@ -2955,6 +2954,52 @@ function Lunar.API:UserHasProfession(val_Value, bit_Value)
 end
 
 function Lunar.API:IsVersionRetail()
-       _, _, _, t = GetBuildInfo();
-       return (t > 30000);
+	_, _, _, t = GetBuildInfo();
+    return (t > 30000);
+end
+
+-- Lunar.API:IsVersionClassic()
+-- 
+-- Returns `true` if the current `Interface` is under `20000`.
+--
+-- Returns :
+--    true - Client is Classic
+--   false - Client is Retail or BCC
+--
+function Lunar.API:IsVersionClassic()
+	_, _, _, t = GetBuildInfo();
+    return (t < 20000);
+end
+
+-- Lunar.API:GetBuildInfo()
+-- 
+-- Returns the API build number the client is running.
+--
+-- Returns :
+--   The API build number the client is running.
+--
+function Lunar.API:GetBuildInfo()
+	_, _, _, t = GetBuildInfo();
+    return t;
+end
+
+--
+-- Lunar.API:IsFlyableArea()
+-- 
+-- Checks whether the player's current location is classified as being a 
+-- flyable area. Wrapper around `IsFlyableArea()` because the Classic 
+-- client doesn't support it.
+--
+-- Returns :
+-- canFly 
+--    1 if the area is classified as flyable, nil otherwise.
+--
+function Lunar.API:IsFlyableArea()
+	_, _, _, t = GetBuildInfo();
+	-- Retail or BCC
+    if (t > 20000) then
+    	return IsFlyableArea()
+    else
+    	return nil
+    end
 end
