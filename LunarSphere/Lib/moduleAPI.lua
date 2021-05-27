@@ -1373,13 +1373,11 @@ function Lunar.API:Load()
 					Lunar.API.moneyCache = GetMoney() - repairAllCost;
 
 					-- Do the repair and format the cost of the repair into a formatted string (##g, ##s, ##c)
-
 					-- This function is defined in MerchantFrame.lua
 
 					-- Guild Banks were added in patch 2.3.0. Hopefully Blizzard
 					-- will keep the API versioning consistent for BCC
 					if (Lunar.API:GetBuildInfo() >= 23000 and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
-
 						-- Get our bank funds and withdraw max. 
 
 						local withdrawMax = GetGuildBankWithdrawMoney();
