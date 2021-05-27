@@ -3090,7 +3090,7 @@ function Lunar.Settings:Initialize()
 				sectionY = 0;
 
 				local creditContents = {
-					"N3od3ath";
+					"voyseys, Fullmoon, N3od3ath";
 					"Ace977977, Calif94577, Deadman80, Deep42, Erudan, Faytel, Illutian, Jaycce, Jonzadar, Kae, Kj Maghica, Mitsobar, NapalmDawn, Pakka, Seanmcgpa, Tank, Valderon, Xenoid, Zacharum, Zoquara";
 					"Moongaze for bringing LunarShpere into our WoW lives and Erudan for the hard work on the random mount code :D";
 						"|cFFFFFFFFProject coded by:\n\nMoongaze:|r\n(Twisting Nether - Horde - US)\n|cFFFFFFFFhttp://www.lunaraddons.com\n\n" ..

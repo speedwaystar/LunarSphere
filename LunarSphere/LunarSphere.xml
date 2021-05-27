@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
 
-	<Frame name="LunarSphereLoadFrame" movable="true" toplevel="true" hidden="true" parent="UIParent" inherits="BackdropTemplate">
+	<Frame name="LunarSphereLoadFrame" movable="true" toplevel="true" hidden="true" parent="UIParent">
 		<Size>
 			<AbsDimension x="200" y="200"/>
 		</Size>
@@ -12,7 +12,8 @@
 			</Anchor>
 		</Anchors>
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
 				LunarSphere_OnLoad(self);
 			</OnLoad>
 			<OnEvent>
@@ -20,5 +21,4 @@
 			</OnEvent>
 		</Scripts>
 	</Frame>
-
 </Ui>

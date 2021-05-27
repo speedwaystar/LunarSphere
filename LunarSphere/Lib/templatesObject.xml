@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
 
-	<EditBox name="LunarEditBox" toplevel="true" hidden="false" virtual="true" autofocus="false" inherits="BackdropTemplate">
+	<EditBox name="LunarEditBox" toplevel="true" hidden="false" virtual="true" autofocus="false">
 		<Size>
 			<AbsDimension x="128" y="20"/>
 		</Size>
@@ -45,6 +45,9 @@
 		</Layers>
 		<FontString name="$parentText" inherits="ChatFontSmall"/>
 		<Scripts>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
+			</OnLoad>
 			<OnShow>
 				self:ClearFocus();
 			</OnShow>
@@ -231,25 +234,35 @@
 		</ThumbTexture>
 	</Slider>
 
-	<Frame name="LunarCaption" virtual="true" inherits="BackdropTemplate">
+	<Frame name="LunarCaption" virtual="true">
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontNormal" justifyH="LEFT" text="">
 				</FontString>
 			</Layer>
 		</Layers>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 
-	<Frame name="LunarCaptionSmall" virtual="true" inherits="BackdropTemplate">
+	<Frame name="LunarCaptionSmall" virtual="true">
 		<Layers>
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GameFontNormalSmall" justifyH="LEFT" text="">
 				</FontString>
 			</Layer>
 		</Layers>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
+			</OnLoad>
+		</Scripts>
 	</Frame>
 
-	<Button name="LunarColorSelector" virtual="true" enableMouse="true" inherits="BackdropTemplate">
+	<Button name="LunarColorSelector" virtual="true" enableMouse="true">
 		<Size>
 			<AbsDimension x="16" y="16"/>
 		</Size>
@@ -281,10 +294,15 @@
 				</Texture>
 			</Layer>
 		</Layers>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
+			</OnLoad>
+		</Scripts>
 		<HighlightTexture alphamode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 	</Button>
 
-	<Frame name="LunarVerticalTab" toplevel="false" hidden="false" enableMouse="true" virtual="true" inherits="BackdropTemplate">
+	<Frame name="LunarVerticalTab" toplevel="false" hidden="false" enableMouse="true" virtual="true">
 		<Size>
 			<AbsDimension x="92" y="32"/>
 		</Size>
@@ -399,6 +417,10 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				OnLoadCheckMixin(self)
+			</OnLoad>
+		</Scripts>
 	</Frame>
-
 </Ui>
