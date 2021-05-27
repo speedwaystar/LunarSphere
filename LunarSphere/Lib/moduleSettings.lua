@@ -1094,8 +1094,11 @@ function Lunar.Settings:Initialize()
 				tempObject = Lunar.Object:CreateCheckbox(10, sectionY, Lunar.Locale["AUTO_REPAIR"], "autoRepair", true, tempFrameContainer,
 				function (self)
 					LunarSphereSettings.autoRepair = (self:GetChecked() == true);
+					-- Gray-out the other checkboxes
 					Lunar.Settings:SetEnabled(_G["LSSettingsprintRepairBill"], LunarSphereSettings.autoRepair);
-					Lunar.Settings:SetEnabled(_G["LSSettingsuseGuildFunds"], LunarSphereSettings.autoRepair);
+					if (Lunar.API:GetBuildInfo() >= 23000 ) then
+						Lunar.Settings:SetEnabled(_G["LSSettingsuseGuildFunds"], LunarSphereSettings.autoRepair);
+					end
 				end);
 				tempObject:SetHitRectInsets(0, -80, 0, 0);
 
@@ -1111,9 +1114,10 @@ function Lunar.Settings:Initialize()
 					Lunar.Settings:SetEnabled(tempObject, LunarSphereSettings.autoRepair);
 
 					-- Use guild funds checkbox
-					tempObject = Lunar.Object:CreateCheckbox(30, sectionY - 34, Lunar.Locale["USE_GUILD_FUNDS"], "useGuildFunds", true, tempFrameContainer);
-					Lunar.Settings:SetEnabled(tempObject, LunarSphereSettings.autoRepair);
-
+					if (Lunar.API:GetBuildInfo() >= 23000 ) then
+						tempObject = Lunar.Object:CreateCheckbox(30, sectionY - 34, Lunar.Locale["USE_GUILD_FUNDS"], "useGuildFunds", true, tempFrameContainer);
+						Lunar.Settings:SetEnabled(tempObject, LunarSphereSettings.autoRepair);
+					end
 			end
 
 			-- Bypass Gossip option

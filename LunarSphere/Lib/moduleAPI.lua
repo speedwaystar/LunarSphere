@@ -1375,7 +1375,10 @@ function Lunar.API:Load()
 					-- Do the repair and format the cost of the repair into a formatted string (##g, ##s, ##c)
 
 					-- This function is defined in MerchantFrame.lua
-					if (Lunar.API:IsVersionClassic() == false and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
+
+					-- Guild Banks were added in patch 2.3.0. Hopefully Blizzard
+					-- will keep the API versioning consistent for BCC
+					if (Lunar.API:GetBuildInfo() >= 23000 and CanGuildBankRepair() and (LunarSphereSettings.useGuildFunds == true)) then
 
 						-- Get our bank funds and withdraw max. 
 
@@ -2861,7 +2864,6 @@ function Lunar.API:IsVersionRetail()
     return (t > 30000);
 end
 
---
 -- Lunar.API:IsVersionClassic()
 -- 
 -- Returns `true` if the current `Interface` is under `20000`.
@@ -2873,6 +2875,18 @@ end
 function Lunar.API:IsVersionClassic()
 	_, _, _, t = GetBuildInfo();
     return (t < 20000);
+end
+
+-- Lunar.API:GetBuildInfo()
+-- 
+-- Returns the API build number the client is running.
+--
+-- Returns :
+--   The API build number the client is running.
+--
+function Lunar.API:GetBuildInfo()
+	_, _, _, t = GetBuildInfo();
+    return t;
 end
 
 --
