@@ -1,32 +1,72 @@
-Version 1.50 Changelog:
+=======================================================================================
 
-Update for BCC.
 
+LunarSphere Public Release
+Version 1.50 Changelog
+
+
+======================
+Bug Fixes
+======================
+
+* Update for BCC. Unified codebase for Retail, BCC, and Classic.
+
+
+=======================================================================================
+
+
+LunarSphere Public Release
 Version 1.42 b2 Changelog:
+
+
+======================
+Bug Fixes
+======================
 
 * Minor updates
 
+
+=======================================================================================
+
+
+LunarSphere Public Release
 Version 1.41 Changelog:
 
-==================================
-Classic compatability
-==================================
+
+======================
+Bug Fixes
+======================
 
 *  LS now works with Classic as well.
+
+
+=======================================================================================
+
 
 LunarSphere Public Release 
 Version 1.40 Changelog:
 
 ==================================
-Battle for Azeroth compatability
+Battle for Azeroth compatibility
 ==================================
+
+
+======================
+Known Issues
+======================
 
 *  Toys currently can't be directly added to buttons. You can create a /usetoy macro and put that on a button for now.
 
+
+
+=======================================================================================
+
+
+LunarSphere Public Release 
 Version 1.11 Changelog:
 
 ==================================
-Mists of Pandaria compatability
+Mists of Pandaria compatibility
 ==================================
 
 *  Most of the major problems caused by WoW 5.0 have been fixed.
@@ -46,6 +86,11 @@ Known Issues
 
 *  Companion pets can not be added to any button
    
+
+=======================================================================================
+
+
+LunarSphere Public Release 
 Version 1.10 Changelog:
 
 ======================
