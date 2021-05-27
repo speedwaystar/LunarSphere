@@ -304,13 +304,13 @@ function Lunar.Object:CreateImage(xLoc, yLoc, objectWidth, objectHeight, objectN
 	imagePath = string.gsub(imagePath, "$addon", LUNAR_ADDON_PATH);
 
 	tempObject = CreateFrame("Button", "LSSettings" .. objectName, objectParent, "ActionButtonTemplate")
-
 	tempObject:SetPoint("Topleft", xLoc, yLoc);
 	tempObject:SetWidth(objectWidth);
 	tempObject:SetHeight(objectHeight);
 	tempObject:EnableMouse(false);
 	tempObject:SetNormalTexture(imagePath)
-
+	local t = tempObject:GetNormalTexture()
+	t:SetSize(tempObject:GetSize())
 	return tempObject;
 end
 
