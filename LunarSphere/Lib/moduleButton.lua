@@ -3895,27 +3895,27 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 
 			-- grab the texture, if the object exists
 			if (objectName) then
-				local objectType, stackTotal;
-				_, _, _, _, _, objectMainType, objectType, stackTotal, _, objectTexture = GetItemInfo(objectName);
+				local objectType_l, stackTotal_l;
+				_, _, _, _, _, objectMainType, objectType_l, stackTotal_l, _, objectTexture = GetItemInfo(objectName);
 
 				-- If the item is consumable, or can stack, or is a reagent ... we will show the
 				-- count of the item on the button
 				if (stance == button.currentStance) then
-				if (buttonID > 0) then
-					if (clickType == Lunar.Button:GetButtonSetting(buttonID, stance, LUNAR_GET_SHOW_COUNT)) then
-						if (stackTotal) then
-							if (IsConsumableItem(objectName) or (stackTotal > 1) or (objectType == Lunar.Items.reagentString)) then
-								_G[buttonName .. "Count"]:SetText(GetItemCount(objectName, nil, true));
+					if (buttonID > 0) then
+						if (clickType == Lunar.Button:GetButtonSetting(buttonID, stance, LUNAR_GET_SHOW_COUNT)) then
+							if (stackTotal_l) then
+								if (IsConsumableItem(objectName) or (stackTotal_l > 1) or (objectType_l == Lunar.Items.reagentString)) then
+									_G[buttonName .. "Count"]:SetText(GetItemCount(objectName, nil, true));
 
-								if (not LunarSphereSettings.showAssignedCounts == true) then
-									_G[buttonName .. "Count"]:Show();
-									LunarSphereSettings.buttonData[buttonID].showCount = true;
+									if (not LunarSphereSettings.showAssignedCounts == true) then
+										_G[buttonName .. "Count"]:Show();
+										LunarSphereSettings.buttonData[buttonID].showCount = true;
+									end
 								end
 							end
 						end
 					end
 				end
-end
 			end
 		end
 
@@ -4169,7 +4169,7 @@ end
 					button:SetAttribute("*type-S" .. stance  .. clickType, cursorType)
 					button:SetAttribute("*"..cursorType .. "-S" .. stance .. clickType, objectName); -- tempName);
 					button:SetAttribute("*"..cursorType .. "2-S" .. stance .. clickType, GetSpellInfo(objectName)); -- tempName);
-				else
+				elseif (Lunar.API:IsVersionRetail() ) then
 					button:SetAttribute("*type-S" .. stance  .. clickType, "macrotext")
 --				local tempName = select(1, GetSpellInfo(objectName));
 					button:SetAttribute("*macrotext-S" .. stance .. clickType, objectName); -- tempName);

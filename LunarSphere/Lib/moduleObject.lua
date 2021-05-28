@@ -922,6 +922,10 @@ end
 function Lunar.Object:SkinDropDown(level, value, dropDownFrame, anchorName, xOffset, yOffset, menuList)
 
 	local backdrop = _G["DropDownList" .. UIDROPDOWNMENU_MENU_LEVEL .. "Backdrop"];
+	-- This is an awful hack, but for the life of me I can't find where this
+	-- f*cking global object is being created. This is why we *DO NOT* use
+	-- global variables!
+	OnLoadCheckMixin(backdrop)
 	if not Lunar.Object.dropdownSkin then
 		Lunar.Object.dropdownSkinLS = _G["LSSetttingsGaugeOptionsContainer"]:GetBackdrop()
 		Lunar.Object.dropdownSkinColor = { backdrop:GetBackdropColor() };

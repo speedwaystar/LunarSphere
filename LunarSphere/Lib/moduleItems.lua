@@ -845,7 +845,12 @@ function Lunar.Items:UpdateLowHighItems()
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
 							end
-							if (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
+							-- Make things simple for Classic, all mounts are ground mounts
+							if( Lunar.API:IsVersionRetail() == false ) then
+								table.insert(groundMounts, index);
+							-- TODO: Fix for BCC in 5 days
+							-- Handle Retail mounts
+							elseif (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
 								table.insert(groundMounts, index);
 								table.insert(swimmingMounts, index);
 							elseif ((MountType == 231) or (MountType == 232) or (MountType == 254)) then
@@ -1703,6 +1708,11 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			-- Next on the search: Hearthstone. 
 			elseif (itemSpell == searchData.hearthstone) then
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
+			-- Classic and BCC mounts are items, handle them here
+			elseif Lunar.API:IsVersionRetail() == false and itemType == "Miscellaneous" and itemSubType == "Mount" then
+				-- I'm pretty sure all mounts are unique, but we'll count just in case
+				_, itemCount = GetContainerItemInfo(bagID, slot);
+				Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
 			end
 		end
 	end
