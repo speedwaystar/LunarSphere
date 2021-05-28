@@ -847,8 +847,19 @@ function Lunar.Items:UpdateLowHighItems()
 							end
 							-- Make things simple for Classic, all mounts are ground mounts
 							if( Lunar.API:IsVersionRetail() == false ) then
-								table.insert(groundMounts, index);
-							-- TODO: Fix for BCC in 5 days
+								-- Check if we can use the ground mount
+								if( inAQ == true ) then
+									-- AQ mounts can only be used in AQ
+									if string.find(itemData["mount"][index].name, "Qiraji") then
+										table.insert(groundMounts, index);
+									end
+								else
+									-- Regular mounst can not be used in AQ
+									if not string.find(itemData["mount"][index].name, "Qiraji") then
+										table.insert(groundMounts, index);
+									end
+								end
+								-- TODO: Fix for BCC in 5 days
 							-- Handle Retail mounts
 							elseif (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
 								table.insert(groundMounts, index);
