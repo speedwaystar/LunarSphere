@@ -785,7 +785,9 @@ function Lunar.Items:UpdateLowHighItems()
 		itemType = itemTableNames[nameIndex];
 
 		-- If there are items in this catagory ...
-		if (itemType ~= "companion") and (itemType ~= "energyDrink") and (itemData[itemTableNames[nameIndex]][1]) then
+		if (itemType ~= "companion") and (itemType ~= "energyDrink") and (itemData[itemType][1]) then
+
+			print("itemData[",itemType,"][1] : ", itemData[itemType][1])
 
 			-- Cycle through each item and assign its count.
 			for index = 1, table.getn(itemData[itemType]) do 
@@ -840,26 +842,49 @@ function Lunar.Items:UpdateLowHighItems()
 --        284 for Chauffeured Mekgineer's Chopper and Chauffeured Mechano-Hog
 
 						if (itemType == "mount") then -- Sets up the various mount databases
-							local MountType = itemData[itemType][index].count;
+							local _mount = itemData[itemType][index]
+							local MountType = _mount.count;
+
+							print("Lunar.Items:UpdateLowHighItems MountType : ", MountType)
+
+							print("mount name: ", _mount.name, " (", index, ")")
+							print("mount itemID: ", _mount.itemID)
+
+							print("canFly :", canFly)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
 							end
 							-- Make things simple for Classic, all mounts are ground mounts
-							if( Lunar.API:IsVersionRetail() == false ) then
+							if( Lunar.API:IsVersionClassic() == true ) then
 								-- Check if we can use the ground mount
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
-									if string.find(itemData["mount"][index].name, "Qiraji") then
+									if string.find(_mount.name, "Qiraji") then
 										table.insert(groundMounts, index);
 									end
 								else
-									-- Regular mounst can not be used in AQ
-									if not string.find(itemData["mount"][index].name, "Qiraji") then
+									-- Regular mounts can not be used in AQ
+									if not string.find(_mount.name, "Qiraji") then
 										table.insert(groundMounts, index);
 									end
 								end
-								-- TODO: Fix for BCC in 5 days
+							elseif ( Lunar.API:GetBuildInfo() >= 2000 ) then
+								-- Check if we can use the ground mount
+								if( inAQ == true ) then
+									-- AQ mounts can only be used in AQ
+									if string.find(_mount.name, "Qiraji") then
+										table.insert(groundMounts, index);
+									end
+								else
+									-- Regular mounts can not be used in AQ
+									if not string.find(_mount.name, "Qiraji") then
+										table.insert(groundMounts, index);
+									end
+									if string.find(_mount.name, "Windrider") then
+										table.insert(flyingMounts, index);
+									end
+								end
 							-- Handle Retail mounts
 							elseif (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
 								table.insert(groundMounts, index);
@@ -996,6 +1021,8 @@ function Lunar.Items:UpdateLowHighItems()
 
 			local Lunar_areaId = C_Map.GetBestMapForUnit("player");
 
+			print("Lunar_areaId : ", Lunar_areaId)
+
 			RndGround = nil;
 			RndFly = nil;
 			RndSwim = nil;
@@ -1040,6 +1067,8 @@ function Lunar.Items:UpdateLowHighItems()
 			else
 				itemStrength[itemType][0] = RndGround;	-- Otherwise a Ground Mount
 			end
+
+			print("itemType: 1043 ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
 			itemStrength[itemType][1] = RndGround;		-- ground mounts
 			itemStrength[itemType][2] = RndFly;			-- flying mounts
 			itemStrength[itemType][3] = RndSwim;		-- Swimming mounts
@@ -1239,6 +1268,8 @@ function Lunar.Items:UpdateSpecialButtons()
 end
 
 function Lunar.Items:GetItem(catagory, subIndex, onlyConjured)
+
+	print("Lunar.Items:GetItem 1244:", catagory, subIndex, onlyConjured)
 
 	local returnedItem = "";
 	local catagory1, catagory2, catagory3;
@@ -1514,6 +1545,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 		-- If the slot was not empty, then we have an item link, which means
 		-- we are currently looking at an item. Continue.
 		if (itemLink) then
+			--print("itemLink : ", itemLink)
 			
 --			Lunar.Items.bagSlots[bagID] = Lunar.Items.bagSlots[bagID] + 1;
 

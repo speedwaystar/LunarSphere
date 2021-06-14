@@ -2900,7 +2900,7 @@ end
 function Lunar.API:IsFlyableArea()
 	_, _, _, t = GetBuildInfo();
 	-- Retail or BCC
-    if (t > 20000) then
+    if (t >= 20000) then
     	return IsFlyableArea()
     else
     	return nil
