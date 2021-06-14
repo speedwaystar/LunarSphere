@@ -1931,15 +1931,14 @@ function Lunar.API:Load()
 		function Lunar.API:HideGryphons(toggle, loading)
 
 			if (toggle) then
-				MainMenuBarArtFrame.LeftEndCap:Hide();
-                        MainMenuBarArtFrame.RightEndCap:Hide();
+				MainMenuBarLeftEndCap:Hide();
+				MainMenuBarRightEndCap:Hide();
 			else
 				if (not loading) then
-                              MainMenuBarArtFrame.LeftEndCap:Show();
-                              MainMenuBarArtFrame.RightEndCap:Show();
+					MainMenuBarLeftEndCap:Show();
+					MainMenuBarRightEndCap:Show();
 				end
 			end
-
 		end
 
 		function Lunar.API:HideMenus(toggle, loading)
