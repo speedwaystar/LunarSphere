@@ -787,10 +787,10 @@ function Lunar.Items:UpdateLowHighItems()
 		-- If there are items in this catagory ...
 		if (itemType ~= "companion") and (itemType ~= "energyDrink") and (itemData[itemType][1]) then
 
-			--print("itemData[",itemType,"][1] : ", itemData[itemType][1])
-
 			-- Cycle through each item and assign its count.
 			for index = 1, table.getn(itemData[itemType]) do 
+
+				local _item = itemData[itemType][index]
 
 				isFavourite = False;
 				minLevel = (itemData[itemType][index].level)
@@ -1593,6 +1593,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 							-- If the item spell is the same as one of our search data types,
 							-- we add the item to our item data table and stop our search.
 							if (itemSpell == searchData[itemTableNames[nameIndex]]) then
+
 								-- Bandage strength is based on bandage item number, so change the
 								-- itemLevel to reflect that
 								if (itemSpell == searchData.bandage) then
@@ -1621,7 +1622,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 	
 								-- If we haven't found a match yet, check if it is a healthstone. If so, add it to the health potions
 								-- section
-								elseif (itemID == 5512) then --   searchData.healthStone) then
+								elseif (itemID == 5512) or string.find(itemName, searchData.healthStone) then
+
 									-- Calculate strength of stone, if it is improved  -- Healthstone Here
 --									local stoneStr = math.fmod(math.floor(string.find(itemSpellID.healthStone, itemID) /  6), 3);
 									local stoneStr = string.match((spellRank or ""), "(%d+)") or (0);
