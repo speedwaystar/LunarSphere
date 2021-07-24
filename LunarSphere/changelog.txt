@@ -2,6 +2,22 @@
 
 
 LunarSphere Public Release
+Version 1.51 Changelog
+
+======================
+Bug Fixes
+======================
+
+*  Fixed Mount Button for Classic and BCC
+
+
+*  Fixed Improved Healthstones as a Healing Item button for Classic and BCC
+
+
+=======================================================================================
+
+
+LunarSphere Public Release
 Version 1.50 Changelog
 
 
