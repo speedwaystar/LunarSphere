@@ -787,7 +787,7 @@ function Lunar.Items:UpdateLowHighItems()
 		-- If there are items in this catagory ...
 		if (itemType ~= "companion") and (itemType ~= "energyDrink") and (itemData[itemType][1]) then
 
-			print("itemData[",itemType,"][1] : ", itemData[itemType][1])
+			--print("itemData[",itemType,"][1] : ", itemData[itemType][1])
 
 			-- Cycle through each item and assign its count.
 			for index = 1, table.getn(itemData[itemType]) do 
@@ -845,12 +845,12 @@ function Lunar.Items:UpdateLowHighItems()
 							local _mount = itemData[itemType][index]
 							local MountType = _mount.count;
 
-							print("Lunar.Items:UpdateLowHighItems MountType : ", MountType)
+							--print("Lunar.Items:UpdateLowHighItems MountType : ", MountType)
 
-							print("mount name: ", _mount.name, " (", index, ")")
-							print("mount itemID: ", _mount.itemID)
+							--print("mount name: ", _mount.name, " (", index, ")")
+							--print("mount itemID: ", _mount.itemID)
 
-							print("canFly :", canFly)
+							--print("canFly :", canFly)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
@@ -1021,7 +1021,7 @@ function Lunar.Items:UpdateLowHighItems()
 
 			local Lunar_areaId = C_Map.GetBestMapForUnit("player");
 
-			print("Lunar_areaId : ", Lunar_areaId)
+			--print("Lunar_areaId : ", Lunar_areaId)
 
 			RndGround = nil;
 			RndFly = nil;
@@ -1067,13 +1067,17 @@ function Lunar.Items:UpdateLowHighItems()
 			else
 				itemStrength[itemType][0] = RndGround;	-- Otherwise a Ground Mount
 			end
-
-			print("itemType: 1043 ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
+			--print("itemType: 1070 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
+			--print("itemType: 1071 ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
+			--print("itemType: 1072 ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
+			--print("itemType: 1073 ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
+			--print("itemType: 1074 ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
+			--print("itemType: 1075 ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
 			itemStrength[itemType][1] = RndGround;		-- ground mounts
 			itemStrength[itemType][2] = RndFly;			-- flying mounts
 			itemStrength[itemType][3] = RndSwim;		-- Swimming mounts
 			itemStrength[itemType][4] = RndStrider;		-- Strider mounts
-			itemStrength[itemType][5] = RndFavourite;		-- Favourite mounts
+			itemStrength[itemType][5] = RndFavourite;	-- Favourite mounts
 		else
 
 			-- Now, if the highCombo is different than the highNoCooldown, we use the item
@@ -1269,7 +1273,7 @@ end
 
 function Lunar.Items:GetItem(catagory, subIndex, onlyConjured)
 
-	print("Lunar.Items:GetItem 1244:", catagory, subIndex, onlyConjured)
+	--print("Lunar.Items:GetItem 1244:", catagory, subIndex, onlyConjured)
 
 	local returnedItem = "";
 	local catagory1, catagory2, catagory3;

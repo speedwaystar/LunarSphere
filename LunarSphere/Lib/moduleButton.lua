@@ -3748,7 +3748,7 @@ end
 --  *********************
 function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUsedUpdate)
 
-	print("Lunar.Button:AssignByType: 3751 ", button, clickType, buttonType, stance, lastUsedUpdate)
+	--print("Lunar.Button:AssignByType: 3751 ", button, clickType, buttonType, stance, lastUsedUpdate)
 
 	-- Create our locals and store the data that's in the player's cursor
 --	local cursorType, objectID, objectData = GetCursorInfo();
@@ -3893,7 +3893,7 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 				objectName = Lunar.Items:GetItem(Lunar.Items:GetCatagoryName(buttonType - 109), 3, true);
 			end
 
-				print("objectName (3893) : ", objectName)
+				--print("objectName (3893) : ", objectName)
 
 			-- Or grab our strongest
 --			elseif (math.fmod(buttonType, 10) == 1) then
@@ -3905,7 +3905,7 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 				local objectType_l, stackTotal_l;
 				_, _, _, _, _, objectMainType, objectType_l, stackTotal_l, _, objectTexture = GetItemInfo(objectName);
 
-				print("objectMainType : ", objectMainType, objectType_l, stackTotal_l, objectTexture)
+				--print("objectMainType : ", objectMainType, objectType_l, stackTotal_l, objectTexture)
 
 				-- If the item is consumable, or can stack, or is a reagent ... we will show the
 				-- count of the item on the button
@@ -3928,11 +3928,11 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 			end
 		end
 
-		print("objectMainType (3928) : ", objectMainType, objectType, stackTotal, objectTexture)
+		--print("objectMainType (3928) : ", objectMainType, objectType, stackTotal, objectTexture)
 
 		-- Mount Buttons ... we check for spell mounts here
 		if (buttonType >= 80) and (buttonType < 90) and (objectName) then
-			print("objectName (3932) : ", objectName, objectTexture, cursorType)
+			--print("objectName (3932) : ", objectName, objectTexture, cursorType)
 			if (string.sub(objectName, 1, 2) == "**") then
 				objectName = string.sub(objectName, 3);
 --				objectName, _, objectTexture = string.match(objectName, "%*%*(.*)~(.*)~(.*)") --string.sub(objectName, 3);
@@ -3940,7 +3940,7 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 				cursorType = "spell";
 			end
 
-			print("objectMainType (3937) : ", objectMainType, objectType, stackTotal, objectTexture)
+			--print("objectMainType (3937) : ", objectMainType, objectType, stackTotal, objectTexture)
 
 		-- Companion button
 		elseif (buttonType == 132) then
@@ -4084,13 +4084,13 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 			objectName = buttonType - 139;
 		end
 
-		print("AssignByType (4084) : ", objectName, objectTexture, cursorType)
+		--print("AssignByType (4084) : ", objectName, objectTexture, cursorType)
 
 		-- Save the texture data. If it's a left click (main) action, also assign the texture to 
 		-- the button icon
 --		if (clickType == 1) then
 if (stance == button.currentStance) then
-		print("AssignByType (4090) : ", objectName, objectTexture, cursorType)
+		--print("AssignByType (4090) : ", objectName, objectTexture, cursorType)
 		if (clickType == Lunar.Button:GetButtonSetting(buttonID, stance, LUNAR_GET_SHOW_ICON)) then
 			if (buttonID > 0) then
 				if (buttonType ~= 100) then
@@ -4114,10 +4114,10 @@ if (stance == button.currentStance) then
 								objectTexture = string.match(Lunar.Speech.actionAssignNames[9], ":::(.*)");
 							end
 
-							print("AssignByType (4114) : ", objectName, objectTexture, cursorType)
+							--print("AssignByType (4114) : ", objectName, objectTexture, cursorType)
 							_G[buttonName .. "Icon"]:SetTexture(objectTexture);
 						else
-							print("AssignByType (4117) : ", objectName, objectTexture, cursorType)
+							--print("AssignByType (4117) : ", objectName, objectTexture, cursorType)
 							_G[buttonName .. "Icon"]:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Background");
 						end
 					else
@@ -4127,10 +4127,10 @@ if (stance == button.currentStance) then
 --						elseif (buttonType == 86) then
 --							objectTexture = string.match(Lunar.Speech.actionAssignNames[9], ":::(.*)");
 --						end
-						print("AssignByType (4127) : ", buttonName .. "Icon", objectName, objectTexture, cursorType)
+						--print("AssignByType (4127) : ", buttonName .. "Icon", objectName, objectTexture, cursorType)
 						_G[buttonName .. "Icon"]:SetTexture(objectTexture);
 					end
-					print("AssignByType (4130) : ", buttonName .. "Icon", objectName, objectTexture, cursorType)
+					--print("AssignByType (4130) : ", buttonName .. "Icon", objectName, objectTexture, cursorType)
 					SetPortraitToTexture(_G[buttonName .. "Icon"], _G[buttonName .. "Icon"]:GetTexture());
 				end
 			end
@@ -4187,14 +4187,14 @@ end
 --				button:SetAttribute("shift-clickbutton" .. clickType, _G["PetActionButton" .. objectName]);
 			elseif ((buttonType >= 80) and (buttonType < 90)) or (buttonType == 132) then
 
-				print("AssignByType (4180) : ", buttonName .. "Icon", objectName, objectTexture, cursorType, buttonType)
-				print("objectName (4180) : ", objectName, objectTexture)
+				--print("AssignByType (4180) : ", buttonName .. "Icon", objectName, objectTexture, cursorType, buttonType)
+				--print("objectName (4180) : ", objectName, objectTexture)
 				if (buttonType == 132) then
 					button:SetAttribute("*type-S" .. stance  .. clickType, cursorType)
 					button:SetAttribute("*"..cursorType .. "-S" .. stance .. clickType, objectName); -- tempName);
 					button:SetAttribute("*"..cursorType .. "2-S" .. stance .. clickType, GetSpellInfo(objectName)); -- tempName);
 				elseif (Lunar.API:IsVersionRetail() ) then
-					print("4194 : ", "*type-S" .. stance  .. clickType, "macrotext")
+					--print("4194 : ", "*type-S" .. stance  .. clickType, "macrotext")
 					button:SetAttribute("*type-S" .. stance  .. clickType, "macrotext")
 --				local tempName = select(1, GetSpellInfo(objectName));
 					button:SetAttribute("*macrotext-S" .. stance .. clickType, objectName); -- tempName);
@@ -4207,7 +4207,7 @@ end
 			end
 			-- Call the update function of the button to map the new actions!
 		end
-		print("SetButtonData (4212)", buttonID, stance, clickType, (lastUsedUpdate or buttonType), cursorType, objectName, objectTexture)
+		--print("SetButtonData (4212)", buttonID, stance, clickType, (lastUsedUpdate or buttonType), cursorType, objectName, objectTexture)
 		Lunar.Button:SetButtonData(buttonID, stance, clickType, (lastUsedUpdate or buttonType), cursorType, objectName, objectTexture);
 
 --		LunarSphereSettings.buttonData[buttonID]["actionType" .. clickType] = cursorType;
@@ -7140,11 +7140,11 @@ function Lunar.Button:SetTooltip(self)
 --			buttonType = LunarSphereSettings.buttonData[self:GetID()]["buttonType" .. index];
 			itemCount = "";
 
-			print("buttonType (7121):", buttonType)
+			--print("buttonType (7121):", buttonType)
 
 			if (buttonType) then
 
-				print("actionType (7125):", actionType)
+				--print("actionType (7125):", actionType)
 
 				if (actionType == "item") then
 					_, itemLink, _, _, _, objectMainType, objectType, stackTotal = GetItemInfo(actionName);
@@ -7171,11 +7171,11 @@ function Lunar.Button:SetTooltip(self)
 
 				if (buttonType == 1) or ((buttonType >= 3) and (buttonType <= 6)) then
 
-					print("buttonType (7152):", buttonType, ", ", actionName)
+					--print("buttonType (7152):", buttonType, ", ", actionName)
 
 					if (actionName) and not ((actionName == "") or (actionName == " "))  then
 
-						print("buttonType (7169):", buttonType, ", ", actionName, ", ", actionType)
+						--print("buttonType (7169):", buttonType, ", ", actionName, ", ", actionType)
 
 						if (buttonType == 5) then
 							itemCount = itemCount .. "  |cFF00EE00" .. "[" .. Lunar.Locale["_SELFCAST"] .. "]|r";
@@ -7190,7 +7190,7 @@ function Lunar.Button:SetTooltip(self)
 --						if (actionType == "spell") then
 							if (LunarSphereSettings.tooltipType == 2) then
 
-								print("buttonType (7184):", buttonType, ", ", actionName, ", ", actionType)
+								--print("buttonType (7184):", buttonType, ", ", actionName, ", ", actionType)
 
 								if (actionType == "item") then
 									GameTooltip:AddLine(buttonName .. (GetItemInfo(actionName) or (actionName .. " " .. Lunar.Locale["_NOT_IN_CACHE"]))  .. " " .. itemCount .. keybindText, 1, 1, 1);
@@ -7206,10 +7206,10 @@ function Lunar.Button:SetTooltip(self)
 							else
 								macroCommand = Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount .. keybindText);
 
-								print("macroCommand : 7200, ", macroCommand)
+								--print("macroCommand : 7200, ", macroCommand)
 							end
 
-							print("buttonType (7203):", buttonType, ", ", actionName, ", ", actionType)
+							--print("buttonType (7203):", buttonType, ", ", actionName, ", ", actionType)
 --						else
 --							Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount);
 
@@ -7224,9 +7224,9 @@ function Lunar.Button:SetTooltip(self)
 								DrDamage:SetSpell(GameTooltip, spellID);
 							end
 						end
-						print("buttonType (7218):", buttonType, ", ", actionName, ", ", actionType)
+						--print("buttonType (7218):", buttonType, ", ", actionName, ", ", actionType)
 					else
-						print("buttonType (7220):", buttonType, ", ", actionName, ", ", actionType)
+						--print("buttonType (7220):", buttonType, ", ", actionName, ", ", actionType)
 						if (buttonType == 3) then
 							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
 							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
@@ -7250,17 +7250,17 @@ function Lunar.Button:SetTooltip(self)
 --						end
 --					end
 
-				print("SetTooltip (7240)")
+				--print("SetTooltip (7240)")
 
 				elseif (buttonType == 2) then
-					print("SetTooltip (7243)")
+					--print("SetTooltip (7243)")
 					if (index > 1) then
 						GameTooltip:AddLine(" ", 1, 1, 1);
 					end
 					GameTooltip:AddLine(buttonName .. "Open Menu"  .. keybindText, 1, 1, 1);
 					GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 				elseif (buttonType >= 10) then
-					print("SetTooltip (7250)")
+					--print("SetTooltip (7250)")
 					if (index > 1) then
 						GameTooltip:AddLine(" ", 1, 1, 1);
 					end
@@ -7324,7 +7324,7 @@ function Lunar.Button:SetTooltip(self)
 						-- Check to see if there is a texture attached (which means we have it in stock). If
 						-- so, print the name. Otherwise, say that we're out of stock on this item catagory
 
-						print("SetTooltip (7309)")
+						--print("SetTooltip (7309)")
 
 						if (buttonTexture) and (GetItemCount(actionName) > 0) then
 							if (LunarSphereSettings.tooltipType == 2) then
@@ -7393,7 +7393,7 @@ function Lunar.Button:SetTooltip(self)
 					end
 				end
 
-				print("SetTooltip (7383)")
+				--print("SetTooltip (7383)")
 --
 --				GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --]]
@@ -7409,17 +7409,17 @@ function Lunar.Button:SetTooltip(self)
 
 		GameTooltip:Show();
 
-		print("macroCommand : 7389, ", macroCommand)
+		--print("macroCommand : 7389, ", macroCommand)
 
 		if (macroCommand) then
-			print("buttonType (7406)")
+			--print("buttonType (7406)")
 			GameTooltip:SetWidth(GameTooltip:GetWidth() + 32);
 		else
-			print("buttonType (7409)")
+			--print("buttonType (7409)")
 			GameTooltip:SetWidth(GameTooltip:GetWidth() + 16);-- + 48);
-			print("buttonType (7411)")
+			--print("buttonType (7411)")
 		end
-		print("buttonType (7412)")
+		--print("buttonType (7412)")
 --		GameTooltip:Show();
 		if (LunarSphereSettings.fadeOutTooltips) then
 
