@@ -719,6 +719,17 @@ function Lunar.Items:UpdateItemCounts()
 	end
 end
 
+function Lunar.Items:BCCIsFlyingMount(mount)
+	local items = { "Windrider", "Gryphon", "Cenarion War Hippogryph", "Netherwing Drake", "Nether Ray", "Ashes of Al'ar", "Flying Machine" }
+
+	for _,v in pairs(items) do
+		if string.find(mount.name, v) then
+	    	return true
+	  	end
+	end
+	return false
+end
+
 -- /***********************************************
 --  * UpdateLowHighItems
 --  * ========================
@@ -878,10 +889,12 @@ function Lunar.Items:UpdateLowHighItems()
 									end
 								else
 									-- Regular mounts can not be used in AQ
-									if not string.find(_mount.name, "Qiraji") then
+									if not string.find(_mount.name, "Qiraji") and not Lunar.Items:BCCIsFlyingMount(_mount) then
+										--print("Ground mount :", _mount.name)
 										table.insert(groundMounts, index);
 									end
-									if string.find(_mount.name, "Windrider") then
+									if Lunar.Items:BCCIsFlyingMount(_mount) then
+										--print("Flying mount :", _mount.name)
 										table.insert(flyingMounts, index);
 									end
 								end
