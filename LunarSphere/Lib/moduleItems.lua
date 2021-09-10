@@ -914,11 +914,9 @@ function Lunar.Items:UpdateLowHighItems()
 								else
 									-- Regular mounts can not be used in AQ
 									if not string.find(_mount.name, "Qiraji") and not Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
-										print("Ground mount :", _mount.name)
 										table.insert(groundMounts, index);
 									end
 									if Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
-										print("Flying mount :", _mount.name)
 										table.insert(flyingMounts, index);
 									end
 								end
