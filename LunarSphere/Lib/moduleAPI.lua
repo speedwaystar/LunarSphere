@@ -781,8 +781,8 @@ function Lunar.API:MultiAddToTooltip(actionType, actionName, index, firstLineApp
 --		spellID, spellRank = Lunar.API:GetSpellID(actionName);
 
 		spellID = GetSpellLink(actionName);
-		_, spellRank = GetSpellBookItemName(actionName);
-		if (spellID) then
+		--_, spellRank = GetSpellBookItemName(actionName);
+		if (spellID and (spellID:len() > 0)) then
 			Lunar.Items.tooltip:SetHyperlink(spellID);
 		end
 
