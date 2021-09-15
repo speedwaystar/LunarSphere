@@ -719,6 +719,41 @@ function Lunar.Items:UpdateItemCounts()
 	end
 end
 
+-- Returns true if the mountId is a flying mount. 
+-- By checking the ID, we avoid handling the localized mount names.
+function Lunar.Items:BCCIsFlyingMount(mountId)
+	local items = {
+		25474, --tawny windrider
+		25477, --swift red windrider
+		25475, --blue windrider
+		25533, --swift purple windrider
+		25476, --green windrider
+		25532, --swift yellow windrider
+		25531, --swift green windrider
+		25473, --swift blue gryphon
+		25470, --golden gryphon
+		25472, --snowy gryphon
+		25471, --ebon gryphon
+		25529, --swift purple gryphon
+		25527, --swift red gryphon
+		25528, --swift green gryphon
+		33999, --cenarion war hippogryph
+		32858, --reins of the azure netherwing drake
+		32857, --reins of the onyx netherwing drake
+		32860, --reins of the purple netherwing drake
+		32859, --reins of the cobalt netherwing drake
+		32862, --reins of the violet netherwing drake
+		32861, --reins of the veridian netherwing drake
+		32316, --purple riding nether ray
+		32319, --blue riding nether ray
+		32317, --red riding nether ray
+		32314, --green riding nether ray
+		32318, --silver riding nether ray
+		32458 --ashes of alar
+	}
+	return tContains(items, mountId)
+end
+
 -- /***********************************************
 --  * UpdateLowHighItems
 --  * ========================
@@ -878,10 +913,10 @@ function Lunar.Items:UpdateLowHighItems()
 									end
 								else
 									-- Regular mounts can not be used in AQ
-									if not string.find(_mount.name, "Qiraji") then
+									if not string.find(_mount.name, "Qiraji") and not Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
 										table.insert(groundMounts, index);
 									end
-									if string.find(_mount.name, "Windrider") then
+									if Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
 										table.insert(flyingMounts, index);
 									end
 								end

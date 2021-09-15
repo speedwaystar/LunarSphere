@@ -4200,6 +4200,20 @@ end
 					button:SetAttribute("*macrotext-S" .. stance .. clickType, objectName); -- tempName);
 					button:SetAttribute("*macrotext2-S" .. stance .. clickType, "/stopcasting\n/cast [nomounted] " .. (GetSpellInfo(objectName) or "")  .. "\n/dismount"); -- tempName);
 --"/cast [nomounted] " .. objectName .. "\n/dismount"
+				elseif (Lunar.API:IsVersionRetail() == false ) then
+					-- OMG, could this be more complicated? We have to set
+					-- the '*item-S01' attribute with the name of the fucking
+					-- item we want to use, so it gets picked up when
+					-- Lunar.Items:UpdateSpecialButtons() is called, so
+					-- SetAttribute called THERE gets the correct item name
+					-- and we use the mount. I mean, fuck you Blizzard for
+					-- creating that stupid SecureActionButtonTemplate API.
+					-- Fuck you PUC Rio for not properly supporting OOP in
+					-- LUA so we could abstract this nonsense. And last but
+					-- not least, fuck me for spending four hours trying to
+					-- undertand this spaghetti code.
+
+					button:SetAttribute("*"..cursorType .. "-S" .. stance .. clickType, objectName)
 				end
 			else
 				button:SetAttribute("*type-S" .. stance  .. clickType, cursorType)

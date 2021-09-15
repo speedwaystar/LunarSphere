@@ -26,7 +26,7 @@ if (not Lunar.API) then
 end
 
 -- Set our current version for the module (used for version checking later on)
-Lunar.API.version = 1.50;
+Lunar.API.version = 1.52;
 
 -- Set our default chat printing colors
 Lunar.API.chatRed	= 0.3;
@@ -781,8 +781,8 @@ function Lunar.API:MultiAddToTooltip(actionType, actionName, index, firstLineApp
 --		spellID, spellRank = Lunar.API:GetSpellID(actionName);
 
 		spellID = GetSpellLink(actionName);
-		_, spellRank = GetSpellBookItemName(actionName);
-		if (spellID) then
+		--_, spellRank = GetSpellBookItemName(actionName);
+		if (spellID and (spellID:len() > 0)) then
 			Lunar.Items.tooltip:SetHyperlink(spellID);
 		end
 
