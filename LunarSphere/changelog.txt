@@ -1,3 +1,13 @@
+LunarSphere Public Release
+Version 1.52 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed the special mounts buttons for BCC and Classic.
+* Fixed bug that caused an exception when setting the tooltip of a button with a spell that has been unlearned.
+
 =======================================================================================
 
 
