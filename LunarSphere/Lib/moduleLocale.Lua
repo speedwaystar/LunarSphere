@@ -35,7 +35,7 @@ local LSMACRO;
 local LS = "LunarSphere"		-- Not to be localized =)
 local LSE = "LunarSphereExporter"	-- Not to be localized =)
 
-local localeVersion = 1.50;
+local localeVersion = 1.52;
 
 ---------------------
 -- Backdrop Settings
