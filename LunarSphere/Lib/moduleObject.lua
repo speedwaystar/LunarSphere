@@ -1114,8 +1114,8 @@ function Lunar.Object.IconPlaceHolder_OnClick(self)
 			-- Set the name of the spell and its texture
 			updateType = "spell";
 
-			actionName, _, objectTexture = C_MountJournal.GetMountInfo(updateData)
-			displayID, _, _, _, _ = C_MountJournal.GetMountInfoExtra(updateData)
+			actionName, _, objectTexture = C_MountJournal.GetMountInfoByID(updateID)
+			displayID, _, _, _, _ = C_MountJournal.GetMountInfoExtraByID(updateID)
 
 		elseif (updateType == "item") then
 			actionName, _, _, _, _, objectType, _, _, _, objectTexture = GetItemInfo(updateID);
