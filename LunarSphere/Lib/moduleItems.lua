@@ -1493,6 +1493,29 @@ function Lunar.Items:ScanForSpellMounts()
 	end
 end
 
+-- Returns true if the itemId belongs to a healthstone.
+-- By checking the ID, we avoid handling the localized stone names.
+function Lunar.Items:IsHealthStone(itemId)
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		return false;
+	end
+
+	-- We have several healthstones with the same neame because of the
+	-- Improved Healthstone talent.
+	local items = {
+		5512,  -- minor healthstone (all clients)
+		19004, -- minor healthstone (Classic & BCC)
+		19005, -- minor healthstone (Classic & BCC)
+		5509,  -- healthstone (Classic & BCC)
+		19008, -- healthstone (Classic & BCC)
+		19009, -- healthstone (Classic & BCC)
+		22103, -- master healthstone (only in BCC)
+		22104, -- master healthstone (only in BCC)
+		22105  -- master healthstone (only in BCC)
+	}
+	return tContains(items, mountId)
+end
+
 -- /***********************************************
 --  * UpdateBagContents
 --  * ========================
@@ -1657,7 +1680,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 	
 								-- If we haven't found a match yet, check if it is a healthstone. If so, add it to the health potions
 								-- section
-								elseif (itemID == 5512) or string.find(itemName, searchData.healthStone) then
+								elseif Lunar.Items:IsHealthStone(itemId) or string.find(itemName, searchData.healthStone) then
 
 									-- Calculate strength of stone, if it is improved  -- Healthstone Here
 --									local stoneStr = math.fmod(math.floor(string.find(itemSpellID.healthStone, itemID) /  6), 3);
