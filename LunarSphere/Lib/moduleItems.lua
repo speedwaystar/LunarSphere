@@ -371,8 +371,8 @@ function Lunar.Items:OnUpdate(elapsed)
 	Lunar.Items.eventFrame:RegisterEvent("LEARNED_SPELL_IN_TAB");
 	if ( Lunar.API:IsVersionRetail() == true ) then
 		Lunar.Items.eventFrame:RegisterEvent("COMPANION_LEARNED");
-		Lunar.Items:ScanForSpellMounts();
 	end
+	Lunar.Items:ScanForSpellMounts();
 
 	-- Now, setup bag watching functions, so we can check our counts when we receive a new
 	-- item or lose one
@@ -1439,7 +1439,7 @@ function Lunar.Items:BuildSpellMountData()
 
 end
 
-function Lunar.Items:ScanForSpellMounts()
+function Lunar.Items:RetailScanForSpellMounts()
 
 	local index, spellID, textLine, searchText, textContainer, speed, itemLevel, mountType, spellName, spellTexture;
 
@@ -1492,6 +1492,43 @@ function Lunar.Items:ScanForSpellMounts()
 		end
 	end
 end
+
+function Lunar.Items:ClassicScanForSpellMounts()
+
+	local SpellMountsIDs = {
+		23214, -- summon charger 
+		13819, -- summon warhorse
+		34767, -- summon charger (Blood Elf)
+		34769, -- summon warhorse (Blood Elf)
+		5784,  -- summon felsteed
+		23161, -- summon dreadsteed
+	}
+
+	for _, spellID in ipairs(SpellMountsIDs)
+	do
+		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spellID)
+		local isUsable = IsSpellKnown(spellID)
+
+		if (isUsable) then
+			local spellName = "**" .. spellID --.. "~" .. spellName .. "~" .. spellTexture; 
+
+			local mountType = 248
+			local itemLevel = UnitLevel("player")
+
+			-- All mounts
+			Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
+		end
+	end
+end
+
+function Lunar.Items:ScanForSpellMounts()
+	if ( Lunar.API:IsVersionRetail() == true ) then
+		Lunar.Items:RetailScanForSpellMounts()
+	else
+		Lunar.Items:ClassicScanForSpellMounts()
+	end
+end
+
 
 -- Returns true if the itemId belongs to a healthstone.
 -- By checking the ID, we avoid handling the localized stone names.
@@ -1936,6 +1973,7 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 				-- some mounts).
 
 				if (tableName == "mount") then
+
 					if (itemLink ~= "spellMount") then
 						itemData[tableName][table.getn(itemData[tableName])].spell = GetItemSpell(itemName);
 					else
