@@ -2782,6 +2782,10 @@ function Lunar.API:UserGetProfession()
     };
 
 
+    if ( Lunar.API:IsVersionRetail() == false ) then
+        return
+    end
+
     -- Set local strings to Nil values.
     --
     local bin_Prof = 0;
