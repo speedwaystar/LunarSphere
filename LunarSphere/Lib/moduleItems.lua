@@ -719,39 +719,142 @@ function Lunar.Items:UpdateItemCounts()
 	end
 end
 
--- Returns true if the mountId is a flying mount. 
+-- Returns true if the mount is a flying mount. 
+-- Sets the `isFlying` property in the mount.
+--
 -- By checking the ID, we avoid handling the localized mount names.
-function Lunar.Items:BCCIsFlyingMount(mountId)
+function Lunar.Items:BCCIsFlyingMount(mount) 
+	-- This code is a fucking mess, mount.itemID doesn't holds the ID if
+	-- it's a spellMount.
+	if mount.spellMount then
+		itemID = tonumber(string.sub(mount.name, 3))
+	else
+		itemID = mount.itemID
+	end
+
 	local items = {
-		25474, --tawny windrider
-		25477, --swift red windrider
-		25475, --blue windrider
-		25533, --swift purple windrider
-		25476, --green windrider
-		25532, --swift yellow windrider
-		25531, --swift green windrider
-		25473, --swift blue gryphon
-		25470, --golden gryphon
-		25472, --snowy gryphon
-		25471, --ebon gryphon
-		25529, --swift purple gryphon
-		25527, --swift red gryphon
-		25528, --swift green gryphon
-		33999, --cenarion war hippogryph
-		32858, --reins of the azure netherwing drake
-		32857, --reins of the onyx netherwing drake
-		32860, --reins of the purple netherwing drake
-		32859, --reins of the cobalt netherwing drake
-		32862, --reins of the violet netherwing drake
-		32861, --reins of the veridian netherwing drake
-		32316, --purple riding nether ray
-		32319, --blue riding nether ray
-		32317, --red riding nether ray
-		32314, --green riding nether ray
-		32318, --silver riding nether ray
-		32458 --ashes of alar
+		25474, -- tawny windrider
+		25477, -- swift red windrider
+		25475, -- blue windrider
+		25533, -- swift purple windrider
+		25476, -- green windrider
+		25532, -- swift yellow windrider
+		25531, -- swift green windrider
+		25473, -- swift blue gryphon
+		25470, -- golden gryphon
+		25472, -- snowy gryphon
+		25471, -- ebon gryphon
+		25529, -- swift purple gryphon
+		25527, -- swift red gryphon
+		25528, -- swift green gryphon
+		33999, -- cenarion war hippogryph
+		32858, -- reins of the azure netherwing drake
+		32857, -- reins of the onyx netherwing drake
+		32860, -- reins of the purple netherwing drake
+		32859, -- reins of the cobalt netherwing drake
+		32862, -- reins of the violet netherwing drake
+		32861, -- reins of the veridian netherwing drake
+		32316, -- purple riding nether ray
+		32319, -- blue riding nether ray
+		32317, -- red riding nether ray
+		32314, -- green riding nether ray
+		32318, -- silver riding nether ray
+		32458  -- ashes of alar
 	}
-	return tContains(items, mountId)
+	return tContains(items, itemID)
+end
+
+-- Returns true if the mount is a epic mount. 
+-- By checking the ID, we avoid handling the localized mount names.
+function Lunar.Items:ClassicIsMountEpic(mount)
+
+--	print("Lunar.Items:ClassicIsMountEpic 774 : ", itemID)
+
+	-- This code is a fucking mess, mount.itemID doesn't holds the ID if
+	-- it's a spellMount.
+	if mount.spellMount then
+		itemID = tonumber(string.sub(mount.name, 3))
+	else
+		itemID = mount.itemID
+	end
+
+	-- According to wowhead, the IDs seem to hold across all three clients. 
+	-- As the number of non-epic mounts is smaller than the number of epic
+	-- mounts, we'll check if the mount is not in the non-epic table and just
+	-- assume it's epic.
+	local mounts = {
+		2414,  -- pinto-bridle
+		5656,  -- brown-horse-bridle
+		5655,  -- chestnut-mare-bridle
+		5872,  -- brown-ram
+		5864,  -- gray-ram
+		5873,  -- white-ram
+		8632,  -- reins-of-the-spotted-frostsaber
+		8631,  -- reins-of-the-striped-frostsaber
+		8629,  -- reins-of-the-striped-nightsaber
+		8595,  -- blue-mechanostrider
+		13321, -- green-mechanostrider
+		8563,  -- red-mechanostrider
+		13322, -- unpainted-mechanostrider
+		28481, -- brown-elekk
+		29744, -- gray-elekk
+		29743, -- purple-elekk
+		5665,  -- horn-of-the-dire-wolf
+		1132,  -- horn-of-the-timber-wolf
+		5668,  -- horn-of-the-brown-wolf
+		13332, -- blue-skeletal-horse
+		13333, -- brown-skeletal-horse
+		13331, -- red-skeletal-horse
+		15290, -- brown-kodo
+		15277, -- gray-kodo
+		8588,  -- whistle-of-the-emerald-raptor
+		8591,  -- whistle-of-the-turquoise-raptor
+		8592,  -- whistle-of-the-violet-raptor
+		29221, -- black-hawkstrider
+		29222, -- purple-hawkstrider
+		28927, -- red-hawkstrider
+		29220, -- blue-hawkstrider
+		21218, -- blue-qiraji-resonating-crystal
+		21323, -- green-qiraji-resonating-crystal
+		21324, -- yellow-qiraji-resonating-crystal
+		21321, -- red-qiraji-resonating-crystal
+		33976, -- brewfest-ram
+		37827, -- brewfest-kodo
+		25472, -- snowy-gryphon
+		25471, -- ebon-gryphon
+		25470, -- golden-gryphon
+		25475, -- blue-windrider
+		25476, -- green-windrider
+		25474, -- tawny-windrider
+		34060  -- flying-machine-control
+	}
+
+	local not_epic = tContains(mounts, itemID)
+	-- Mount was found in the table above, just return false
+	if( not_epic ) then
+		return false
+	end
+
+	-- mount can be a spell mount
+	local spell_mounts = {
+		13819, -- summon-warhorse
+		34769, -- summon-warhorse (Blood Elf version)
+		5784, -- summon-felsteed
+	}
+
+	not_epic = tContains(spell_mounts, itemID)
+
+
+--	print("Lunar.Items:ClassicIsMountEpic 849 : ", itemID, mount.spellMount, not_epic )
+
+	-- Mount was found in the table above, just return false
+	if( mount.spellMount and not_epic ) then
+		return false
+	end
+
+	-- Epic mount, return true
+	return true
+
 end
 
 -- /***********************************************
@@ -778,6 +881,11 @@ function Lunar.Items:UpdateLowHighItems()
     local Lunar_AbyssalMount_Name, _ = GetSpellInfo(75207);
 
 	local playerLevel = UnitLevel("player");
+
+	-- Helps with selecting epic vs normal mounts
+	local groundMountsEpic = {};
+	local flyingMountsEpic = {};
+	local flyingMountsEpic300 = {};
 
 	bestRange = 100;
 	if (playerLevel < 40) then
@@ -877,21 +985,21 @@ function Lunar.Items:UpdateLowHighItems()
 --        284 for Chauffeured Mekgineer's Chopper and Chauffeured Mechano-Hog
 
 						if (itemType == "mount") then -- Sets up the various mount databases
-							local _mount = itemData[itemType][index]
+							local _mount = itemData["mount"][index]
 							local MountType = _mount.count;
 
 							--print("Lunar.Items:UpdateLowHighItems MountType : ", MountType)
-
 							--print("mount name: ", _mount.name, " (", index, ")")
 							--print("mount itemID: ", _mount.itemID)
-
-							--print("canFly :", canFly)
+							--print("mount isFlying: ", _mount.isFlying)
+							--print("mount isEpic: ", _mount.isEpic)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
 							end
-							-- Make things simple for Classic, all mounts are ground mounts
-							if( Lunar.API:IsVersionClassic() == true ) then
+
+							-- Handle Classic and BCC mounts
+							if( Lunar.API:IsVersionRetail() == false ) then
 								-- Check if we can use the ground mount
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
@@ -901,23 +1009,17 @@ function Lunar.Items:UpdateLowHighItems()
 								else
 									-- Regular mounts can not be used in AQ
 									if not string.find(_mount.name, "Qiraji") then
-										table.insert(groundMounts, index);
-									end
-								end
-							elseif ( Lunar.API:GetBuildInfo() >= 2000 ) then
-								-- Check if we can use the ground mount
-								if( inAQ == true ) then
-									-- AQ mounts can only be used in AQ
-									if string.find(_mount.name, "Qiraji") then
-										table.insert(groundMounts, index);
-									end
-								else
-									-- Regular mounts can not be used in AQ
-									if not string.find(_mount.name, "Qiraji") and not Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
-										table.insert(groundMounts, index);
-									end
-									if Lunar.Items:BCCIsFlyingMount(_mount.itemID) then
-										table.insert(flyingMounts, index);
+										if _mount.isFlying then
+											table.insert(flyingMounts, index);
+											if _mount.isEpic then
+												table.insert(flyingMountsEpic, index);
+											end
+										else
+											table.insert(groundMounts, index);
+											if _mount.isEpic then
+												table.insert(groundMountsEpic, index);
+											end
+										end
 									end
 								end
 							-- Handle Retail mounts
@@ -1065,10 +1167,14 @@ function Lunar.Items:UpdateLowHighItems()
 			RndStrider = nil;
 			RndMount = nil;
 
-			if (table.getn(groundMounts) > 0) then
+			if (table.getn(groundMountsEpic) > 0) then
+				RndGround = groundMountsEpic[math.random(table.getn(groundMountsEpic))];
+			end
+			-- Choose a non-epic mount if we didn't select an epic
+			if (RndGround == nil and table.getn(groundMounts) > 0) then
 				RndGround = groundMounts[math.random(table.getn(groundMounts))];
 			end
-			
+
 			if (table.getn(striderMounts) > 0) then
 				RndStrider = striderMounts[math.random(table.getn(striderMounts))];
 			end
@@ -1076,9 +1182,15 @@ function Lunar.Items:UpdateLowHighItems()
 			if (table.getn(favouriteMounts) > 0) then
 				RndFavourite = favouriteMounts[math.random(table.getn(favouriteMounts))];
 			end
-			
-			if (table.getn(flyingMounts) > 0 and (canFly)) then
-				RndFly = flyingMounts[math.random(table.getn(flyingMounts))];
+
+			if (canFly) then
+				if ( table.getn(flyingMountsEpic) > 0 ) then
+					RndFly = flyingMountsEpic[math.random(table.getn(flyingMountsEpic))];
+				end
+				-- Choose a non-epic mount if we didn't select an epic
+				if ( RndFly == nil and table.getn(flyingMounts) > 0 ) then
+					RndFly = flyingMounts[math.random(table.getn(flyingMounts))];
+				end
 			end
 			
 			if ((Lunar_areaId == 610) or (Lunar_areaId == 614) or (Lunar_areaId == 615)) then
@@ -1102,12 +1214,14 @@ function Lunar.Items:UpdateLowHighItems()
 			else
 				itemStrength[itemType][0] = RndGround;	-- Otherwise a Ground Mount
 			end
+
 			--print("itemType: 1070 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
 			--print("itemType: 1071 ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
 			--print("itemType: 1072 ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
 			--print("itemType: 1073 ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
 			--print("itemType: 1074 ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
 			--print("itemType: 1075 ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
+
 			itemStrength[itemType][1] = RndGround;		-- ground mounts
 			itemStrength[itemType][2] = RndFly;			-- flying mounts
 			itemStrength[itemType][3] = RndSwim;		-- Swimming mounts
@@ -1974,13 +2088,19 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 
 				if (tableName == "mount") then
 
+					local pos = table.getn(itemData[tableName])
 					if (itemLink ~= "spellMount") then
-						itemData[tableName][table.getn(itemData[tableName])].spell = GetItemSpell(itemName);
+						--print("Lunar.Items:ModifyItemDataTable 1962", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, GetItemSpell(itemName))
+						itemData[tableName][pos].spell = GetItemSpell(itemName);
 					else
-						itemData[tableName][table.getn(itemData[tableName])].spell = GetSpellInfo(string.sub(itemName, 3));
-						itemData[tableName][table.getn(itemData[tableName])].spellMount = true;
-						itemData[tableName][table.getn(itemData[tableName])].itemID = "spellMount";
+						--print("Lunar.Items:ModifyItemDataTable 1965", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, string.sub(itemName, 3))
+						itemData[tableName][pos].spell = GetSpellInfo(string.sub(itemName, 3));
+						itemData[tableName][pos].spellMount = true;
+						itemData[tableName][pos].itemID = "spellMount";
 					end
+					-- Update the mount properties that we use to select the random mounts.
+					itemData[tableName][pos].isEpic = Lunar.Items:ClassicIsMountEpic(itemData[tableName][pos])
+					itemData[tableName][pos].isFlying = Lunar.Items:BCCIsFlyingMount(itemData[tableName][pos])
 				end
 
 				if (tableName == "companion") then
