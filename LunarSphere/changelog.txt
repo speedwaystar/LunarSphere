@@ -1,4 +1,25 @@
 LunarSphere Public Release
+Version 1.53 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Added proper support fr AQ40 mounts for Classic and BCC.
+* Added support for BCC 310 % speed mounts. 
+* Changed the randon mount selection for ground mounts, flying mounts, and
+  random mount for Classic and BCC: now the epic mounts are selected over
+  regular mounts.
+* Fixed spell mounts (palladin and warlock) mounts for Classic and BCC
+  (thanks beren12 for the bug report)
+* Fixed exception when calling GetProfessions in Classic and BCC.
+* Fixed master healthstone in BCC.
+* Fixed error in the Retail client that caused an exception when dragging a
+  mount to a action button (thanks nicodemusmercy for the bug report).
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.52 Changelog
 
 ======================

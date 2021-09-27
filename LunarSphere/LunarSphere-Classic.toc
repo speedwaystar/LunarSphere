@@ -1,6 +1,6 @@
 ﻿## Interface: 11307
 ##
-## Version: v1.52
+## Version: v1.53
 ##
 ## Author: Moongaze (Twisting Nether)
 ## Fixer:  Shaun Voysey
