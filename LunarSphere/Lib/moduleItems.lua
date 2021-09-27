@@ -857,6 +857,48 @@ function Lunar.Items:ClassicIsMountEpic(mount)
 
 end
 
+-- Returns true if the mount is an AQ40 mount. 
+-- By checking the ID, we avoid handling the localized mount names.
+function Lunar.Items:ClassicIsMountAQ40(mount)
+
+	if mount.spellMount then
+		itemID = tonumber(string.sub(mount.name, 3))
+	else
+		itemID = mount.itemID
+	end
+
+	local mounts = {
+		21218, -- blue-qiraji-resonating-crystal
+		21323, -- green-qiraji-resonating-crystal
+		21324, -- yellow-qiraji-resonating-crystal
+		21321, -- red-qiraji-resonating-crystal
+		21176 -- black-qiraji-resonating-crystal
+	}
+
+	return tContains(mounts, itemID)
+end
+
+-- Returns true if the mount is an 310 % speed mount. 
+-- By checking the ID, we avoid handling the localized mount names.
+function Lunar.Items:ClassicIsMountEpic310(mount)
+
+	if mount.spellMount then
+		itemID = tonumber(string.sub(mount.name, 3))
+	else
+		itemID = mount.itemID
+	end
+
+	local mounts = {
+		32458, -- ashes-of-alar
+		30609, -- swift-nether-drake
+		37676, -- vengeful-nether-drake
+		34092, -- merciless-nether-drake
+		43516 -- brutal-nether-drake
+	}
+
+	return tContains(mounts, itemID)
+end
+
 -- /***********************************************
 --  * UpdateLowHighItems
 --  * ========================
@@ -885,7 +927,7 @@ function Lunar.Items:UpdateLowHighItems()
 	-- Helps with selecting epic vs normal mounts
 	local groundMountsEpic = {};
 	local flyingMountsEpic = {};
-	local flyingMountsEpic300 = {};
+	local flyingMountsEpic310 = {};
 
 	bestRange = 100;
 	if (playerLevel < 40) then
@@ -993,6 +1035,8 @@ function Lunar.Items:UpdateLowHighItems()
 							--print("mount itemID: ", _mount.itemID)
 							--print("mount isFlying: ", _mount.isFlying)
 							--print("mount isEpic: ", _mount.isEpic)
+							--print("mount isEpic310: ", _mount.isEpic310)
+							--print("mount isAQ40: ", _mount.isAQ40)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
@@ -1003,16 +1047,19 @@ function Lunar.Items:UpdateLowHighItems()
 								-- Check if we can use the ground mount
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
-									if string.find(_mount.name, "Qiraji") then
+									if _mount.isAQ40 then
 										table.insert(groundMounts, index);
 									end
 								else
 									-- Regular mounts can not be used in AQ
-									if not string.find(_mount.name, "Qiraji") then
+									if not _mount.isAQ40 then
 										if _mount.isFlying then
 											table.insert(flyingMounts, index);
 											if _mount.isEpic then
 												table.insert(flyingMountsEpic, index);
+											end
+											if _mount.isEpic310 then
+												table.insert(flyingMountsEpic310, index);
 											end
 										else
 											table.insert(groundMounts, index);
@@ -1184,7 +1231,10 @@ function Lunar.Items:UpdateLowHighItems()
 			end
 
 			if (canFly) then
-				if ( table.getn(flyingMountsEpic) > 0 ) then
+				if ( table.getn(flyingMountsEpic310) > 0 ) then
+					RndFly = flyingMountsEpic310[math.random(table.getn(flyingMountsEpic310))];
+				end
+				if ( RndFly == nil and table.getn(flyingMountsEpic) > 0 ) then
 					RndFly = flyingMountsEpic[math.random(table.getn(flyingMountsEpic))];
 				end
 				-- Choose a non-epic mount if we didn't select an epic
@@ -2101,6 +2151,8 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 					-- Update the mount properties that we use to select the random mounts.
 					itemData[tableName][pos].isEpic = Lunar.Items:ClassicIsMountEpic(itemData[tableName][pos])
 					itemData[tableName][pos].isFlying = Lunar.Items:BCCIsFlyingMount(itemData[tableName][pos])
+					itemData[tableName][pos].isAQ40 = Lunar.Items:ClassicIsMountAQ40(itemData[tableName][pos])
+					itemData[tableName][pos].isEpic310 = Lunar.Items:ClassicIsMountEpic310(itemData[tableName][pos])
 				end
 
 				if (tableName == "companion") then
