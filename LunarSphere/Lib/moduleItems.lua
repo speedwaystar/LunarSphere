@@ -542,11 +542,11 @@ function Lunar.Items:BuildLookupStrings()
 
 	searchData.drink		 = GetSpellInfo(430);
 	searchData.food		 = GetSpellInfo(433);
-	searchData.potionHealing = GetSpellInfo(441);
-	searchData.potionMana	 = GetSpellInfo(2023);
+	searchData.potionHealing = GetSpellInfo(441); -- healing-potion
+	searchData.potionMana	 = GetSpellInfo(2023); -- restore-mana
 	searchData.energyDrink	 = GetSpellInfo(9512);
 	searchData.bandage	 = GetSpellInfo(746);
-	searchData.healthStone	 = GetSpellInfo(6262); --GetSpellInfo(5720);
+	searchData.healthStone	 = GetSpellInfo(6262); -- minor-healthstone (works for Retail)
 	searchData.refreshment	 = GetSpellInfo(44166);
 
 	Lunar.Locale["_SUMMON"] = select(2, GetSpellInfo(688))
@@ -1694,11 +1694,13 @@ function Lunar.Items:ScanForSpellMounts()
 end
 
 
--- Returns true if the itemId belongs to a healthstone.
--- By checking the ID, we avoid handling the localized stone names.
-function Lunar.Items:IsHealthStone(itemId)
+-- Returns the stone strength based on the item ID. Returns nil if the item Id
+-- isn't a healthstone.
+-- By checking the ID, we avoid handling the localized
+-- stone names.
+function Lunar.Items:GetHealthStoneStrength(itemId)
 	if ( Lunar.API:IsVersionRetail() == true ) then
-		return false;
+		return nil;
 	end
 
 	-- We have several healthstones with the same neame because of the
@@ -1714,7 +1716,27 @@ function Lunar.Items:IsHealthStone(itemId)
 		22104, -- master healthstone (only in BCC)
 		22105  -- master healthstone (only in BCC)
 	}
-	return tContains(items, mountId)
+
+	local str = {
+		100,   -- minor healthstone (all clients)
+		110,  -- minor healthstone (Classic & BCC)
+		120,  -- minor healthstone (Classic & BCC)
+		500,   -- healthstone (Classic & BCC)
+		550,  -- healthstone (Classic & BCC)
+		600,  -- healthstone (Classic & BCC)
+		2080, -- master healthstone (only in BCC)
+		2288, -- master healthstone (only in BCC)
+		2496  -- master healthstone (only in BCC)
+	}
+
+	for index, id in ipairs(items) do
+		if id == itemId then
+			return str[index]
+		end
+	end
+
+	return nil
+
 end
 
 -- /***********************************************
@@ -1845,6 +1867,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 -- Item Spells for over 80's
 					if (itemSpell) then
 
+
 						-- Search through all of our search strings to see if we found a match
 						-- for a type of item we search for.
 						for nameIndex = 1, Lunar.Items.totalItemTypes do 
@@ -1881,8 +1904,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 	
 								-- If we haven't found a match yet, check if it is a healthstone. If so, add it to the health potions
 								-- section
-								elseif Lunar.Items:IsHealthStone(itemId) or string.find(itemName, searchData.healthStone) then
 
+								elseif (itemID == 5512) or string.find(itemName, searchData.healthStone) then
 									-- Calculate strength of stone, if it is improved  -- Healthstone Here
 --									local stoneStr = math.fmod(math.floor(string.find(itemSpellID.healthStone, itemID) /  6), 3);
 									local stoneStr = string.match((spellRank or ""), "(%d+)") or (0);
@@ -1894,6 +1917,20 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 								itemSpell = nil;
 								break;
 							end
+						end
+
+						-- The healthstone checking above fails for the
+						-- Classic clients because `itemSpell` is not
+						-- generic, i.e. `itemSpell` for a Minor Healthstone
+						-- is 'Minor Healthstone', so the only match that
+						-- will work is for item IDs 5512 (minor healthstone,
+						-- all clients), 19004, and 19005. All the other
+						-- healthstones won't match.
+
+						-- If we didn't find a healthstone yet
+						if stoneStr == nil and Lunar.Items:GetHealthStoneStrength(itemID) then
+							local stoneStr = Lunar.Items:GetHealthStoneStrength(itemID)
+							Lunar.Items:ModifyItemDataTable("potionHealing", updateType, itemLink, itemCount, itemLevel + 2000 + stoneStr, itemMinLevel, itemLink);
 						end
 					end
 
