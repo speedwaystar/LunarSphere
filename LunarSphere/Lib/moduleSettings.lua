@@ -6273,10 +6273,7 @@ function Lunar.Settings:CreateAnchorPlaceholders()
 
 		pos = LunarSphereSettings["anchorCorner" .. anchorSetting] +  1;
 		temp = Lunar.API:CreateFrame("Frame", "LSSettings" .. frame.tooltipName, frame, 80, 60, nil, true, 0)
-
-		if not Lunar.API:IsVersionRetail() then
-			temp:SetBackdrop(GameTooltip:GetBackdrop());
-		end
+		temp:SetBackdrop(GameTooltip:GetBackdrop());
 		temp:SetPoint(Lunar.Button.tooltipPos[9 - pos], frame, Lunar.Button.tooltipPos[pos]);
 		temp:RegisterForDrag("LeftButton");
 		temp:SetScript("OnDragStart", Lunar.Settings.AnchorRadio_OnDragStart);

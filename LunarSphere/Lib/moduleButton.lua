@@ -220,15 +220,12 @@ Lunar.cooldownEffectFunction = {
 --  *********************
 function Lunar.Button:Initialize()
 
-
-	if not Lunar.API:IsVersionRetail() then
-		backdrop = GameTooltip:GetBackdrop();
-		backdrop.bgFile = LUNAR_ART_PATH .. "background.blp";
-		backdrop.insets.left = 3;
-		backdrop.insets.right = 3;
-		backdrop.insets.top = 3;
-		backdrop.insets.bottom = 3;
-	end
+	backdrop = GameTooltip:GetBackdrop();
+	backdrop.bgFile = LUNAR_ART_PATH .. "background.blp";
+	backdrop.insets.left = 3;
+	backdrop.insets.right = 3;
+	backdrop.insets.top = 3;
+	backdrop.insets.bottom = 3;
 
 	Lunar.Button.enabledButtons = LunarSphereSettings.buttonEditMode;
 
@@ -6913,7 +6910,7 @@ function Lunar.Button:TooltipOnShow()
 --	GameTooltip:SetBackdrop(ItemRefTooltip:GetBackdrop()); --origBackdrop);
 --	GameTooltip:SetBackdropColor(ItemRefTooltip:GetBackdropColor()); --unpack(origBackdropColor));
 
-	if not Lunar.origBackdrop and not Lunar.API:IsVersionRetail() then
+	if not Lunar.origBackdrop then
 		Lunar.origBackdrop = GameTooltip:GetBackdrop();
 		Lunar.origBackdropColor = {GameTooltip:GetBackdropColor()};
 		Lunar.origBackdropBorderColor = {GameTooltip:GetBackdropBorderColor()};
