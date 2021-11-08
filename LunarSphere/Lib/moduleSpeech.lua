@@ -177,11 +177,11 @@ function Lunar.Speech:Initialize()
 
 end
 
-function Lunar.Speech.OnEvent(self, event, arg1, arg2, arg3, arg4)
+function Lunar.Speech.OnEvent(self, event, unit, target, castGUID, spellID)
 
 	-- Ignore all spells that are not from the player
 
-	if (arg1 ~= "player") then
+	if (unit ~= "player") then
 		return;
 	end
 
@@ -190,12 +190,11 @@ function Lunar.Speech.OnEvent(self, event, arg1, arg2, arg3, arg4)
 	-- order to catch spells that have a cast time.
 
 	if (event == "UNIT_SPELLCAST_SENT") then
-		self.spellName = arg2;
-		self.spellRank = arg3;
-		self.spellTarget = arg4;
+		self.spellName, self.spellRank = GetSpellInfo(spellID);
+		self.spellTarget = target;
 
 		-- If the target data doesn't exist, grab it from the player target if possible
-		if ((not arg4 or (arg4 == "")) and UnitName("target")) then
+		if ((not target or (target == "")) and UnitName("target")) then
 			self.spellTarget = UnitName("target") or ("");
 		end
 	end
@@ -216,11 +215,8 @@ function Lunar.Speech.OnEvent(self, event, arg1, arg2, arg3, arg4)
 	-- spell for speeches
 
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") and not (self.spellStart) then
-
 		Lunar.Speech.CheckCurrentAction(self);
-
 	end
-	
 end
 --REVISE
 function Lunar.Speech:Import()
@@ -1087,9 +1083,10 @@ function Lunar.Speech.RunScript(self, scriptName)
 								SendChatMessage(speechLine, "WHISPER", nil, whisperTarget);
 							end
 						else
-							SendChatMessage(speechLine, forceChannel or (channel));
+							if ( (forceChannel or channel) ~= "SAY" ) or IsInInstance() then
+								SendChatMessage(speechLine, forceChannel or (channel));
+							end
 						end
-
 					end
 				end
 			end
