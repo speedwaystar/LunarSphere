@@ -1,4 +1,19 @@
 LunarSphere Public Release
+Version 1.54 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Updated detection for healthstones for the Classic clients. The old method
+  only worked for minor healthstones because that's the name of the spell in
+  the Retail client.
+* Updated speech module according to speedwaystar's patch.
+* Quick and dirty fix for Retail 90105
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.53 Changelog
 
 ======================
