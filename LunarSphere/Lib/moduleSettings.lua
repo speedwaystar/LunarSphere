@@ -6273,6 +6273,11 @@ function Lunar.Settings:CreateAnchorPlaceholders()
 
 		pos = LunarSphereSettings["anchorCorner" .. anchorSetting] +  1;
 		temp = Lunar.API:CreateFrame("Frame", "LSSettings" .. frame.tooltipName, frame, 80, 60, nil, true, 0)
+
+		if not GameTooltip.GetBackdrop then
+		    Mixin(GameTooltip, BackdropTemplateMixin)
+		end
+
 		temp:SetBackdrop(GameTooltip:GetBackdrop());
 		temp:SetPoint(Lunar.Button.tooltipPos[9 - pos], frame, Lunar.Button.tooltipPos[pos]);
 		temp:RegisterForDrag("LeftButton");

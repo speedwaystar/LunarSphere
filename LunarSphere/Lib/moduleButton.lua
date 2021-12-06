@@ -220,13 +220,6 @@ Lunar.cooldownEffectFunction = {
 --  *********************
 function Lunar.Button:Initialize()
 
-	backdrop = GameTooltip:GetBackdrop();
-	backdrop.bgFile = LUNAR_ART_PATH .. "background.blp";
-	backdrop.insets.left = 3;
-	backdrop.insets.right = 3;
-	backdrop.insets.top = 3;
-	backdrop.insets.bottom = 3;
-
 	Lunar.Button.enabledButtons = LunarSphereSettings.buttonEditMode;
 
 --	_, Lunar.Items.reagentString = GetAuctionItemSubClasses(10);
@@ -3567,7 +3560,8 @@ function Lunar.Button:Assign(self, clickType, stance)
 			-- Get the name of the item, what it can stack as, and its texture
 			objectName, _, _, _, _, objectMainType, objectType, stackTotal, _, objectTexture = GetItemInfo(objectData);
 			
-			if C_ToyBox.GetToyInfo(objectID) then
+
+			if Lunar.API:IsVersionRetail() and C_ToyBox.GetToyInfo(objectID) then
 				--print(objectName.." is a toy")
 				--print("/usetoy ".. objectID)	
 			end
@@ -7018,35 +7012,36 @@ function Lunar.Button.SetDefaultAnchor(tooltip, parent, ...)
 	end
 end
 
+
 function Lunar.Button:SetTooltip(self)
 
 	if (not self) or (LunarSphereSettings.tooltipType == 0)  then
 		return;
 	end
 
-	local GameTooltip = GameTooltip;
+	local myGameTooltip = GameTooltip;
 	local catagoryStart = 7;
 
 	if ((not LunarSphereSettings.buttonData[self:GetID()].empty)) or (self:GetID() == 0) then -- and (LunarSphereSettings.debugTooltips)) then
 
-		GameTooltip:ClearLines();
+		myGameTooltip:ClearLines();
 
---		GameTooltip_SetDefaultAnchor(GameTooltip, UIParent);
+--		GameTooltip_SetDefaultAnchor(myGameTooltip, UIParent);
 --		if ((self:GetID() < 6) or ((self:GetID() > 10) and (self:GetID() < (10 + (12*5))))) then
---			GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT"); --"ANCHOR_CURSOR");
+--			myGameTooltip:SetOwner(this, "ANCHOR_TOPLEFT"); --"ANCHOR_CURSOR");
 --		else
---			GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT"); --"ANCHOR_CURSOR");
+--			myGameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT"); --"ANCHOR_CURSOR");
 --		end
---		GameTooltip:SetBackdrop(backdrop);
---		GameTooltip:SetBackdropBorderColor(0,0,0,1);
---		GameTooltip:SetBackdropColor(0,0,1,1);
---		GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT"); --"ANCHOR_CURSOR");
---		GameTooltip:SetWidth(180);
+--		myGameTooltip:SetBackdrop(backdrop);
+--		myGameTooltip:SetBackdropBorderColor(0,0,0,1);
+--		myGameTooltip:SetBackdropColor(0,0,1,1);
+--		myGameTooltip:SetOwner(this, "ANCHOR_TOPLEFT"); --"ANCHOR_CURSOR");
+--		myGameTooltip:SetWidth(180);
 		
 		Lunar.Button.tooltipSetOwner = nil; --true;
 
 --		Lunar.Button.tooltipCalled = true;
-		GameTooltip_SetDefaultAnchor(GameTooltip, self); --UIParent);
+		GameTooltip_SetDefaultAnchor(myGameTooltip, self); --UIParent);
 --		Lunar.Button.tooltipCalled = nil;
 
 --		Lunar.Button.tooltipSetOwner = true;
@@ -7055,40 +7050,40 @@ function Lunar.Button:SetTooltip(self)
 		local tooltipType = LunarSphereSettings.anchorModeLS;
 		local pos = LunarSphereSettings.anchorCornerLS +  1;
 		if (tooltipType == 0) then
---			GameTooltip_SetDefaultAnchor(GameTooltip, UIParent);
+--			GameTooltip_SetDefaultAnchor(myGameTooltip, UIParent);
 		elseif (tooltipType == 1) then
-			GameTooltip:ClearAllPoints();
-			GameTooltip:SetPoint(Lunar.Button.tooltipPos[9 - pos], _G["LSSettingsLSAnchor"], Lunar.Button.tooltipPos[pos]);
+			myGameTooltip:ClearAllPoints();
+			myGameTooltip:SetPoint(Lunar.Button.tooltipPos[9 - pos], _G["LSSettingsLSAnchor"], Lunar.Button.tooltipPos[pos]);
 		elseif (tooltipType == 2) then
-			GameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
+			myGameTooltip:SetOwner(UIParent, "ANCHOR_CURSOR");
 		else
 			pos = tooltipType - 2;	
-			GameTooltip:SetOwner(self, "ANCHOR_NONE");
-			GameTooltip:SetPoint(Lunar.Button.tooltipPos[9 - pos], self, Lunar.Button.tooltipPos[pos]);
+			myGameTooltip:SetOwner(self, "ANCHOR_NONE");
+			myGameTooltip:SetPoint(Lunar.Button.tooltipPos[9 - pos], self, Lunar.Button.tooltipPos[pos]);
 		end
 
 		if (self:GetID() == 0) then
 			if (LunarSphereSettings.buttonEditMode == true) then
-				GameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"], 1, 1, 1);
---				GameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"] .. " " .. Lunar.Locale["_EDIT_MODE_ON"], 1, 1, 1);
-				GameTooltip:AddLine(Lunar.Locale["_EDIT_MODE_ON"] .. "\n" .. Lunar.Locale["_EDIT_MODE_ON_DESC"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"], 1, 1, 1);
+--				myGameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"] .. " " .. Lunar.Locale["_EDIT_MODE_ON"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_EDIT_MODE_ON"] .. "\n" .. Lunar.Locale["_EDIT_MODE_ON_DESC"], 1, 1, 1);
 			else	
-				GameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_LS_DETAILS"], 1, 1, 1);
 			end
-			GameTooltip:AddLine("========================", 1, 1, 1);
-			GameTooltip:AddLine("CTRL: " .. Lunar.Locale["_DROPDOWN_MENU"], 1, 1, 1);
-			GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse1");
-			GameTooltip:AddLine("CTRL: " .. Lunar.Locale["_SETTINGS_MENU"], 1, 1, 1);
-			GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse2");
-			GameTooltip:AddLine("========================", 1, 1, 1);
+			myGameTooltip:AddLine("========================", 1, 1, 1);
+			myGameTooltip:AddLine("CTRL: " .. Lunar.Locale["_DROPDOWN_MENU"], 1, 1, 1);
+			myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse1");
+			myGameTooltip:AddLine("CTRL: " .. Lunar.Locale["_SETTINGS_MENU"], 1, 1, 1);
+			myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse2");
+			myGameTooltip:AddLine("========================", 1, 1, 1);
 
---			GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\Versions\\Source\\buttonSkin_scale.png");
+--			myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\Versions\\Source\\buttonSkin_scale.png");
 		else
 			if (LunarSphereSettings.buttonEditMode == true) then
-				GameTooltip:AddLine(Lunar.Locale["_CLICKS"] .. " " .. Lunar.Locale["_EDIT_MODE_ON"], 1, 1, 1);
-				GameTooltip:AddLine(Lunar.Locale["_EDIT_MODE_ON_DESC"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_CLICKS"] .. " " .. Lunar.Locale["_EDIT_MODE_ON"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_EDIT_MODE_ON_DESC"], 1, 1, 1);
 			else	
-				GameTooltip:AddLine(Lunar.Locale["_CLICKS"], 1, 1, 1);
+				myGameTooltip:AddLine(Lunar.Locale["_CLICKS"], 1, 1, 1);
 			end
 		end
 
@@ -7198,7 +7193,7 @@ function Lunar.Button:SetTooltip(self)
 						end
 
 						if (index > 1) then
-							GameTooltip:AddLine(" ", 1, 1, 1);
+							myGameTooltip:AddLine(" ", 1, 1, 1);
 						end
 
 --						if (actionType == "spell") then
@@ -7207,16 +7202,16 @@ function Lunar.Button:SetTooltip(self)
 								--print("buttonType (7184):", buttonType, ", ", actionName, ", ", actionType)
 
 								if (actionType == "item") then
-									GameTooltip:AddLine(buttonName .. (GetItemInfo(actionName) or (actionName .. " " .. Lunar.Locale["_NOT_IN_CACHE"]))  .. " " .. itemCount .. keybindText, 1, 1, 1);
+									myGameTooltip:AddLine(buttonName .. (GetItemInfo(actionName) or (actionName .. " " .. Lunar.Locale["_NOT_IN_CACHE"]))  .. " " .. itemCount .. keybindText, 1, 1, 1);
 								else
 									-- Make sure we don't show spell IDs
 									if (actionName == tostring(tonumber(actionName))) then
 										actionName = GetSpellInfo(actionName);
 									end
 										
-									GameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount .. keybindText, 1, 1, 1);
+									myGameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount .. keybindText, 1, 1, 1);
 								end
-								GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+								myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 							else
 								macroCommand = Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount .. keybindText);
 
@@ -7228,25 +7223,25 @@ function Lunar.Button:SetTooltip(self)
 --							Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount);
 
 							-- Small Tooltips
---							GameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount, 1, 1, 1);
---							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+--							myGameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount, 1, 1, 1);
+--							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --						end
 						if DrDamage and (actionType == "spell") and (LunarSphereSettings.enableDrDamageTips == true) then
 --						if DrDamage and (LunarSphereSettings.enableDrDamage == true) and (actionType == "spell") and (LunarSphereSettings.enableDrDamageTips == true) then
 							local spellID = Lunar.API:GetSpellID(actionName);
 							if (spellID) then
-								DrDamage:SetSpell(GameTooltip, spellID);
+								DrDamage:SetSpell(myGameTooltip, spellID);
 							end
 						end
 						--print("buttonType (7218):", buttonType, ", ", actionName, ", ", actionType)
 					else
 						--print("buttonType (7220):", buttonType, ", ", actionName, ", ", actionType)
 						if (buttonType == 3) then
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
-							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						elseif (buttonType == 4) then
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU2"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
-							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU2"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						end
 					end
 --				if (actionType == "spell") then
@@ -7257,10 +7252,10 @@ function Lunar.Button:SetTooltip(self)
 
 --				if (buttonType == 1) or (buttonType == 3)  then
 --					if (actionName) and not ((actionName == "") or (actionName == " "))  then
---						GameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount, 1, 1, 1);
+--						myGameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount, 1, 1, 1);
 --					else
 --						if (buttonType == 3) then
---							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE, 1, 1, 1);
+--							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE, 1, 1, 1);
 --						end
 --					end
 
@@ -7269,70 +7264,70 @@ function Lunar.Button:SetTooltip(self)
 				elseif (buttonType == 2) then
 					--print("SetTooltip (7243)")
 					if (index > 1) then
-						GameTooltip:AddLine(" ", 1, 1, 1);
+						myGameTooltip:AddLine(" ", 1, 1, 1);
 					end
-					GameTooltip:AddLine(buttonName .. "Open Menu"  .. keybindText, 1, 1, 1);
-					GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+					myGameTooltip:AddLine(buttonName .. "Open Menu"  .. keybindText, 1, 1, 1);
+					myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 				elseif (buttonType >= 10) then
 					--print("SetTooltip (7250)")
 					if (index > 1) then
-						GameTooltip:AddLine(" ", 1, 1, 1);
+						myGameTooltip:AddLine(" ", 1, 1, 1);
 					end
 					-- Random mount tooltip
 --					if (buttonType > 82) and (buttonType < 90) then
---						GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_MOUNT" .. ((buttonType - 80) + 1)]  .. keybindText, 1, 1, 1);
---						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+--						myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_MOUNT" .. ((buttonType - 80) + 1)]  .. keybindText, 1, 1, 1);
+--						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --					elseif (buttonType >= 90) and (buttonType < 100) then
 					if (buttonType >= 90) and (buttonType < 100) then
 						local usedSlots, totalSlots = Lunar.Button:GetBagCountData(buttonType);
 						-- Don't show count on keyring
 						if (buttonType == 96) then
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_BAG" .. ((buttonType - 90) + 1)] .. keybindText, 1, 1, 1);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_BAG" .. ((buttonType - 90) + 1)] .. keybindText, 1, 1, 1);
 						else
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_BAG" .. ((buttonType - 90) + 1)] .. " (" .. usedSlots .. "/" .. totalSlots .. ")"  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_BAG" .. ((buttonType - 90) + 1)] .. " (" .. usedSlots .. "/" .. totalSlots .. ")"  .. keybindText, 1, 1, 1);
 						end
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 					elseif (buttonType >= 100) and (buttonType < 110) then
-						GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_MENUBAR" .. ((buttonType - 100) + 1)]  .. keybindText, 1, 1, 1);
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_MENUBAR" .. ((buttonType - 100) + 1)]  .. keybindText, 1, 1, 1);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 					elseif (buttonType >= 52) and (buttonType < 60)  then
-						GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_ENERGY" .. ((buttonType - 50) + 1)] .. ":"  .. keybindText, 1, 1, 1);
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_ENERGY" .. ((buttonType - 50) + 1)] .. ":"  .. keybindText, 1, 1, 1);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						if not ((actionName == "") or (actionName == "item: ") or (actionName == " ") or (actionName == nil)) then
-							GameTooltip:AddLine(actionName .. " " .. itemCount, 0.7, 0.7, 1);
+							myGameTooltip:AddLine(actionName .. " " .. itemCount, 0.7, 0.7, 1);
 						else
-							GameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
+							myGameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
 						end
 					elseif (buttonType >= 110) and (buttonType < 130) then
 						if (buttonType < 120) then
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_TRADE" .. ((buttonType - 110) + 1)] .. ":"  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_TRADE" .. ((buttonType - 110) + 1)] .. ":"  .. keybindText, 1, 1, 1);
 						else
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_WEAPONAPPLY" .. ((buttonType - 120) + 1)] .. ":"  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_WEAPONAPPLY" .. ((buttonType - 120) + 1)] .. ":"  .. keybindText, 1, 1, 1);
 						end
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						if not ((actionName == "") or (actionName == "item: ") or (actionName == " ") or (actionName == nil)) then
 							actionName = GetItemInfo(actionName);
 							if (actionName == nil) then
-								GameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
+								myGameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
 							else
-								GameTooltip:AddLine(actionName .. " " .. itemCount, 0.7, 0.7, 1);
+								myGameTooltip:AddLine(actionName .. " " .. itemCount, 0.7, 0.7, 1);
 							end
 						else
-							GameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
+							myGameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
 						end
 					elseif (buttonType == 132) then
-						GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_INVENTORY3"] .. keybindText, 1, 1, 1);
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_INVENTORY3"] .. keybindText, 1, 1, 1);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 					elseif (buttonType == 133) then
-						GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_INVENTORY4"] .. keybindText, 1, 1, 1);
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
-						GameTooltip:AddLine(buttonName .. string.gsub(actionName, "/equipset ", ""), 0.7, 0.7, 1);
+						myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_INVENTORY4"] .. keybindText, 1, 1, 1);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddLine(buttonName .. string.gsub(actionName, "/equipset ", ""), 0.7, 0.7, 1);
 					elseif (buttonType >= 140) and (buttonType < 150) then
 						if (GetPetActionInfo(buttonType - 139)) then
 							macroCommand = Lunar.API:MultiAddToTooltip("pet", tostring(buttonType - 139), index, itemCount  .. keybindText);
 						else
-							GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_PET" .. (buttonType - 139)] .. keybindText, 1, 1, 1);
-							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_PET" .. (buttonType - 139)] .. keybindText, 1, 1, 1);
+							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						end
 					elseif (actionType == "item") then
 						-- Check to see if there is a texture attached (which means we have it in stock). If
@@ -7342,8 +7337,8 @@ function Lunar.Button:SetTooltip(self)
 
 						if (buttonTexture) and (GetItemCount(actionName) > 0) then
 							if (LunarSphereSettings.tooltipType == 2) then
-								GameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount  .. keybindText, 1, 1, 1);
-								GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+								myGameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount  .. keybindText, 1, 1, 1);
+								myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 							else
 								Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount .. keybindText);
 --macroCommand = true;
@@ -7351,23 +7346,23 @@ function Lunar.Button:SetTooltip(self)
 						else
 							if (buttonType >= 50) and (buttonType < 52) then --60) then
 --								if (buttonType < 52) then
-									GameTooltip:AddLine(buttonName .. Lunar.Locale["_ENERGY_DRINK"]  .. ": " .. Lunar.Locale["OUT_OF_STOCK"]  .. keybindText, 1, 1, 1);
-									GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+									myGameTooltip:AddLine(buttonName .. Lunar.Locale["_ENERGY_DRINK"]  .. ": " .. Lunar.Locale["OUT_OF_STOCK"]  .. keybindText, 1, 1, 1);
+									myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --								else
---									GameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_ENERGY" .. ((buttonType - 50) + 1)] .. ":"  .. keybindText, 1, 1, 1);
---									GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
---									GameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
+--									myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_ENERGY" .. ((buttonType - 50) + 1)] .. ":"  .. keybindText, 1, 1, 1);
+--									myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+--									myGameTooltip:AddLine(Lunar.Locale["OUT_OF_STOCK"], 1.0, 0, 0);
 --								end
 							else
-								GameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][math.floor(buttonType / 10) + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"]  .. keybindText, 1, 1, 1);
-								GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+								myGameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][math.floor(buttonType / 10) + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"]  .. keybindText, 1, 1, 1);
+								myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 							end
 						end
 					-- Spell mount support
 					elseif (actionType == "spell") then
 						if (LunarSphereSettings.tooltipType == 2) then
-							GameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount  .. keybindText, 1, 1, 1);
-							GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+							myGameTooltip:AddLine(buttonName .. actionName .. " " .. itemCount  .. keybindText, 1, 1, 1);
+							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						else
 							Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount  .. keybindText);
 --macroCommand = true;
@@ -7382,26 +7377,26 @@ function Lunar.Button:SetTooltip(self)
 						else
 							actionName = GetItemInfo(GetInventoryItemLink("player", buttonType - 117) or ("")) or ("");
 						end
-						GameTooltip:AddLine(buttonName .. Lunar.Locale[Lunar.Object.dropdownData["Button_Type"][math.floor(buttonType / 10) + catagoryStart][3] .. (math.fmod(buttonType, 10) + 1)] .. keybindText, 1, 1, 1);
-						GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+						myGameTooltip:AddLine(buttonName .. Lunar.Locale[Lunar.Object.dropdownData["Button_Type"][math.floor(buttonType / 10) + catagoryStart][3] .. (math.fmod(buttonType, 10) + 1)] .. keybindText, 1, 1, 1);
+						myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 						if (actionName ~= "") then
 							if (buttonType < 130) then
-								GameTooltip:AddLine("" .. buttonName .. actionName .. " (" .. (GetItemCount(actionName) or (0)) .. ")", 1, 1, 1);
+								myGameTooltip:AddLine("" .. buttonName .. actionName .. " (" .. (GetItemCount(actionName) or (0)) .. ")", 1, 1, 1);
 							else
-								GameTooltip:AddLine("" .. buttonName .. actionName, 0.7, 0.7, 1);
+								myGameTooltip:AddLine("" .. buttonName .. actionName, 0.7, 0.7, 1);
 							end
 						else
 							if (buttonType < 130) then
-								GameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][2 + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
+								myGameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][2 + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
 							else
-								GameTooltip:AddLine(buttonName .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
+								myGameTooltip:AddLine(buttonName .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
 							end
 						end								
 						if (actionName2 ~= "") then
-							GameTooltip:AddLine("" .. buttonName .. actionName2 .. " (" .. (GetItemCount(actionName2) or (0)) .. ")", 1, 1, 1);
+							myGameTooltip:AddLine("" .. buttonName .. actionName2 .. " (" .. (GetItemCount(actionName2) or (0)) .. ")", 1, 1, 1);
 						else
 							if (buttonType < 130) then
-								GameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][1 + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
+								myGameTooltip:AddLine(buttonName .. Lunar.Object.dropdownData["Button_Type"][1 + catagoryStart][1] .. ": " .. Lunar.Locale["OUT_OF_STOCK"], 1, 1, 1);
 							end
 						end								
 					end
@@ -7409,42 +7404,45 @@ function Lunar.Button:SetTooltip(self)
 
 				--print("SetTooltip (7383)")
 --
---				GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+--				myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --]]
 			else
 -- Simple Tooltip
 --				if (index == 2) and (Lunar.Button:GetButtonType(self:GetID(), stance, 3)) then
---					GameTooltip:AddLine(" ", 1, 1, 1);	
---					GameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
+--					myGameTooltip:AddLine(" ", 1, 1, 1);	
+--					myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 --				end
 			end					
 		end
 		Lunar.Button.tooltipCalled = true;
 
-		GameTooltip:Show();
+		myGameTooltip:Show();
 
 		--print("macroCommand : 7389, ", macroCommand)
 
 		if (macroCommand) then
 			--print("buttonType (7406)")
-			GameTooltip:SetWidth(GameTooltip:GetWidth() + 32);
+			myGameTooltip:SetWidth(myGameTooltip:GetWidth() + 32);
 		else
 			--print("buttonType (7409)")
-			GameTooltip:SetWidth(GameTooltip:GetWidth() + 16);-- + 48);
+			myGameTooltip:SetWidth(myGameTooltip:GetWidth() + 16);-- + 48);
 			--print("buttonType (7411)")
 		end
 		--print("buttonType (7412)")
---		GameTooltip:Show();
+--		myGameTooltip:Show();
 		if (LunarSphereSettings.fadeOutTooltips) then
 
 			-- Check for CowTip auto-hide stuff... since it will hide our tooltip if it is set to hide and not
 			-- fade out
 			if not (CowTip and CowTip:IsModuleActive("Fade") and (CowTip:GetDatabaseNamespace("Fade").profile.otherFrames == "hide")) then
-				GameTooltip:FadeOut();
+				myGameTooltip:FadeOut();
 			end
 		end
 	end
 end
+
+
+
 
 function Lunar.Button:UpdateBindingText(button)
 
