@@ -1,4 +1,17 @@
 LunarSphere Public Release
+Version 1.55 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed GameTooltip:GetBackdrop() for Retail and Classic.
+* Fixed exception for the Classic client where GetSpellLink ionly returns the
+  spell name and not a link.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.54 Changelog
 
 ======================
