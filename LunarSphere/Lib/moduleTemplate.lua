@@ -8093,7 +8093,7 @@ function Lunar.Template:ParseTemplateData()
 								
 									-- If no spell was found, check if it was a spell mount
 									-- (Spell mounts are saved with just the spell ID for the name)
-									if not newName and not isNotLearned then
+									if Lunar.API:IsVersionRetail() and not newName and not isNotLearned then
 										local mountIDs = C_MountJournal.GetMountIDs()
 										for key, value in pairs(mountIDs) do	
 											scanName, spellID, scanTexture = C_MountJournal.GetMountInfoByID(value);
@@ -8106,7 +8106,7 @@ function Lunar.Template:ParseTemplateData()
 									end
 
 									-- If no spell was found, check if it was a companion pet
-									if not newName and not isNotLearned then
+									if Lunar.API:IsVersionRetail() and not newName and not isNotLearned then
 										for i = 1, GetNumCompanions("critter") do 
 											_, _, scanName, scanTexture = GetCompanionInfo("critter", i);
 											scanTexture = string.lower(scanTexture);
