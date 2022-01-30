@@ -719,6 +719,118 @@ function Lunar.Items:UpdateItemCounts()
 	end
 end
 
+-- Returns the ID for a mount item
+function Lunar.Items:getMountID(mount)
+
+	local itemID
+	
+	if type(mount) == "number" then
+		itemID = mount
+	elseif mount.spellMount then
+		-- This code is a fucking mess, mount.itemID doesn't holds the ID if
+		-- it's a spellMount.
+		itemID = tonumber(string.sub(mount.name, 3))
+	else
+		itemID = mount.itemID
+	end
+
+	return itemID
+end
+
+-- Global table used in ClassicIsMountEpic and ClassicIsMount
+-- According to wowhead, the IDs seem to hold across all three clients. 
+tableMountsIDNonEpic = {
+	2414,  -- pinto-bridle
+	5656,  -- brown-horse-bridle
+	5655,  -- chestnut-mare-bridle
+	2411,  -- black-stallion-bridle
+	5872,  -- brown-ram
+	5864,  -- gray-ram
+	5873,  -- white-ram
+	8632,  -- reins-of-the-spotted-frostsaber
+	8631,  -- reins-of-the-striped-frostsaber
+	8629,  -- reins-of-the-striped-nightsaber
+	8595,  -- blue-mechanostrider
+	13321, -- green-mechanostrider
+	8563,  -- red-mechanostrider
+	13322, -- unpainted-mechanostrider
+	28481, -- brown-elekk
+	29744, -- gray-elekk
+	29743, -- purple-elekk
+	5665,  -- horn-of-the-dire-wolf
+	1132,  -- horn-of-the-timber-wolf
+	5668,  -- horn-of-the-brown-wolf
+	13332, -- blue-skeletal-horse
+	13333, -- brown-skeletal-horse
+	13331, -- red-skeletal-horse
+	15290, -- brown-kodo
+	15277, -- gray-kodo
+	8588,  -- whistle-of-the-emerald-raptor
+	8591,  -- whistle-of-the-turquoise-raptor
+	8592,  -- whistle-of-the-violet-raptor
+	29221, -- black-hawkstrider
+	29222, -- purple-hawkstrider
+	28927, -- red-hawkstrider
+	29220, -- blue-hawkstrider
+	21218, -- blue-qiraji-resonating-crystal
+	21323, -- green-qiraji-resonating-crystal
+	21324, -- yellow-qiraji-resonating-crystal
+	21321, -- red-qiraji-resonating-crystal
+	33976, -- brewfest-ram
+	37827, -- brewfest-kodo
+	25472, -- snowy-gryphon
+	25471, -- ebon-gryphon
+	25470, -- golden-gryphon
+	25475, -- blue-windrider
+	25476, -- green-windrider
+	25474, -- tawny-windrider
+	34060  -- flying-machine-control
+}
+
+-- Global table used in ClassicIsMount
+-- According to wowhead, the IDs seem to hold across all three clients. 
+tableMountsIDEpic = {
+	18777,  -- swift-brown-steed
+	18776,  -- swift-palomino
+	18778,  -- swift-white-steed
+	18241,  -- black-war-steed-bridle
+	18244,  -- black-war-ram
+	18786,  -- swift-brown-ram
+	18787,  -- swift-gray-ram
+	18785,  -- swift-white-ram
+	18766,  -- reins-of-the-swift-frostsaber
+	18767,  -- reins-of-the-swift-mistsaber
+	18902,  -- reins-of-the-swift-stormsaber
+	18772,  -- swift-green-mechanostrider
+	18773,  -- swift-white-mechanostrider
+	18774,  -- swift-yellow-mechanostrider
+	18242,  -- reins-of-the-black-war-tiger
+	18243,  -- black-battlestrider
+	19030,  -- stormpike-battle-charger
+	13086,  -- reins-of-the-winterspring-frostsaber
+	18796,  -- horn-of-the-swift-brown-wolf
+	18798,  -- horn-of-the-swift-gray-wolf
+	18797,  -- horn-of-the-swift-timber-wolf
+	13334,  -- green-skeletal-warhorse
+	18791,  -- purple-skeletal-warhorse
+	18794,  -- great-brown-kodo
+	18795,  -- great-gray-kodo
+	18793,  -- great-white-kodo
+	18788,  -- swift-blue-raptor
+	18789,  -- swift-olive-raptor
+	18790,  -- swift-orange-raptor
+	18245,  -- horn-of-the-black-war-wolf
+	18248,  -- red-skeletal-warhorse
+	18247,  -- black-war-kodo
+	18246,  -- whistle-of-the-black-war-raptor
+	19029,  -- horn-of-the-frostwolf-howler
+	13335,  -- deathchargers-reins
+	19872,  -- swift-razzashi-raptor
+	19902,  -- swift-zulian-tiger
+	21176,  -- black-qiraji-resonating-crystal
+}
+
+
 -- Returns true if the mount is a flying mount. 
 -- Sets the `isFlying` property in the mount.
 --
@@ -768,92 +880,77 @@ end
 -- By checking the ID, we avoid handling the localized mount names.
 function Lunar.Items:ClassicIsMountEpic(mount)
 
---	print("Lunar.Items:ClassicIsMountEpic 774 : ", itemID)
+	local itemID = Lunar.Items:getMountID(mount)
 
-	-- This code is a fucking mess, mount.itemID doesn't holds the ID if
-	-- it's a spellMount.
-	if mount.spellMount then
-		itemID = tonumber(string.sub(mount.name, 3))
-	else
-		itemID = mount.itemID
-	end
+--	print("Lunar.Items:ClassicIsMountEpic 872 : ", itemID, tContains(tableMountsIDEpic, itemID))
 
-	-- According to wowhead, the IDs seem to hold across all three clients. 
-	-- As the number of non-epic mounts is smaller than the number of epic
-	-- mounts, we'll check if the mount is not in the non-epic table and just
-	-- assume it's epic.
-	local mounts = {
-		2414,  -- pinto-bridle
-		5656,  -- brown-horse-bridle
-		5655,  -- chestnut-mare-bridle
-		5872,  -- brown-ram
-		5864,  -- gray-ram
-		5873,  -- white-ram
-		8632,  -- reins-of-the-spotted-frostsaber
-		8631,  -- reins-of-the-striped-frostsaber
-		8629,  -- reins-of-the-striped-nightsaber
-		8595,  -- blue-mechanostrider
-		13321, -- green-mechanostrider
-		8563,  -- red-mechanostrider
-		13322, -- unpainted-mechanostrider
-		28481, -- brown-elekk
-		29744, -- gray-elekk
-		29743, -- purple-elekk
-		5665,  -- horn-of-the-dire-wolf
-		1132,  -- horn-of-the-timber-wolf
-		5668,  -- horn-of-the-brown-wolf
-		13332, -- blue-skeletal-horse
-		13333, -- brown-skeletal-horse
-		13331, -- red-skeletal-horse
-		15290, -- brown-kodo
-		15277, -- gray-kodo
-		8588,  -- whistle-of-the-emerald-raptor
-		8591,  -- whistle-of-the-turquoise-raptor
-		8592,  -- whistle-of-the-violet-raptor
-		29221, -- black-hawkstrider
-		29222, -- purple-hawkstrider
-		28927, -- red-hawkstrider
-		29220, -- blue-hawkstrider
-		21218, -- blue-qiraji-resonating-crystal
-		21323, -- green-qiraji-resonating-crystal
-		21324, -- yellow-qiraji-resonating-crystal
-		21321, -- red-qiraji-resonating-crystal
-		33976, -- brewfest-ram
-		37827, -- brewfest-kodo
-		25472, -- snowy-gryphon
-		25471, -- ebon-gryphon
-		25470, -- golden-gryphon
-		25475, -- blue-windrider
-		25476, -- green-windrider
-		25474, -- tawny-windrider
-		34060  -- flying-machine-control
-	}
-
-	local not_epic = tContains(mounts, itemID)
-	-- Mount was found in the table above, just return false
-	if( not_epic ) then
-		return false
+	if ( tContains(tableMountsIDEpic, itemID) ) then
+		return true
 	end
 
 	-- mount can be a spell mount
+	local spell_mounts = {
+		23214, -- summon-charger : Human,  Dwarf, Draenei
+		34767, -- summon-charger : Blood Elf
+		5784, -- summon-felsteed
+	}
+
+--	print("Lunar.Items:ClassicIsMountEpic 891 : ", itemID, mount.spellMount, tContains(spell_mounts, itemID) )
+
+	-- Mount was found in the table above, just return false
+	if( type(mount) ~= "number" and mount.spellMount and tContains(spell_mounts, itemID) ) then
+		return true
+	end
+
+	-- Not an epic mount, return false
+	return false
+
+end
+
+-- Returns true if the item is a mount.
+--
+-- The itemSubType from GetItemInfo() for mounts in Classic is 'Junk',
+-- the itemSubType from GetItemInfo() for mounts in BCC is 'Mount'.
+-- Thanks Blizzard!
+-- By checking the ID, we avoid handling the localized mount names.
+function Lunar.Items:ClassicIsMount(mount)
+
+
+	local itemID = Lunar.Items:getMountID(mount)
+
+	-- If it's an epic mount, it's a mount
+	if Lunar.Items:ClassicIsMountEpic(mount) then
+		return true
+	end
+
+	-- If it's an AQ40 mount, it's a mount
+	if Lunar.Items:ClassicIsMountAQ40(mount) then
+		return true
+	end
+
+	-- Check for non-epic mounts
+	if tContains(tableMountsIDNonEpic, itemID) then
+		return true
+	end
+
+	-- Not an item mount, could be a spell mount.
+	-- Epic spell mounts are handled in ClassicIsMountEpic, so we just check the
+	-- regular mounts here.
 	local spell_mounts = {
 		13819, -- summon-warhorse
 		34769, -- summon-warhorse (Blood Elf version)
 		5784, -- summon-felsteed
 	}
 
-	not_epic = tContains(spell_mounts, itemID)
-
-
 --	print("Lunar.Items:ClassicIsMountEpic 849 : ", itemID, mount.spellMount, not_epic )
 
-	-- Mount was found in the table above, just return false
-	if( mount.spellMount and not_epic ) then
-		return false
+	-- Mount was found in the table above, just return true
+	if( type(mount) ~= "number" and mount.spellMount and tContains(spell_mounts, itemID) ) then
+		return true
 	end
 
-	-- Epic mount, return true
-	return true
+	-- Not a mount
+	return false
 
 end
 
@@ -861,11 +958,7 @@ end
 -- By checking the ID, we avoid handling the localized mount names.
 function Lunar.Items:ClassicIsMountAQ40(mount)
 
-	if mount.spellMount then
-		itemID = tonumber(string.sub(mount.name, 3))
-	else
-		itemID = mount.itemID
-	end
+	local itemID = Lunar.Items:getMountID(mount)
 
 	local mounts = {
 		21218, -- blue-qiraji-resonating-crystal
@@ -882,11 +975,7 @@ end
 -- By checking the ID, we avoid handling the localized mount names.
 function Lunar.Items:ClassicIsMountEpic310(mount)
 
-	if mount.spellMount then
-		itemID = tonumber(string.sub(mount.name, 3))
-	else
-		itemID = mount.itemID
-	end
+	local itemID = Lunar.Items:getMountID(mount)
 
 	local mounts = {
 		32458, -- ashes-of-alar
@@ -969,8 +1058,12 @@ function Lunar.Items:UpdateLowHighItems()
 		highNoCooldown = nil;
 		itemType = itemTableNames[nameIndex];
 
+		--print("972 Lunar.Items:UpdateLowHighItems itemType : ", itemType)
+
 		-- If there are items in this catagory ...
 		if (itemType ~= "companion") and (itemType ~= "energyDrink") and (itemData[itemType][1]) then
+
+			--print("977 Lunar.Items:UpdateLowHighItems getn : ", table.getn(itemData[itemType]))
 
 			-- Cycle through each item and assign its count.
 			for index = 1, table.getn(itemData[itemType]) do 
@@ -1030,13 +1123,13 @@ function Lunar.Items:UpdateLowHighItems()
 							local _mount = itemData["mount"][index]
 							local MountType = _mount.count;
 
-							--print("Lunar.Items:UpdateLowHighItems MountType : ", MountType)
-							--print("mount name: ", _mount.name, " (", index, ")")
-							--print("mount itemID: ", _mount.itemID)
-							--print("mount isFlying: ", _mount.isFlying)
-							--print("mount isEpic: ", _mount.isEpic)
-							--print("mount isEpic310: ", _mount.isEpic310)
-							--print("mount isAQ40: ", _mount.isAQ40)
+							--print("1033 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
+							--print("    name: ", _mount.name, " (", index, ")")
+							--print("    itemID: ", _mount.itemID)
+							--print("    isFlying: ", _mount.isFlying)
+							--print("    isEpic: ", _mount.isEpic)
+							--print("    isEpic310: ", _mount.isEpic310)
+							--print("    isAQ40: ", _mount.isAQ40)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
@@ -1845,6 +1938,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			-- Grab the item ID 
 			itemID = Lunar.API:GetItemID(itemLink);
 
+			--print("1852 itemName: ", itemName, ", itemRarity: ", itemRarity, ", itemLevel: ", itemLevel, ", itemMinLevel: ", itemMinLevel, ", itemType: ", itemType, ", itemSubType: ", itemSubType, ", itemStackCount: ", itemStackCount, ", itemID: ", itemID)
+
 			mountType = nil;
 			mountFound = nil;
 
@@ -2054,7 +2149,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			elseif (itemSpell == searchData.hearthstone) then
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
 			-- Classic and BCC mounts are items, handle them here
-			elseif Lunar.API:IsVersionRetail() == false and itemType == "Miscellaneous" and itemSubType == "Mount" then
+			-- The Classic API returns itemSubType == "Junk" :-(
+			elseif Lunar.API:IsVersionRetail() == false and itemType == "Miscellaneous" and ( itemSubType == "Mount" or Lunar.Items:ClassicIsMount(itemID) ) then
 				-- I'm pretty sure all mounts are unique, but we'll count just in case
 				_, itemCount = GetContainerItemInfo(bagID, slot);
 				Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
@@ -2174,7 +2270,6 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 				-- some mounts).
 
 				if (tableName == "mount") then
-
 					local pos = table.getn(itemData[tableName])
 					if (itemLink ~= "spellMount") then
 						--print("Lunar.Items:ModifyItemDataTable 1962", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, GetItemSpell(itemName))
