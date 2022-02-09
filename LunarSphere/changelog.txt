@@ -1,4 +1,26 @@
 LunarSphere Public Release
+Version 1.57 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Updated the ToC interface version for the Classic client.
+
+======================
+Known Issues
+======================
+
+* The mount buttons might not work for spell mounts: Summon Warhorse, Summon
+  Charger, Summon Felsteed, and Summon Dreadsteed. The workaround is to
+  create a regular button.
+
+If you play a palladin or warlock and are willing to help me fix this, please
+post in the forum.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.56 Changelog
 
 ======================
