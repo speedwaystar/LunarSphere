@@ -1,4 +1,26 @@
 LunarSphere Public Release
+Version 1.58 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed random mount button for Amani War Bear in the BCC client.
+
+======================
+Known Issues
+======================
+
+* The mount buttons might not work for spell mounts: Summon Warhorse, Summon
+  Charger, Summon Felsteed, and Summon Dreadsteed. The workaround is to
+  create a regular button.
+
+If you play a palladin or warlock and are willing to help me fix this, please
+post in the forum.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.57 Changelog
 
 ======================

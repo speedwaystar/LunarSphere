@@ -737,7 +737,7 @@ function Lunar.Items:getMountID(mount)
 	return itemID
 end
 
--- Global table used in ClassicIsMountEpic and ClassicIsMount
+-- Global table used in ClassicIsMount
 -- According to wowhead, the IDs seem to hold across all three clients. 
 tableMountsIDNonEpic = {
 	2414,  -- pinto-bridle
@@ -787,7 +787,7 @@ tableMountsIDNonEpic = {
 	34060  -- flying-machine-control
 }
 
--- Global table used in ClassicIsMount
+-- Global table used in ClassicIsMountEpic
 -- According to wowhead, the IDs seem to hold across all three clients. 
 tableMountsIDEpic = {
 	18777,  -- swift-brown-steed
@@ -828,8 +828,8 @@ tableMountsIDEpic = {
 	19872,  -- swift-razzashi-raptor
 	19902,  -- swift-zulian-tiger
 	21176,  -- black-qiraji-resonating-crystal
+	33809,  -- amani-war-bear
 }
-
 
 -- Returns true if the mount is a flying mount. 
 -- Sets the `isFlying` property in the mount.
@@ -1123,7 +1123,7 @@ function Lunar.Items:UpdateLowHighItems()
 							local _mount = itemData["mount"][index]
 							local MountType = _mount.count;
 
-							--print("1033 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
+							--print("1126 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
 							--print("    name: ", _mount.name, " (", index, ")")
 							--print("    itemID: ", _mount.itemID)
 							--print("    isFlying: ", _mount.isFlying)
