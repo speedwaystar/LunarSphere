@@ -1,0 +1,13 @@
+package-as: LunarSphere
+enable-toc-creation: yes
+
+manual-changelog:
+  filename: LunarSphere/changelog.txt
+  markup-type: plain
+
+ignore:
+  - README.md
+
+move-folders:
+  LunarSphere/LunarSphere: LunarSphere
+
