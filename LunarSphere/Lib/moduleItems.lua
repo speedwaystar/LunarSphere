@@ -829,6 +829,57 @@ tableMountsIDEpic = {
 	19902,  -- swift-zulian-tiger
 	21176,  -- black-qiraji-resonating-crystal
 	33809,  -- amani-war-bear
+	44157,  -- turbo-charged-flying-machine
+	29224, -- swift-purple-hawkstrider
+	29223, -- swift-green-hawkstrider
+	28936, -- swift-pink-hawkstrider
+	29745, -- great-blue-elekk
+	29747, -- great-purple-elekk
+	29746, -- great-green-elekk
+	25529, -- swift-purple-gryphon
+	25473, -- swift-blue-gryphon
+	25527, -- swift-red-gryphon
+	25528, -- swift-green-gryphon
+	25477, -- swift-red-windrider
+	25531, -- swift-green-windrider
+	25532, -- swift-yellow-windrider
+	25533, -- swift-purple-windrider
+	29471, -- reins-of-the-black-war-tiger
+	29467, -- black-war-ram
+	29465, -- black-battlestrider
+	29466, -- black-war-kodo
+	29472, -- whistle-of-the-black-war-raptor
+	29469, -- horn-of-the-black-war-wolf
+	29470, -- red-skeletal-warhorse
+	34129, -- swift-warstrider
+	28915, -- reins-of-the-dark-riding-talbuk
+	29228, -- reins-of-the-dark-war-talbuk
+	32768, -- reins-of-the-raven-lord
+	35513, -- swift-white-hawkstrider
+	30480, -- fiery-warhorses-reins
+	33977, -- swift-brewfest-ram
+	37828, -- great-brewfest-kodo
+	37012, -- the-horsemans-reins
+	33999, -- cenarion war hippogryph
+	32858, -- reins of the azure netherwing drake
+	32857, -- reins of the onyx netherwing drake
+	32860, -- reins of the purple netherwing drake
+	32859, -- reins of the cobalt netherwing drake
+	32862, -- reins of the violet netherwing drake
+	32861, -- reins of the veridian netherwing drake
+	31830, -- reins-of-the-cobalt-riding-talbuk
+	31835, -- reins-of-the-white-riding-talbuk
+	31833, -- reins-of-the-tan-riding-talbuk
+	31832, -- reins-of-the-silver-riding-talbuk
+	29227, -- reins-of-the-cobalt-war-talbuk
+	29103, -- reins-of-the-white-war-talbuk
+	29105, -- reins-of-the-tan-war-talbuk
+	29229, -- reins-of-the-silver-war-talbuk
+	32316, -- purple riding nether ray
+	32319, -- blue riding nether ray
+	32317, -- red riding nether ray
+	32314, -- green riding nether ray
+	32318  -- silver riding nether ray
 }
 
 -- Returns true if the mount is a flying mount. 
@@ -836,13 +887,8 @@ tableMountsIDEpic = {
 --
 -- By checking the ID, we avoid handling the localized mount names.
 function Lunar.Items:BCCIsFlyingMount(mount) 
-	-- This code is a fucking mess, mount.itemID doesn't holds the ID if
-	-- it's a spellMount.
-	if mount.spellMount then
-		itemID = tonumber(string.sub(mount.name, 3))
-	else
-		itemID = mount.itemID
-	end
+
+	local itemID = Lunar.Items:getMountID(mount)
 
 	local items = {
 		25474, -- tawny windrider
@@ -871,7 +917,14 @@ function Lunar.Items:BCCIsFlyingMount(mount)
 		32317, -- red riding nether ray
 		32314, -- green riding nether ray
 		32318, -- silver riding nether ray
-		32458  -- ashes of alar
+		32458, -- ashes of alar
+		34060, -- flying-machine-control
+		44157, -- turbo-charged-flying-machine
+		30609, -- swift-nether-drake
+		37676, -- vengeful-nether-drake
+		34092, -- merciless-nether-drake
+		43516  -- brutal-nether-drake
+
 	}
 	return tContains(items, itemID)
 end
@@ -930,6 +983,10 @@ function Lunar.Items:ClassicIsMount(mount)
 
 	-- Check for non-epic mounts
 	if tContains(tableMountsIDNonEpic, itemID) then
+		return true
+	end
+
+	if Lunar.Items:BCCIsFlyingMount(mount) then
 		return true
 	end
 
@@ -2149,8 +2206,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			elseif (itemSpell == searchData.hearthstone) then
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
 			-- Classic and BCC mounts are items, handle them here
-			-- The Classic API returns itemSubType == "Junk" :-(
-			elseif Lunar.API:IsVersionRetail() == false and itemType == "Miscellaneous" and ( itemSubType == "Mount" or Lunar.Items:ClassicIsMount(itemID) ) then
+			elseif ( Lunar.API:IsVersionRetail() == false and Lunar.Items:ClassicIsMount(itemID) ) then
 				-- I'm pretty sure all mounts are unique, but we'll count just in case
 				_, itemCount = GetContainerItemInfo(bagID, slot);
 				Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
