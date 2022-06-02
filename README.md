@@ -150,10 +150,8 @@ features that you'd like to be added.
 
 ### User Manual and various help that might be needed
 
-LunarSphere doesn't have a usre manual, but [Dreambound's blog post]
-(http://dreambound-druid.blogspot.com/2009/03/lunarsphere.html) is pretty
+LunarSphere doesn't have a usre manual, but [Dreambound's blog post](http://dreambound-druid.blogspot.com/2009/03/lunarsphere.html) is pretty
 close to one.
-
 
 LunarSphere can be overwhelming at first. Lots of beta testers who helped with
 the project have said that after getting used to it, LunarSphere became

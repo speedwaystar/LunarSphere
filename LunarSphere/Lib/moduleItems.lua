@@ -919,7 +919,7 @@ function Lunar.Items:BCCIsFlyingMount(mount)
 		32318, -- silver riding nether ray
 		32458, -- ashes of alar
 		34060, -- flying-machine-control
-		44157, -- turbo-charged-flying-machine
+		34061, -- turbo-charged-flying-machine-control
 		30609, -- swift-nether-drake
 		37676, -- vengeful-nether-drake
 		34092, -- merciless-nether-drake
@@ -968,8 +968,8 @@ end
 -- By checking the ID, we avoid handling the localized mount names.
 function Lunar.Items:ClassicIsMount(mount)
 
-
 	local itemID = Lunar.Items:getMountID(mount)
+	--print("Lunar.Items:ClassicIsMount 922 : ", itemID)
 
 	-- If it's an epic mount, it's a mount
 	if Lunar.Items:ClassicIsMountEpic(mount) then
@@ -1159,8 +1159,7 @@ function Lunar.Items:UpdateLowHighItems()
 							end
 						end
 
--- Mount Stuff is Here.
-
+-- Mount Stuff is Here: only valid for the Retail client.
 -- Abyssal seahorse = 75207
 --mountType 
 --    number - a number indicating the capabilities of the mount; known values include:
@@ -1176,11 +1175,13 @@ function Lunar.Items:UpdateLowHighItems()
 --        269 for Azure and Crimson Water Strider
 --        284 for Chauffeured Mekgineer's Chopper and Chauffeured Mechano-Hog
 
+
+
 						if (itemType == "mount") then -- Sets up the various mount databases
 							local _mount = itemData["mount"][index]
 							local MountType = _mount.count;
 
-							--print("1126 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
+							--print("1184 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
 							--print("    name: ", _mount.name, " (", index, ")")
 							--print("    itemID: ", _mount.itemID)
 							--print("    isFlying: ", _mount.isFlying)
@@ -1212,8 +1213,10 @@ function Lunar.Items:UpdateLowHighItems()
 												table.insert(flyingMountsEpic310, index);
 											end
 										else
+											--print("1216 UpdateLowHighItems insert groundMounts index", index)
 											table.insert(groundMounts, index);
 											if _mount.isEpic then
+												--print("1219 UpdateLowHighItems insert groundMountsEpic index", index)
 												table.insert(groundMountsEpic, index);
 											end
 										end
@@ -1416,11 +1419,11 @@ function Lunar.Items:UpdateLowHighItems()
 			end
 
 			--print("itemType: 1070 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
-			--print("itemType: 1071 ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
-			--print("itemType: 1072 ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
-			--print("itemType: 1073 ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
-			--print("itemType: 1074 ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
-			--print("itemType: 1075 ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
+			--print("RndGround:     ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
+			--print("RndFly:        ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
+			--print("RndSwim        ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
+			--print("RndStrider     ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
+			--print("RndFavourite   ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
 
 			itemStrength[itemType][1] = RndGround;		-- ground mounts
 			itemStrength[itemType][2] = RndFly;			-- flying mounts
@@ -1829,6 +1832,8 @@ function Lunar.Items:ClassicScanForSpellMounts()
 			local mountType = 248
 			local itemLevel = UnitLevel("player")
 
+			--print("1835 ClassicScanForSpellMounts : ", GetSpellInfo(spellID))
+
 			-- All mounts
 			Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
 		end
@@ -1977,15 +1982,20 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 		-- Grab the slot's item link
 		itemLink = GetContainerItemLink(bagID, slot);
 
+		--print("1925 Lunar.Items:UpdateBagContents itemLink : ", itemLink)
+
 		-- If the slot was not empty, then we have an item link, which means
 		-- we are currently looking at an item. Continue.
 		if (itemLink) then
-			--print("itemLink : ", itemLink)
+			--print("1930 Lunar.Items:UpdateBagContents itemLink : ", itemLink)
 			
 --			Lunar.Items.bagSlots[bagID] = Lunar.Items.bagSlots[bagID] + 1;
 
 			-- With our new link, grab all of the item's details
 			itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount = GetItemInfo(itemLink);
+
+			--print("1937 Lunar.Items:UpdateBagContents : ", itemName, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount)
+			--print("1937 Lunar.Items:UpdateBagContents : ", itemName, itemType, itemSubType)
 
 			-- Set our tooltip up
 			Lunar.Items.tooltip:ClearLines();
@@ -1995,7 +2005,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			-- Grab the item ID 
 			itemID = Lunar.API:GetItemID(itemLink);
 
-			--print("1852 itemName: ", itemName, ", itemRarity: ", itemRarity, ", itemLevel: ", itemLevel, ", itemMinLevel: ", itemMinLevel, ", itemType: ", itemType, ", itemSubType: ", itemSubType, ", itemStackCount: ", itemStackCount, ", itemID: ", itemID)
+			--print("2004 Lunar.Items:UpdateBagContents : ", itemName, itemID, itemType, itemSubType)
+			--print("2005 itemName: ", itemName, ", itemRarity: ", itemRarity, ", itemLevel: ", itemLevel, ", itemMinLevel: ", itemMinLevel, ", itemType: ", itemType, ", itemSubType: ", itemSubType, ", itemStackCount: ", itemStackCount, ", itemID: ", itemID)
 
 			mountType = nil;
 			mountFound = nil;
@@ -2023,6 +2034,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 						-- Search through all of our search strings to see if we found a match
 						-- for a type of item we search for.
 						for nameIndex = 1, Lunar.Items.totalItemTypes do 
+
+							--print("1972 Lunar.Items:UpdateBagContents name : ", itemName, itemTableNames[nameIndex])
 
 							-- If the item spell is the same as one of our search data types,
 							-- we add the item to our item data table and stop our search.
@@ -2207,9 +2220,11 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
 			-- Classic and BCC mounts are items, handle them here
 			elseif ( Lunar.API:IsVersionRetail() == false and Lunar.Items:ClassicIsMount(itemID) ) then
-				-- I'm pretty sure all mounts are unique, but we'll count just in case
-				_, itemCount = GetContainerItemInfo(bagID, slot);
-				Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
+
+					-- I'm pretty sure all mounts are unique, but we'll count just in case
+					_, itemCount = GetContainerItemInfo(bagID, slot);
+					Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
+
 			end
 		end
 	end
@@ -2328,10 +2343,10 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 				if (tableName == "mount") then
 					local pos = table.getn(itemData[tableName])
 					if (itemLink ~= "spellMount") then
-						--print("Lunar.Items:ModifyItemDataTable 1962", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, GetItemSpell(itemName))
+						--print("Lunar.Items:ModifyItemDataTable 2346", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, GetItemSpell(itemName))
 						itemData[tableName][pos].spell = GetItemSpell(itemName);
 					else
-						--print("Lunar.Items:ModifyItemDataTable 1965", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, string.sub(itemName, 3))
+						--print("Lunar.Items:ModifyItemDataTable 2349", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, string.sub(itemName, 3))
 						itemData[tableName][pos].spell = GetSpellInfo(string.sub(itemName, 3));
 						itemData[tableName][pos].spellMount = true;
 						itemData[tableName][pos].itemID = "spellMount";

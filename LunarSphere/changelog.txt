@@ -1,4 +1,16 @@
 LunarSphere Public Release
+Version 1.59 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed mount selection for engineering mounts for Classic and BCC clients.
+* Fixed bug with spell mounts for Classic and BCC clients.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.58 Changelog
 
 ======================
