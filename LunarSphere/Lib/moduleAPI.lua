@@ -2946,7 +2946,6 @@ function Lunar.API:IsFlyableArea()
 
 	-- Retail or BCC
     elseif (t >= 20000) then
-		print("2925 Lunar.API:IsFlyableArea() : IsFlyableArea() ", IsFlyableArea())
     	return IsFlyableArea()
     else
     	return nil

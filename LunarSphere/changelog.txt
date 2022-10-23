@@ -1,4 +1,15 @@
 LunarSphere Public Release
+Version 1.60 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed mount selection for WotLK
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.59 Changelog
 
 ======================
