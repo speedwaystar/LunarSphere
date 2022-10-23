@@ -960,6 +960,242 @@ function Lunar.Items:ClassicIsMountEpic(mount)
 
 end
 
+function Lunar.Items:WotLKIsMountEpic(mount)
+    local itemID = Lunar.Items:getMountID(mount)
+    local mounts = {
+        579, -- Red Wolf
+        15779, -- White Mechanostrider Mod B
+        16055, -- Black Nightsaber
+        16056, -- Ancient Frostsaber
+        16080, -- Red Wolf
+        16081, -- Arctic Wolf
+        16082, -- Palomino
+        16083, -- White Stallion
+        16084, -- Mottled Red Raptor
+        17229, -- Winterspring Frostsaber
+        17450, -- Ivory Raptor
+        17459, -- Icy Blue Mechanostrider Mod A
+        17460, -- Frost Ram
+        17461, -- Black Ram
+        17465, -- Green Skeletal Warhorse
+        17481, -- Rivendare's Deathcharger
+        18991, -- Green Kodo
+        18992, -- Teal Kodo
+        22717, -- Black War Steed
+        22718, -- Black War Kodo
+        22719, -- Black Battlestrider
+        22720, -- Black War Ram
+        22721, -- Black War Raptor
+        22722, -- Red Skeletal Warhorse
+        22723, -- Black War Tiger
+        22724, -- Black War Wolf
+        23161, -- Dreadsteed
+        23214, -- Charger
+        23219, -- Swift Mistsaber
+        23221, -- Swift Frostsaber
+        23222, -- Swift Yellow Mechanostrider
+        23223, -- Swift White Mechanostrider
+        23225, -- Swift Green Mechanostrider
+        23227, -- Swift Palomino
+        23228, -- Swift White Steed
+        23229, -- Swift Brown Steed
+        23238, -- Swift Brown Ram
+        23239, -- Swift Gray Ram
+        23240, -- Swift White Ram
+        23241, -- Swift Blue Raptor
+        23242, -- Swift Olive Raptor
+        23243, -- Swift Orange Raptor
+        23246, -- Purple Skeletal Warhorse
+        23247, -- Great White Kodo
+        23248, -- Great Gray Kodo
+        23249, -- Great Brown Kodo
+        23250, -- Swift Brown Wolf
+        23251, -- Swift Timber Wolf
+        23252, -- Swift Gray Wolf
+        23338, -- Swift Stormsaber
+        23509, -- Frostwolf Howler
+        23510, -- Stormpike Battle Charger
+        24242, -- Swift Razzashi Raptor
+        24252, -- Swift Zulian Tiger
+        25863, -- Black Qiraji Battle Tank
+        25953, -- Blue Qiraji Battle Tank
+        26054, -- Red Qiraji Battle Tank
+        26055, -- Yellow Qiraji Battle Tank
+        26056, -- Green Qiraji Battle Tank
+        26655, -- Black Qiraji Battle Tank
+        26656, -- Black Qiraji Battle Tank
+        28828, -- Nether Drake
+        32242, -- Swift Blue Gryphon
+        32246, -- Swift Red Wind Rider
+        32289, -- Swift Red Gryphon
+        32290, -- Swift Green Gryphon
+        32292, -- Swift Purple Gryphon
+        32295, -- Swift Green Wind Rider
+        32296, -- Swift Yellow Wind Rider
+        32297, -- Swift Purple Wind Rider
+        33660, -- Swift Pink Hawkstrider
+        34767, -- Thalassian Charger
+        34790, -- Dark War Talbuk
+        34896, -- Cobalt War Talbuk
+        34897, -- White War Talbuk
+        34898, -- Silver War Talbuk
+        34899, -- Tan War Talbuk
+        35025, -- Swift Green Hawkstrider
+        35027, -- Swift Purple Hawkstrider
+        35028, -- Swift Warstrider
+        35712, -- Great Green Elekk
+        35713, -- Great Blue Elekk
+        35714, -- Great Purple Elekk
+        36702, -- Fiery Warhorse
+        37015, -- Swift Nether Drake
+        39315, -- Cobalt Riding Talbuk
+        39316, -- Dark Riding Talbuk
+        39317, -- Silver Riding Talbuk
+        39318, -- Tan Riding Talbuk
+        39319, -- White Riding Talbuk
+        39798, -- Green Riding Nether Ray
+        39800, -- Red Riding Nether Ray
+        39801, -- Purple Riding Nether Ray
+        39802, -- Silver Riding Nether Ray
+        39803, -- Blue Riding Nether Ray
+        40192, -- Ashes of Al'ar
+        41252, -- Raven Lord
+        41513, -- Onyx Netherwing Drake
+        41514, -- Azure Netherwing Drake
+        41515, -- Cobalt Netherwing Drake
+        41516, -- Purple Netherwing Drake
+        41517, -- Veridian Netherwing Drake
+        41518, -- Violet Netherwing Drake
+        42777, -- Swift Spectral Tiger
+        43688, -- Amani War Bear
+        43900, -- Swift Brewfest Ram
+        43927, -- Cenarion War Hippogryph
+        44151, -- Turbo-Charged Flying Machine
+        44317, -- Merciless Nether Drake
+        44744, -- Merciless Nether Drake
+        46199, -- X-51 Nether-Rocket X-TREME
+        46628, -- Swift White Hawkstrider
+        48027, -- Black War Elekk
+        48778, -- Acherus Deathcharger
+        48954, -- Swift Zhevra
+        49193, -- Vengeful Nether Drake
+        49322, -- Swift Zhevra
+        49379, -- Great Brewfest Kodo
+        51412, -- Big Battle Bear
+        54753, -- White Polar Bear
+        55164, -- Swift Spectral Gryphon
+        55531, -- Mechano-Hog
+        58615, -- Brutal Nether Drake
+        59567, -- Azure Drake
+        59568, -- Blue Drake
+        59569, -- Bronze Drake
+        59570, -- Red Drake
+        59571, -- Twilight Drake
+        59572, -- Black Polar Bear
+        59650, -- Black Drake
+        59785, -- Black War Mammoth
+        59788, -- Black War Mammoth
+        59791, -- Wooly Mammoth
+        59793, -- Wooly Mammoth
+        59797, -- Ice Mammoth
+        59799, -- Ice Mammoth
+        59961, -- Red Proto-Drake
+        59976, -- Black Proto-Drake
+        59996, -- Blue Proto-Drake
+        60002, -- Time-Lost Proto-Drake
+        60021, -- Plagued Proto-Drake
+        60024, -- Violet Proto-Drake
+        60025, -- Albino Drake
+        60114, -- Armored Brown Bear
+        60116, -- Armored Brown Bear
+        60118, -- Black War Bear
+        60119, -- Black War Bear
+        60136, -- Grand Caravan Mammoth
+        60140, -- Grand Caravan Mammoth
+        60424, -- Mekgineer's Chopper
+        61229, -- Armored Snowy Gryphon
+        61230, -- Armored Blue Wind Rider
+        61294, -- Green Proto-Drake
+        61309, -- Magnificent Flying Carpet
+        61425, -- Traveler's Tundra Mammoth
+        61447, -- Traveler's Tundra Mammoth
+        61465, -- Grand Black War Mammoth
+        61467, -- Grand Black War Mammoth
+        61469, -- Grand Ice Mammoth
+        61470, -- Grand Ice Mammoth
+        61996, -- Blue Dragonhawk
+        61997, -- Red Dragonhawk
+        62048, -- Illidari Doomhawk
+        63232, -- Stormwind Steed
+        63635, -- Darkspear Raptor
+        63636, -- Ironforge Ram
+        63637, -- Darnassian Nightsaber
+        63638, -- Gnomeregan Mechanostrider
+        63639, -- Exodar Elekk
+        63640, -- Orgrimmar Wolf
+        63641, -- Thunder Bluff Kodo
+        63642, -- Silvermoon Hawkstrider
+        63643, -- Forsaken Warhorse
+        63796, -- Mimiron's Head
+        63844, -- Argent Hippogryph
+        63956, -- Ironbound Proto-Drake
+        63963, -- Rusted Proto-Drake
+        64656, -- Blue Skeletal Warhorse
+        64659, -- Venomhide Ravasaur
+        64927, -- Deadly Gladiator's Frost Wyrm
+        65439, -- Furious Gladiator's Frost Wyrm
+        65637, -- Great Red Elekk
+        65638, -- Swift Moonsaber
+        65639, -- Swift Red Hawkstrider
+        65640, -- Swift Gray Steed
+        65641, -- Great Golden Kodo
+        65642, -- Turbostrider
+        65643, -- Swift Violet Ram
+        65644, -- Swift Purple Raptor
+        65645, -- White Skeletal Warhorse
+        65646, -- Swift Burgundy Wolf
+        66087, -- Silver Covenant Hippogryph
+        66088, -- Sunreaver Dragonhawk
+        66090, -- Quel'dorei Steed
+        66091, -- Sunreaver Hawkstrider
+        66122, -- Magic Rooster
+        66123, -- Magic Rooster
+        66124, -- Magic Rooster
+        66846, -- Ochre Skeletal Warhorse
+        66906, -- Argent Charger
+        67336, -- Relentless Gladiator's Frost Wyrm
+        67466, -- Argent Warhorse
+        68056, -- Swift Horde Wolf
+        68057, -- Swift Alliance Steed
+        68187, -- Crusader's White Warhorse
+        68188, -- Crusader's Black Warhorse
+        69395, -- Onyxian Drake
+        71810, -- Wrathful Gladiator's Frost Wyrm
+        72807, -- Icebound Frostbrood Vanquisher
+        72808, -- Bloodbathed Frostbrood Vanquisher
+        73313, -- Crimson Deathcharger
+        74918, -- Wooly White Rhino
+        75596, -- Frosty Flying Carpet
+    }
+
+    return tContains(mounts, itemID)
+end
+
+
+function Lunar.Items:IsMountEpic(mount)
+
+	if( Lunar.API:IsVersionWotLK() ) then
+		return Lunar.Items:WotLKIsMountEpic(mount)
+	end
+
+	if( Lunar.API:IsVersionClassic() ) then
+		return Lunar.Items:ClassicIsMountEpic(mount)
+	end
+
+	return false
+end
+
+
 -- Returns true if the item is a mount.
 --
 -- The itemSubType from GetItemInfo() for mounts in Classic is 'Junk',
@@ -977,7 +1213,7 @@ function Lunar.Items:ClassicIsMount(mount)
 	end
 
 	-- If it's an AQ40 mount, it's a mount
-	if Lunar.Items:ClassicIsMountAQ40(mount) then
+	if Lunar.Items:IsMountAQ40(mount) then
 		return true
 	end
 
@@ -1013,34 +1249,94 @@ end
 
 -- Returns true if the mount is an AQ40 mount. 
 -- By checking the ID, we avoid handling the localized mount names.
-function Lunar.Items:ClassicIsMountAQ40(mount)
+function Lunar.Items:IsMountAQ40(mount)
 
 	local itemID = Lunar.Items:getMountID(mount)
+	local _, _, _, t = GetBuildInfo();
+	local mounts
 
-	local mounts = {
-		21218, -- blue-qiraji-resonating-crystal
-		21323, -- green-qiraji-resonating-crystal
-		21324, -- yellow-qiraji-resonating-crystal
-		21321, -- red-qiraji-resonating-crystal
-		21176 -- black-qiraji-resonating-crystal
-	}
+	-- Retail or WotLK
+	if (t >= 30000) then
+		-- From https://wowpedia.fandom.com/wiki/MountID
+		-- Mount : Spell ID
+		-- Blue Qiraji Battle Tank : 25953
+		-- Red Qiraji Battle Tank : 26054
+		-- Yellow Qiraji Battle Tank : 26055
+		-- Green Qiraji Battle Tank : 26056
+		-- Black Qiraji Battle Tank : 26655
+		-- Black Qiraji Battle Tank : 26656
+		-- Black Qiraji Battle Tank : 25863
+		-- https://www.wowhead.com/wotlk/spell=31700/black-qiraji-battle-tank
+
+		mounts = {
+			25953, -- Blue Qiraji Battle Tank
+			26054, -- Red Qiraji Battle Tank
+			26055, -- Yellow Qiraji Battle Tank
+			26056, -- Green Qiraji Battle Tank
+			26655, -- Black Qiraji Battle Tank
+			26656, -- Black Qiraji Battle Tank
+			25863, -- Black Qiraji Battle Tank
+			31700  -- black-qiraji-battle-tank
+		}
+	-- SoM
+	else
+		mounts = {
+			21218, -- blue-qiraji-resonating-crystal
+			21323, -- green-qiraji-resonating-crystal
+			21324, -- yellow-qiraji-resonating-crystal
+			21321, -- red-qiraji-resonating-crystal
+			21176  -- black-qiraji-resonating-crystal
+		}
+	end
 
 	return tContains(mounts, itemID)
 end
 
 -- Returns true if the mount is an 310 % speed mount. 
 -- By checking the ID, we avoid handling the localized mount names.
-function Lunar.Items:ClassicIsMountEpic310(mount)
+function Lunar.Items:IsMountEpic310(mount)
 
 	local itemID = Lunar.Items:getMountID(mount)
+	local _, _, _, t = GetBuildInfo();
+	local mounts
 
-	local mounts = {
-		32458, -- ashes-of-alar
-		30609, -- swift-nether-drake
-		37676, -- vengeful-nether-drake
-		34092, -- merciless-nether-drake
-		43516 -- brutal-nether-drake
-	}
+
+	-- Retail or WotLK
+	if (t >= 30000) then
+		-- From https://wowpedia.fandom.com/wiki/MountID
+		-- Mount : Spell ID
+	    mounts = {
+	        37015, -- Swift Nether Drake
+	        40192, -- Ashes of Al'ar
+	        44317, -- Merciless Nether Drake
+	        44744, -- Merciless Nether Drake
+	        49193, -- Vengeful Nether Drake
+	        58615, -- Brutal Nether Drake
+	        59976, -- Black Proto-Drake
+	        60021, -- Plagued Proto-Drake
+	        60024, -- Violet Proto-Drake
+	        63796, -- Mimiron's Head
+	        63956, -- Ironbound Proto-Drake
+	        63963, -- Rusted Proto-Drake
+	        64927, -- Deadly Gladiator's Frost Wyrm
+	        65439, -- Furious Gladiator's Frost Wyrm
+	        67336, -- Relentless Gladiator's Frost Wyrm
+	        69395, -- Onyxian Drake
+	        71810, -- Wrathful Gladiator's Frost Wyrm
+	        72807, -- Icebound Frostbrood Vanquisher
+	        72808, -- Bloodbathed Frostbrood Vanquisher
+	    }
+
+	-- SoM
+	else
+		mounts = {
+			32458, -- ashes-of-alar
+			30609, -- swift-nether-drake
+			37676, -- vengeful-nether-drake
+			34092, -- merciless-nether-drake
+			43516 -- brutal-nether-drake
+		}
+	end
 
 	return tContains(mounts, itemID)
 end
@@ -1079,7 +1375,6 @@ function Lunar.Items:UpdateLowHighItems()
 	if (playerLevel < 40) then
 		bestRange = 1;
 	end
-
 
 	-- Wipe our ground and flying mounts table
 	for index = 1, table.getn(favouriteMounts) do 
@@ -1194,7 +1489,7 @@ function Lunar.Items:UpdateLowHighItems()
 							end
 
 							-- Handle Classic and BCC mounts
-							if( Lunar.API:IsVersionRetail() == false ) then
+							if( Lunar.API:IsVersionClassic() == true ) then
 								-- Check if we can use the ground mount
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
@@ -1222,20 +1517,45 @@ function Lunar.Items:UpdateLowHighItems()
 										end
 									end
 								end
-							-- Handle Retail mounts
+							-- Handle Retail and WotLK mounts
 							elseif (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
-								table.insert(groundMounts, index);
+
+								if( inAQ == true ) then
+									-- AQ mounts can only be used in AQ
+									if _mount.isAQ40 then
+										table.insert(groundMounts, index);
+									end
+								else -- Not in AQ40
+									if _mount.isAQ40 == false then
+										table.insert(groundMounts, index);
+										if _mount.isEpic then
+											table.insert(groundMountsEpic, index);
+										end
+									end
+								end
 								table.insert(swimmingMounts, index);
+
 							elseif ((MountType == 231) or (MountType == 232) or (MountType == 254)) then
+
 								if (itemData[itemType][index].spell == Lunar_AbyssalMount_Name) then
 									Lunar_Seahorse = index;
 								else
 									table.insert(swimmingMounts, index);
 								end
+
 							elseif (MountType == 247 or MountType == 248) then -- Only when CanFly
+
 							  -- flying and Ground Mounts only
 								table.insert(flyingMounts, index);
+								if _mount.isEpic then
+									table.insert(flyingMountsEpic, index);
+								end
+								if _mount.isEpic310 then
+									table.insert(flyingMountsEpic310, index);
+								end
+
 								table.insert(swimmingMounts, index);
+
 							elseif (MountType == 269) then -- Only when Strider
 							  -- Strider Mounts only
 								table.insert(striderMounts, index);
@@ -1418,7 +1738,7 @@ function Lunar.Items:UpdateLowHighItems()
 				itemStrength[itemType][0] = RndGround;	-- Otherwise a Ground Mount
 			end
 
-			--print("itemType: 1070 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
+			--print("itemType: 1424 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
 			--print("RndGround:     ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
 			--print("RndFly:        ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
 			--print("RndSwim        ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
@@ -1812,6 +2132,8 @@ end
 
 function Lunar.Items:ClassicScanForSpellMounts()
 
+	print("1822 Lunar.Items:ClassicScanForSpellMounts()")
+
 	local SpellMountsIDs = {
 		23214, -- summon charger 
 		13819, -- summon warhorse
@@ -1821,9 +2143,9 @@ function Lunar.Items:ClassicScanForSpellMounts()
 		23161, -- summon dreadsteed
 	}
 
+
 	for _, spellID in ipairs(SpellMountsIDs)
 	do
-		local name, rank, icon, cost, isFunnel, powerType, castTime, minRange, maxRange = GetSpellInfo(spellID)
 		local isUsable = IsSpellKnown(spellID)
 
 		if (isUsable) then
@@ -1840,14 +2162,228 @@ function Lunar.Items:ClassicScanForSpellMounts()
 	end
 end
 
+-- Replicates the functionality of C_MountJournal.GetMountInfoExtraByID for WotLK:
+--
+-- mountTypeID
+-- number - a number indicating the capabilities of the mount; known values include:
+-- 230 for most ground mounts
+-- 231 for  [Riding Turtle] and  [Sea Turtle]
+-- 232 for  [Vashj'ir Seahorse] (was named Abyssal Seahorse prior to Warlords of Draenor)
+-- 241 for Blue, Green, Red, and Yellow Qiraji Battle Tank (restricted to use inside Temple of Ahn'Qiraj)
+-- 242 for Swift Spectral Gryphon (hidden in the mount journal, used while dead in certain zones)
+-- 247 for  [Disc of the Red Flying Cloud]
+-- 248 for most flying mounts, including those that change capability based on riding skill
+-- 254 for  [Reins of Poseidus],  [Brinedeep Bottom-Feeder] and  [Fathom Dweller]
+-- 269 for  [Reins of the Azure Water Strider] and  [Reins of the Crimson Water Strider]
+-- 284 for  [Chauffeured Chopper] and Chauffeured Mechano-Hog
+-- 398 for  [Kua'fon's Harness]
+-- 407 for  [Deepstar Polyp]
+-- 408 for  [Unsuccessful Prototype Fleetpod]
+
+function Lunar.Items:WotLKGetMountType(mount)
+
+    local itemID = Lunar.Items:getMountID(mount)
+
+    if itemID >= 458 and itemID <= 25863 then -- Brown Horse -> Black Qiraji Battle Tank
+        return 230 -- most ground mounts
+    end
+    if itemID >= 25953 and itemID <= 26056 then -- Blue Qiraji Battle Tank -> Green Qiraji Battle Tank
+        return 241 -- Blue, Green, Red, and Yellow Qiraji Battle Tank (restricted to use inside Temple of Ahn'Qiraj)
+    end
+    if itemID >= 26655 and itemID <= 26656 then -- Black Qiraji Battle Tank -> Black Qiraji Battle Tank
+        return 230 -- most ground mounts
+    end
+    if itemID >= 28828 and itemID <= 28828 then -- Nether Drake -> Nether Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 30174 and itemID <= 30174 then -- Riding Turtle -> Riding Turtle
+        return 231 -- [Riding Turtle] and Sea Turtle
+    end
+    if itemID >= 32235 and itemID <= 32297 then -- Golden Gryphon -> Swift Purple Wind Rider
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 33630 and itemID <= 36702 then -- Blue Mechanostrider -> Fiery Warhorse
+        return 230 -- most ground mounts
+    end
+    if itemID >= 37015 and itemID <= 37015 then -- Swift Nether Drake -> Swift Nether Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 39315 and itemID <= 39319 then -- Cobalt Riding Talbuk -> White Riding Talbuk
+        return 230 -- most ground mounts
+    end
+    if itemID >= 39798 and itemID <= 40192 then -- Green Riding Nether Ray -> Ashes of Al'ar
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 41252 and itemID <= 41252 then -- Raven Lord -> Raven Lord
+        return 230 -- most ground mounts
+    end
+    if itemID >= 41513 and itemID <= 41518 then -- Onyx Netherwing Drake -> Violet Netherwing Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 42776 and itemID <= 43900 then -- Spectral Tiger -> Swift Brewfest Ram
+        return 230 -- most ground mounts
+    end
+    if itemID >= 43927 and itemID <= 46199 then -- Cenarion War Hippogryph -> X-51 Nether-Rocket X-TREME
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 46628 and itemID <= 46628 then -- Swift White Hawkstrider -> Swift White Hawkstrider
+        return 230 -- most ground mounts
+    end
+    if itemID >= 48025 and itemID <= 48025 then -- Headless Horseman's Mount -> Headless Horseman's Mount
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 48027 and itemID <= 48954 then -- Black War Elekk -> Swift Zhevra
+        return 230 -- most ground mounts
+    end
+    if itemID >= 49193 and itemID <= 49193 then -- Vengeful Nether Drake -> Vengeful Nether Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 49322 and itemID <= 51412 then -- Swift Zhevra -> Big Battle Bear
+        return 230 -- most ground mounts
+    end
+    if itemID >= 54729 and itemID <= 54729 then -- Winged Steed of the Ebon Blade -> Winged Steed of the Ebon Blade
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 54753 and itemID <= 54753 then -- White Polar Bear -> White Polar Bear
+        return 230 -- most ground mounts
+    end
+    if itemID >= 55164 and itemID <= 55164 then -- Swift Spectral Gryphon -> Swift Spectral Gryphon
+        return 242 -- Swift Spectral Gryphon (hidden in the mount journal, used while dead in certain zones)
+    end
+    if itemID >= 55531 and itemID <= 55531 then -- Mechano-Hog -> Mechano-Hog
+        return 230 -- most ground mounts
+    end
+    if itemID >= 58615 and itemID <= 58615 then -- Brutal Nether Drake -> Brutal Nether Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 58983 and itemID <= 58983 then -- Big Blizzard Bear -> Big Blizzard Bear
+        return 230 -- most ground mounts
+    end
+    if itemID >= 59567 and itemID <= 59571 then -- Azure Drake -> Twilight Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 59572 and itemID <= 59572 then -- Black Polar Bear -> Black Polar Bear
+        return 230 -- most ground mounts
+    end
+    if itemID >= 59650 and itemID <= 59650 then -- Black Drake -> Black Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 59785 and itemID <= 59799 then -- Black War Mammoth -> Ice Mammoth
+        return 230 -- most ground mounts
+    end
+    if itemID >= 59961 and itemID <= 60025 then -- Red Proto-Drake -> Albino Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 60114 and itemID <= 60424 then -- Armored Brown Bear -> Mekgineer's Chopper
+        return 230 -- most ground mounts
+    end
+    if itemID >= 61229 and itemID <= 61309 then -- Armored Snowy Gryphon -> Magnificent Flying Carpet
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 61425 and itemID <= 61447 then -- Traveler's Tundra Mammoth -> Traveler's Tundra Mammoth
+        return 230 -- most ground mounts
+    end
+    if itemID >= 61451 and itemID <= 61451 then -- Flying Carpet -> Flying Carpet
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 61465 and itemID <= 61470 then -- Grand Black War Mammoth -> Grand Ice Mammoth
+        return 230 -- most ground mounts
+    end
+    if itemID >= 61996 and itemID <= 62048 then -- Blue Dragonhawk -> Illidari Doomhawk
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 63232 and itemID <= 63643 then -- Stormwind Steed -> Forsaken Warhorse
+        return 230 -- most ground mounts
+    end
+    if itemID >= 63796 and itemID <= 63963 then -- Mimiron's Head -> Rusted Proto-Drake
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 64656 and itemID <= 64659 then -- Blue Skeletal Warhorse -> Venomhide Ravasaur
+        return 230 -- most ground mounts
+    end
+    if itemID >= 64731 and itemID <= 64731 then -- Sea Turtle -> Sea Turtle
+        return 231 -- [Riding Turtle] and Sea Turtle
+    end
+    if itemID >= 64927 and itemID <= 64927 then -- Deadly Gladiator's Frost Wyrm -> Deadly Gladiator's Frost Wyrm
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 64977 and itemID <= 64977 then -- Black Skeletal Horse -> Black Skeletal Horse
+        return 230 -- most ground mounts
+    end
+    if itemID >= 65439 and itemID <= 65439 then -- Furious Gladiator's Frost Wyrm -> Furious Gladiator's Frost Wyrm
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 65637 and itemID <= 65917 then -- Great Red Elekk -> Magic Rooster
+        return 230 -- most ground mounts
+    end
+    if itemID >= 66087 and itemID <= 66088 then -- Silver Covenant Hippogryph -> Sunreaver Dragonhawk
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 66090 and itemID <= 66906 then -- Quel'dorei Steed -> Argent Charger
+        return 230 -- most ground mounts
+    end
+    if itemID >= 67336 and itemID <= 67336 then -- Relentless Gladiator's Frost Wyrm -> Relentless Gladiator's Frost Wyrm
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 67466 and itemID <= 68188 then -- Argent Warhorse -> Crusader's Black Warhorse
+        return 230 -- most ground mounts
+    end
+    if itemID >= 69395 and itemID <= 72808 then -- Onyxian Drake -> Bloodbathed Frostbrood Vanquisher
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 73313 and itemID <= 73313 then -- Crimson Deathcharger -> Crimson Deathcharger
+        return 230 -- most ground mounts
+    end
+    if itemID >= 74856 and itemID <= 74856 then -- Blazing Hippogryph -> Blazing Hippogryph
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+    if itemID >= 74918 and itemID <= 74918 then -- Wooly White Rhino -> Wooly White Rhino
+        return 230 -- most ground mounts
+    end
+    if itemID >= 75596 and itemID <= 75973 then -- Frosty Flying Carpet -> X-53 Touring Rocket
+        return 248 -- most flying mounts, including those that change capability based on riding skill
+    end
+
+end
+
+function Lunar.Items:WotLKScanForSpellMounts()
+
+	local amount = GetNumCompanions("mount")
+	for i = 1, amount do
+		-- mountType is always nil, can't rely on it.
+	    local creatureID, creatureName, creatureSpellID, icon, issummoned, mountType = GetCompanionInfo("mount",i)
+
+		--print("1900 Lunar.Items:WotLKScanForSpellMounts() ", ", creatureID: ", creatureID, ", creatureName: ", creatureName, ", creatureSpellID: ", creatureSpellID, ", icon: ", icon, ", issummoned: ", issummoned, ", mountType: ", mountType )
+	    
+		local spellID = creatureSpellID
+
+		local name, rank, icon, castTime, minRange, maxRange, _id = GetSpellInfo(spellID)
+
+		--print("1907 Lunar.Items:WotLKScanForSpellMounts(): ", "spellID: ", spellID, ", name: ", name,", rank: ", rank,", icon: ", icon,", castTime: ", castTime,", minRange: ", minRange,", maxRange: ", maxRange, ", _id: ", _id)
+
+		local spellName = "**" .. spellID --.. "~" .. spellName .. "~" .. spellTexture; 
+
+		local mountType = Lunar.Items:WotLKGetMountType(spellID)
+		local itemLevel = UnitLevel("player")
+
+		--print("2113 Lunar.Items:WotLKScanForSpellMounts() ", ", creatureID: ", creatureID, ", creatureName: ", creatureName, ", creatureSpellID: ", creatureSpellID, ", icon: ", icon, ", issummoned: ", issummoned, ", mountType: ", mountType )
+
+		-- All mounts
+		Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
+	end
+
+end
+
 function Lunar.Items:ScanForSpellMounts()
+
 	if ( Lunar.API:IsVersionRetail() == true ) then
 		Lunar.Items:RetailScanForSpellMounts()
+	elseif ( Lunar.API:IsVersionWotLK()	== true) then
+		Lunar.Items:WotLKScanForSpellMounts()
 	else
 		Lunar.Items:ClassicScanForSpellMounts()
 	end
 end
-
 
 -- Returns the stone strength based on the item ID. Returns nil if the item Id
 -- isn't a healthstone.
@@ -2219,7 +2755,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			elseif (itemSpell == searchData.hearthstone) then
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
 			-- Classic and BCC mounts are items, handle them here
-			elseif ( Lunar.API:IsVersionRetail() == false and Lunar.Items:ClassicIsMount(itemID) ) then
+			elseif ( Lunar.API:IsVersionClassic() == true and Lunar.Items:ClassicIsMount(itemID) ) then
 
 					-- I'm pretty sure all mounts are unique, but we'll count just in case
 					_, itemCount = GetContainerItemInfo(bagID, slot);
@@ -2352,10 +2888,10 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 						itemData[tableName][pos].itemID = "spellMount";
 					end
 					-- Update the mount properties that we use to select the random mounts.
-					itemData[tableName][pos].isEpic = Lunar.Items:ClassicIsMountEpic(itemData[tableName][pos])
+					itemData[tableName][pos].isEpic = Lunar.Items:IsMountEpic(itemData[tableName][pos])
 					itemData[tableName][pos].isFlying = Lunar.Items:BCCIsFlyingMount(itemData[tableName][pos])
-					itemData[tableName][pos].isAQ40 = Lunar.Items:ClassicIsMountAQ40(itemData[tableName][pos])
-					itemData[tableName][pos].isEpic310 = Lunar.Items:ClassicIsMountEpic310(itemData[tableName][pos])
+					itemData[tableName][pos].isAQ40 = Lunar.Items:IsMountAQ40(itemData[tableName][pos])
+					itemData[tableName][pos].isEpic310 = Lunar.Items:IsMountEpic310(itemData[tableName][pos])
 				end
 
 				if (tableName == "companion") then

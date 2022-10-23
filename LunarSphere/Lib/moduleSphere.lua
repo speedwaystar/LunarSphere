@@ -477,7 +477,7 @@ function Lunar.Sphere:Initialize()
 	sphereData.background:RegisterEvent("PLAYER_ENTERING_WORLD");
 --	sphereData.background:RegisterEvent("ZONE_CHANGED");
 	sphereData.background:RegisterEvent("ZONE_CHANGED_NEW_AREA");
-	if ( Lunar.API:IsVersionRetail() == true ) then
+	if ( Lunar.API:IsVersionClassic() == false ) then
 		sphereData.background:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 	end
 

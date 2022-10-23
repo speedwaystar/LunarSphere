@@ -2854,15 +2854,15 @@ end
 --
 -- Lunar.API:IsVersionRetail()
 -- 
--- Returns `true` if the current `Interface` is over `30000`.
+-- Returns `true` if the current `Interface` is over `70000` (BfA interface version).
 --
 -- Returns :
---    true - Client is Retail
---   false - Client is BCC or Classic
+--   true - Client is Retail
+--   false - Client is BCC, WotLKC or Classic
 --
 function Lunar.API:IsVersionRetail()
 	_, _, _, t = GetBuildInfo();
-    return (t > 30000);
+    return (t > 70000);
 end
 
 -- Lunar.API:IsVersionClassic()
@@ -2870,12 +2870,26 @@ end
 -- Returns `true` if the current `Interface` is under `20000`.
 --
 -- Returns :
---    true - Client is Classic
---   false - Client is Retail or BCC
+--   true - Client is Classic
+--   false - Client is Retail, BCC, or WotLKC.
 --
 function Lunar.API:IsVersionClassic()
 	_, _, _, t = GetBuildInfo();
     return (t < 20000);
+end
+
+--
+-- Lunar.API:IsVersionWotLK()
+-- 
+-- Returns `true` if the current `Interface` is `> 20000` and `< 70000`.
+--
+-- Returns :
+--   true - Client is Retail
+--   false - Client is BCC, WotLKC or Classic
+--
+function Lunar.API:IsVersionWotLK()
+	_, _, _, t = GetBuildInfo();
+    return (t > 20000) and (t < 70000);
 end
 
 -- Lunar.API:GetBuildInfo()
@@ -2901,10 +2915,38 @@ end
 -- canFly 
 --    1 if the area is classified as flyable, nil otherwise.
 --
+-- Zone ID from
+-- https://wowpedia.fandom.com/wiki/UiMapID
+--
 function Lunar.API:IsFlyableArea()
-	_, _, _, t = GetBuildInfo();
+
+	local _, _, _, t = GetBuildInfo();
+
+    if ( Lunar.API:IsVersionWotLK() ) then
+
+        local zone_id = C_Map.GetBestMapForUnit("player")
+        -- Dalaran. Check if we're in Krasus' Landing
+        if( zone_id == 125 ) then
+            local x, y = C_Map.GetPlayerMapPosition(C_Map.GetBestMapForUnit("player"), "player"):GetXY()
+            x = x*100
+            y = y*100
+
+            -- Krasus' Landing center coordinates
+            -- x: 0.726104
+            -- y: 0.455933
+            local d = (x-72.6104)*(x-72.6104)+(y-45.5933)*(y-45.5933)
+
+            --print("2939 Lunar.API:IsFlyableArea() : x, y, d: ",x, y, d)
+
+            -- Cartesian distance to the doorway
+            return (d <= 63.24)
+        else
+            return IsFlyableArea()
+        end
+
 	-- Retail or BCC
-    if (t >= 20000) then
+    elseif (t >= 20000) then
+		print("2925 Lunar.API:IsFlyableArea() : IsFlyableArea() ", IsFlyableArea())
     	return IsFlyableArea()
     else
     	return nil

@@ -4187,7 +4187,7 @@ end
 					button:SetAttribute("*type-S" .. stance  .. clickType, cursorType)
 					button:SetAttribute("*"..cursorType .. "-S" .. stance .. clickType, objectName); -- tempName);
 					button:SetAttribute("*"..cursorType .. "2-S" .. stance .. clickType, GetSpellInfo(objectName)); -- tempName);
-				elseif (Lunar.API:IsVersionRetail() ) then
+				elseif ( Lunar.API:IsVersionRetail() or Lunar.API:IsVersionWotLK() ) then
 					--print("4194 : ", "*type-S" .. stance  .. clickType, "macrotext")
 					button:SetAttribute("*type-S" .. stance  .. clickType, "macrotext")
 --				local tempName = select(1, GetSpellInfo(objectName));
