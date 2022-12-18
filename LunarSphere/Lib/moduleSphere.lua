@@ -2019,7 +2019,9 @@ function Lunar.Sphere.Events(self, event, arg1, arg2)
 
 			-- Add Cursor Update event to deal with "Dropping item into same bag
 			-- slot doesn't hide buttons" bug
-			sphereData.background:RegisterEvent("CURSOR_UPDATE");
+
+			-- CURSOR_UPDATE is never registered
+			-- sphereData.background:RegisterEvent("CURSOR_UPDATE");
 
 		elseif (not cursorType) then
 				
@@ -2027,7 +2029,9 @@ function Lunar.Sphere.Events(self, event, arg1, arg2)
 
 			-- Remove Cursor Update event that dealt with "Dropping item into
 			-- same bag slot doesn't hide buttons" bug.
-			sphereData.background:UnregisterEvent("CURSOR_UPDATE");
+
+			-- CURSOR_UPDATE is never registered
+			-- sphereData.background:UnregisterEvent("CURSOR_UPDATE");
 
 			if (Lunar.Button.currentMouseOver) and ((LunarSphereSettings.buttonEditMode == true) or (LunarSphereSettings.forceDragDrop == true)) then
 				if (IsMouseButtonDown("RightButton") )then
