@@ -2436,6 +2436,38 @@ function Lunar.Items:GetHealthStoneStrength(itemId)
 
 end
 
+function Lunar.Items:GetContainerNumSlots(bagID)
+	if( Lunar.API:IsVersionRetail() ) then
+		return C_Container.GetContainerNumSlots(bagID);
+	else
+		return GetContainerNumSlots(bagID);
+	end
+end
+
+function Lunar.Items:GetContainerItemLink(bagID, slot)
+	if( Lunar.API:IsVersionRetail() ) then
+		return C_Container.GetContainerItemLink(bagID, slot);
+	else
+		return GetContainerItemLink(bagID, slot);
+	end
+end
+
+function Lunar.Items:GetContainerItemInfo(bagID, slot)
+	if( Lunar.API:IsVersionRetail() ) then
+		return C_Container.GetContainerItemInfo(bagID, slot);
+	else
+		return GetContainerItemInfo(bagID, slot);
+	end
+end
+
+function Lunar.Items:GetContainerNumFreeSlots(bagID)
+	if( Lunar.API:IsVersionRetail() ) then
+		return Lunar.Items:GetContainerNumFreeSlots(bagID);
+	else
+		return GetContainerNumFreeSlots(bagID);
+	end
+end
+
 -- /***********************************************
 --  * UpdateBagContents
 --  * ========================
@@ -2463,7 +2495,8 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 
 	local scanSize = 8;
 	local startSlot = 1;
-	local endSlot = C_Container.GetContainerNumSlots(bagID);
+	local endSlot = Lunar.Items:GetContainerNumSlots(bagID);
+
 	if (Lunar.Items["updateContainer" .. bagID .. "Slot"]) then
 		startSlot = Lunar.Items["updateContainer" .. bagID .. "Slot"];
 		if (startSlot > endSlot) then
@@ -2522,22 +2555,16 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 	for slot = startSlot, endSlot do
 
 		-- Grab the slot's item link
-		itemLink = C_Container.GetContainerItemLink(bagID, slot);
-
-		--print("1925 Lunar.Items:UpdateBagContents itemLink : ", itemLink)
+		itemLink = Lunar.Items:GetContainerItemLink(bagID, slot);
 
 		-- If the slot was not empty, then we have an item link, which means
 		-- we are currently looking at an item. Continue.
 		if (itemLink) then
-			--print("1930 Lunar.Items:UpdateBagContents itemLink : ", itemLink)
 			
 --			Lunar.Items.bagSlots[bagID] = Lunar.Items.bagSlots[bagID] + 1;
 
 			-- With our new link, grab all of the item's details
 			itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount = GetItemInfo(itemLink);
-
-			--print("1937 Lunar.Items:UpdateBagContents : ", itemName, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount)
-			--print("1937 Lunar.Items:UpdateBagContents : ", itemName, itemType, itemSubType)
 
 			-- Set our tooltip up
 			Lunar.Items.tooltip:ClearLines();
@@ -2546,9 +2573,6 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 
 			-- Grab the item ID 
 			itemID = Lunar.API:GetItemID(itemLink);
-
-			--print("2004 Lunar.Items:UpdateBagContents : ", itemName, itemID, itemType, itemSubType)
-			--print("2005 itemName: ", itemName, ", itemRarity: ", itemRarity, ", itemLevel: ", itemLevel, ", itemMinLevel: ", itemMinLevel, ", itemType: ", itemType, ", itemSubType: ", itemSubType, ", itemStackCount: ", itemStackCount, ", itemID: ", itemID)
 
 			mountType = nil;
 			mountFound = nil;
@@ -2567,7 +2591,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 
 					-- If we found a spell, we'll grab how many of that item is in the slot.
 					-- That way, we can populate the item database with a count of said item.
-					_, itemCount = C_Container.GetContainerItemInfo(bagID, slot);
+					_, itemCount = Lunar.Items:GetContainerItemInfo(bagID, slot);
 
 -- Item Spells for over 80's
 					if (itemSpell) then
@@ -2764,7 +2788,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			elseif ( Lunar.API:IsVersionClassic() == true and Lunar.Items:ClassicIsMount(itemID) ) then
 
 					-- I'm pretty sure all mounts are unique, but we'll count just in case
-					_, itemCount = C_Container.GetContainerItemInfo(bagID, slot);
+					_, itemCount = Lunar.Items:GetContainerItemInfo(bagID, slot);
 					Lunar.Items:ModifyItemDataTable("mount", updateType, itemName, itemCount, itemLevel, itemMinLevel, itemLink);
 
 			end

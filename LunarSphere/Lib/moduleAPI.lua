@@ -329,13 +329,13 @@ function Lunar.API:GetItemBagInfo(itemName)
 --	largestCount = 0;
 
 	for bagID = 0, 4  do 
-		slotTotal = C_Container.GetContainerNumSlots(bagID);
+		slotTotal = Lunar.Items:GetContainerNumSlots(bagID);
 		for slotID = 1, slotTotal do 
-			itemLink = C_Container.GetContainerItemLink(bagID, slotID);
+			itemLink = Lunar.Items:GetContainerItemLink(bagID, slotID);
 			if (itemLink) then
 				searchName, _, _, _, _, _, _, stackSize = GetItemInfo(itemLink);
 				if (itemName == searchName)  then
-					_, count, locked = C_Container.GetContainerItemInfo(bagID, slotID);
+					_, count, locked = Lunar.Items:GetContainerItemInfo(bagID, slotID);
 					if not locked then
 						if ((returnCount or (0)) < count) then
 							returnBag = bagID;
@@ -965,7 +965,7 @@ function Lunar.API:Load()
 				totalMerchItems = NUM_BANKGENERIC_SLOTS;
 				Lunar.API.bankBagInfo = Lunar.API.bankBagInfo or {};
 				for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do
-					Lunar.API.bankBagInfo[bagID - NUM_BAG_SLOTS] = C_Container.GetContainerNumSlots(bagID);
+					Lunar.API.bankBagInfo[bagID - NUM_BAG_SLOTS] = Lunar.Items:GetContainerNumSlots(bagID);
 					totalMerchItems = totalMerchItems + Lunar.API.bankBagInfo[bagID - NUM_BAG_SLOTS];
 				end
 				currentBag = 1;
@@ -1045,7 +1045,7 @@ function Lunar.API:Load()
 							end
 
 							-- Now, obtain an item in the current bag;
-							itemName = GetItemInfo(C_Container.GetContainerItemLink(currentBag + NUM_BAG_SLOTS, currentSlot) or (""));
+							itemName = GetItemInfo(Lunar.Items:GetContainerItemLink(currentBag + NUM_BAG_SLOTS, currentSlot) or (""));
 
 						end
 
@@ -1087,7 +1087,7 @@ function Lunar.API:Load()
 								if (itemIndex <= NUM_BANKGENERIC_SLOTS) then
 									maxBuyAmount = GetInventoryItemCount("player", BankButtonIDToInvSlotID(itemIndex));
 								else
-									_, maxBuyAmount = C_Container.GetContainerItemInfo(currentBag + NUM_BAG_SLOTS, currentSlot);
+									_, maxBuyAmount = Lunar.Items:GetContainerItemInfo(currentBag + NUM_BAG_SLOTS, currentSlot);
 								end
 							elseif (Lunar.API.isGuildBanker) then
 								maxBuyAmount = numAvailable;
@@ -1269,10 +1269,10 @@ function Lunar.API:Load()
 				for bagIndex = 0, 4 do
 
 					-- Cycle through all our slots in the bag
-					for slotIndex = 1, C_Container.GetContainerNumSlots(bagIndex) do
+					for slotIndex = 1, Lunar.Items:GetContainerNumSlots(bagIndex) do
 
 						-- Get the item link of the item in the current slot, if it exists
-						itemLink = C_Container.GetContainerItemLink(bagIndex, slotIndex);
+						itemLink = Lunar.Items:GetContainerItemLink(bagIndex, slotIndex);
 
 						-- If the item exists ...
 						if (itemLink) then

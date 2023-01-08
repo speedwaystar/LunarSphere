@@ -168,19 +168,19 @@ please make sure that you inform:
 
 1. Which of the three clients were you using:
     1. Retail (Mainline) 
-    2. Classic (Vanilla)
-    3. Burning Crusade classic (TBC)
+    2. Classic Era (Vanilla)
+    3. Wrath of the Lich King (WotLK)
 2. Which class were you playing
 3. How to trigger the bug/crash
 
 The more specific the report is, the easier for me to find the problem and fix
 it.
 
-## Current Version: 1.58
+## Current Version: 1.61
 
-* Update to WoW 9.2.0  / Shadowlands for LunarSphere
-* Update to WoW 1.14.2 / Classic for LunarSphere
-* Update to WoW 2.5.4  / TBC-Classic for LunarSphere
+* Update to WoW 10.0.2 / Dragonflight for LunarSphere
+* Update to WoW 1.14.2 / Classic Era (SoM) for LunarSphere
+* Update to WoW 3.4.0  / WotLK-Classic for LunarSphere
 
 Updates for LunarSphere are distributed via WowUp and Curseforge. Be sure to
 get the latest version here:
@@ -196,4 +196,7 @@ originally found it when playing WotLK and I think it's one of the most
 Useful addons I have. Many thanks for the other torch bearers over the years
 who kept LS alive: N3od3ath, Toludin-Stormrage, and voyseys.
 
-Fullmon/Thundermoo/Bloodyaxe-Sulfuras
+Many tanks to Zenyari1 for updating LS to Dragonflight and nicodemusmercy for 
+helping test it.
+
+Fullmon/Thundermoo/Bloodyaxe-Faerlina

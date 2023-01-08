@@ -5,7 +5,7 @@
 ## Author: Moongaze (Twisting Nether)
 ## Fixer:  Shaun Voysey
 ## Fixer#2: Toludin (Stormrage)
-## Fixer#3: Fullmoon (Sulfuras)
+## Fixer#3: Fullmoon (Faerlina)
 ##
 ## Title: LunarSphere v.1.61
 ##

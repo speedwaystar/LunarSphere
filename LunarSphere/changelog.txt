@@ -5,10 +5,18 @@ Version 1.61 Changelog
 Feature Changes
 ======================
 
-* Support for Dragonflight in alpha stage.
+* Add support for extra powers (Lunar Power, Insanity, Chi, etc)
+* Add Monk, Demon Hunter, and Evoker support/templates
+* Fix drop down menu border textures
+* Add support for ActionButtonUseKeyDown console variable
+* Fix Sphere Button textures
+* Fix Button Settings menu button textures
+* Fix LunarSphere Settings Skin Selection button textures
 
 Many tanks to Zenyari1 for updating LS to Dragonflight and nicodemusmercy for 
 helping test it.
+
+=======================================================================================
 
 LunarSphere Public Release
 Version 1.60 Changelog
@@ -476,16 +484,3 @@ Bug Fixes
 *  Fixed an issue where hiding the default action bar buttons would screw with the possess bar to make it unstable and work *sometimes* which, while in a raid, is totally unacceptable. This fix is not fully tested, so if it still freaks out, I will need to do more work.
 
 *  Fixed an issue where hiding and then showing the action bar buttons with LunarSphere, while on a Warrior, would break the action bar and require a reload of the interface.
-
-
-
-
-===========================================
-All previous changelogs can be seen inside
-the changelog board (which also looks better
-and is formatted), found at:
-
-http://lunaraddons.com/forum/index.php?board=29.0
-
-- Moongaze (moongazemods@gmail.com)
-===========================================

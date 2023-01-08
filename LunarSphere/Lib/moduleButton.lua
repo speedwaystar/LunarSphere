@@ -1343,7 +1343,9 @@ function Lunar.Button:Create(name, parent, includeHeader)
 
 	button.texture = icon;
 
-	button.SlotBackground:SetAlpha(0);
+	if button.SlotBackground then
+		button.SlotBackground:SetAlpha(0);
+	end
 
 	button.readyShine = _G[name .. "Cooldown"];
 	button.readyShine:ClearAllPoints();
@@ -4298,19 +4300,19 @@ function Lunar.Button:GetBagCountData(buttonType)
 	if (buttonType == 95) then
 		local bagID;
 		for bagID = 0, 4 do 
-			usedSlots = usedSlots + (GetContainerNumFreeSlots(bagID) or 0);--(Lunar.Items.bagSlots[bagID] or 0);
-			totalSlots = totalSlots + (GetContainerNumSlots(bagID) or 0);
+			usedSlots = usedSlots + (Lunar.Items:GetContainerNumFreeSlots(bagID) or 0);--(Lunar.Items.bagSlots[bagID] or 0);
+			totalSlots = totalSlots + (Lunar.Items:GetContainerNumSlots(bagID) or 0);
 		end
 		usedSlots = totalSlots - usedSlots;
 									
 	-- Individual bags
 	else
 --		usedSlots = Lunar.Items.bagSlots[buttonType - 90] or "?";
-		totalSlots = GetContainerNumSlots(buttonType - 90) or "?";
+		totalSlots = Lunar.Items:GetContainerNumSlots(buttonType - 90) or "?";
 		if (totalSlots == "?") then
 			usedSlots = "?";
 		else
-			usedSlots = totalSlots - (GetContainerNumFreeSlots(buttonType - 90) or 0);
+			usedSlots = totalSlots - (Lunar.Items:GetContainerNumFreeSlots(buttonType - 90) or 0);
 		end
 	end	
 

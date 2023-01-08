@@ -190,12 +190,6 @@ DefaultGaugeColorValues =
 		g = PowerBarColor["MAELSTROM"].g;
 		b = PowerBarColor["MAELSTROM"].b;
 	};
-	[LS_EVENT_RUNE] = -- 51
-	{
-		r = PowerBarColor["RUNES"].r;
-		g = PowerBarColor["RUNES"].g;
-		b = PowerBarColor["RUNES"].b;
-	};
 	[LS_EVENT_SOUL_SHARD] = -- 52
 	{
 		r = PowerBarColor["SOUL_SHARDS"].r;
@@ -228,6 +222,15 @@ DefaultGaugeColorValues =
 		b = 1.00;
 	};
 };
+
+if PowerBarColor["RUNES"] then
+	DefaultGaugeColorValues[LS_EVENT_RUNE] = -- 51
+	{
+		r = PowerBarColor["RUNES"].r;
+		g = PowerBarColor["RUNES"].g;
+		b = PowerBarColor["RUNES"].b;
+	};
+end
 
 function Lunar.Sphere:GetGaugeColorDefaultSettings(gaugeType, r, g, b)
 	local colorGaugeSetting;
@@ -480,12 +483,10 @@ local dataTracking = {
 		[Enum.PowerType.Maelstrom] = LS_EVENT_MAELSTROM, --Croq Added in 1.30 -- 1.3 Croq Add Had to add for Mealstrome (shaman)
 		[Enum.PowerType.Chi] = LS_EVENT_CHI, --Croq Added in 1.30
 		[Enum.PowerType.Insanity] = LS_EVENT_INSANITY, --Croq Added in 1.30
-		[Enum.PowerType.Obsolete] = LS_EVENT_ENERGY, --Croq Added in 1.30
 		[Enum.PowerType.Obsolete2] = LS_EVENT_ENERGY, --Croq Added in 1.30
 		[Enum.PowerType.ArcaneCharges] = LS_EVENT_ARCANE_CHARGE, --Croq Added in 1.30
 		[Enum.PowerType.Fury] = LS_EVENT_FURY, --Croq Added in 1.30 - for demon hunters
 		[Enum.PowerType.Pain] = LS_EVENT_ENERGY,
-		[Enum.PowerType.Essence] = LS_EVENT_ESSENCE,
 	};
 
 	extraPowerType = {
@@ -504,6 +505,16 @@ local dataTracking = {
 		["WARRIOR"] = Enum.PowerType.Mana,
 	};
 };
+
+-- Enum.PowerType.Obsolete only exists in Retail
+if Enum.PowerType.Obsolete then
+	dataTracking["powerName"][Enum.PowerType.Obsolete] = LS_EVENT_ENERGY --Croq Added in 1.30
+end
+
+-- Enum.PowerType.Essence doesn't exist in SoM
+if Enum.PowerType.Essence then
+	dataTracking["powerName"][Enum.PowerType.Essence] = LS_EVENT_ESSENCE --Croq Added in 1.30
+end
 
 -- /***********************************************
 --   Functions
