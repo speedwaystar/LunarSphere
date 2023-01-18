@@ -1,4 +1,13 @@
 LunarSphere Public Release
+Version 1.62 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed LS for WotLK Classic patch 3.4.1
+
+LunarSphere Public Release
 Version 1.61 Changelog
 
 ======================

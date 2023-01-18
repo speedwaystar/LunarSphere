@@ -2437,34 +2437,34 @@ function Lunar.Items:GetHealthStoneStrength(itemId)
 end
 
 function Lunar.Items:GetContainerNumSlots(bagID)
-	if( Lunar.API:IsVersionRetail() ) then
-		return C_Container.GetContainerNumSlots(bagID);
-	else
+	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerNumSlots(bagID);
+	else
+		return C_Container.GetContainerNumSlots(bagID);
 	end
 end
 
 function Lunar.Items:GetContainerItemLink(bagID, slot)
-	if( Lunar.API:IsVersionRetail() ) then
-		return C_Container.GetContainerItemLink(bagID, slot);
-	else
+	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerItemLink(bagID, slot);
+	else
+		return C_Container.GetContainerItemLink(bagID, slot);
 	end
 end
 
 function Lunar.Items:GetContainerItemInfo(bagID, slot)
-	if( Lunar.API:IsVersionRetail() ) then
-		return C_Container.GetContainerItemInfo(bagID, slot);
-	else
+	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerItemInfo(bagID, slot);
+	else
+		return C_Container.GetContainerItemInfo(bagID, slot);
 	end
 end
 
 function Lunar.Items:GetContainerNumFreeSlots(bagID)
-	if( Lunar.API:IsVersionRetail() ) then
-		return Lunar.Items:GetContainerNumFreeSlots(bagID);
-	else
+	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerNumFreeSlots(bagID);
+	else
+		return Lunar.Items:GetContainerNumFreeSlots(bagID);
 	end
 end
 

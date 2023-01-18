@@ -2712,7 +2712,11 @@ function Lunar.API:GetItemCooldown(itemData)
 	local itemID = Lunar.API:GetItemID(itemLink)
 
 	if (itemID) then
-		return GetItemCooldown(itemID);
+        if( Lunar.API:IsVersionClassic() ) then
+            return GetItemCooldown(itemID);
+        else
+            return C_Container.GetItemCooldown(itemID);
+        end
 	end
 
 	return 0, 0, 0;

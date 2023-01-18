@@ -150,8 +150,8 @@ features that you'd like to be added.
 
 ### User Manual and various help that might be needed
 
-LunarSphere doesn't have a usre manual, but [Dreambound's blog post](http://dreambound-druid.blogspot.com/2009/03/lunarsphere.html) is pretty
-close to one.
+LunarSphere doesn't have a user manual, but [Dreambound's blog post](http://dreambound-druid.blogspot.com/2009/03/lunarsphere.html) 
+is pretty close to one.
 
 LunarSphere can be overwhelming at first. Lots of beta testers who helped with
 the project have said that after getting used to it, LunarSphere became
@@ -176,11 +176,11 @@ please make sure that you inform:
 The more specific the report is, the easier for me to find the problem and fix
 it.
 
-## Current Version: 1.61
+## Current Version: 1.62
 
 * Update to WoW 10.0.2 / Dragonflight for LunarSphere
 * Update to WoW 1.14.2 / Classic Era (SoM) for LunarSphere
-* Update to WoW 3.4.0  / WotLK-Classic for LunarSphere
+* Update to WoW 3.4.1  / WotLK-Classic for LunarSphere
 
 Updates for LunarSphere are distributed via WowUp and Curseforge. Be sure to
 get the latest version here:
@@ -193,7 +193,7 @@ get the latest version here:
 
 My first thanks must go to Moongsaze that coded this amazing addon. I
 originally found it when playing WotLK and I think it's one of the most
-Useful addons I have. Many thanks for the other torch bearers over the years
+useful addons I have. Many thanks for the other torch bearers over the years
 who kept LS alive: N3od3ath, Toludin-Stormrage, and voyseys.
 
 Many tanks to Zenyari1 for updating LS to Dragonflight and nicodemusmercy for 
