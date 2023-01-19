@@ -2456,7 +2456,12 @@ function Lunar.Items:GetContainerItemInfo(bagID, slot)
 	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerItemInfo(bagID, slot);
 	else
-		return C_Container.GetContainerItemInfo(bagID, slot);
+		-- Thanks Blizzard for fucking this up. GetContainerItemInfo returns 
+		-- an 11-tuple, but C_Container.GetContainerItemInfo returns _A TABLE_.
+		-- I honestly hope the Micro$oft deal goes throught and 80 % of the 
+		-- developers get fired. unpack() returns nil, so do it manually.
+		local _info = C_Container.GetContainerItemInfo(bagID, slot);
+		return _info.iconFileID, _info.stackCount, _info.isLocked, _info.quality, _info.isReadable, _info.hasLoot, _info.hyperlink, _info.isFiltered, _info.hasNoValue, _info.itemID, _info.isBound
 	end
 end
 
@@ -2464,7 +2469,7 @@ function Lunar.Items:GetContainerNumFreeSlots(bagID)
 	if( Lunar.API:IsVersionClassic() ) then
 		return GetContainerNumFreeSlots(bagID);
 	else
-		return Lunar.Items:GetContainerNumFreeSlots(bagID);
+		return C_Container.GetContainerNumFreeSlots(bagID);
 	end
 end
 
