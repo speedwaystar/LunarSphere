@@ -176,7 +176,7 @@ please make sure that you inform:
 The more specific the report is, the easier for me to find the problem and fix
 it.
 
-## Current Version: 1.62
+## Current Version: 1.63
 
 * Update to WoW 10.0.2 / Dragonflight for LunarSphere
 * Update to WoW 1.14.2 / Classic Era (SoM) for LunarSphere
