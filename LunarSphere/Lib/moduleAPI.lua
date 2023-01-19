@@ -2907,6 +2907,8 @@ function Lunar.API:GetBuildInfo()
     return t;
 end
 
+
+if ( Lunar.API:IsVersionClassic() ) then
 --
 -- Lunar.API:IsFlyableArea()
 -- 
@@ -2921,12 +2923,13 @@ end
 -- Zone ID from
 -- https://wowpedia.fandom.com/wiki/UiMapID
 --
-function Lunar.API:IsFlyableArea()
+    function Lunar.API:IsFlyableArea()
+        return nil
+    end
 
-	local _, _, _, t = GetBuildInfo();
+elseif Lunar.API:IsVersionWotLK() then
 
-    if ( Lunar.API:IsVersionWotLK() ) then
-
+    function Lunar.API:IsFlyableArea()
         local zone_id = C_Map.GetBestMapForUnit("player")
         -- Dalaran. Check if we're in Krasus' Landing
         if( zone_id == 125 ) then
@@ -2946,11 +2949,10 @@ function Lunar.API:IsFlyableArea()
         else
             return IsFlyableArea()
         end
+    end
 
-	-- Retail or BCC
-    elseif (t >= 20000) then
-    	return IsFlyableArea()
-    else
-    	return nil
+else
+    function Lunar.API:IsFlyableArea()
+        return IsFlyableArea()
     end
 end

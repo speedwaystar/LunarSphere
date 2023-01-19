@@ -1181,7 +1181,6 @@ function Lunar.Items:WotLKIsMountEpic(mount)
     return tContains(mounts, itemID)
 end
 
-
 function Lunar.Items:IsMountEpic(mount)
 
 	if( Lunar.API:IsVersionWotLK() ) then
@@ -1357,9 +1356,7 @@ function Lunar.Items:UpdateLowHighItems()
 	local nameIndex, index, low, high, lowSpecial, highSpecial, lowCombo, highCombo, itemType
 	local lowCooldown, highCooldown, lowNoCooldown, highNoCooldown, usableItem, bestRange;
 	local cooldown, isFavourite, minLevel;
---	local hasEpicGroundMount, hasEpicFlyingMount, hasEpicFlyingMount310;
 	local canFly = Lunar.API:IsFlyableArea()
---	local canFly = Lunar.API:CanFly()
 	local inAQ = Lunar.API:IsInAQ();
 	local Lunar_Seahorse = 0;
     local Lunar_AbyssalMount_Name, _ = GetSpellInfo(75207);
@@ -2132,8 +2129,6 @@ end
 
 function Lunar.Items:ClassicScanForSpellMounts()
 
-	print("1822 Lunar.Items:ClassicScanForSpellMounts()")
-
 	local SpellMountsIDs = {
 		23214, -- summon charger 
 		13819, -- summon warhorse
@@ -2153,8 +2148,6 @@ function Lunar.Items:ClassicScanForSpellMounts()
 
 			local mountType = 248
 			local itemLevel = UnitLevel("player")
-
-			--print("1835 ClassicScanForSpellMounts : ", GetSpellInfo(spellID))
 
 			-- All mounts
 			Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
