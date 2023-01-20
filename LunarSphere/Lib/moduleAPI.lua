@@ -1150,11 +1150,11 @@ function Lunar.API:Load()
 
 												-- From the bank	
 												if (itemIndex <= NUM_BANKGENERIC_SLOTS) then
-													UseContainerItem(BANK_CONTAINER, itemIndex);
+													Lunar.API:UseContainerItem(BANK_CONTAINER, itemIndex);
 
 												-- From a bank bag
 												else
-													UseContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot);
+													Lunar.API:UseContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot);
 												end
 
 												restockCounter = 0 --restockCounter - maxBuyAmount
@@ -1301,20 +1301,20 @@ function Lunar.API:Load()
 
 								-- If it's armor and we're selling armor, sell it and update the receipt
 								if ((itemType == armorType) and not (keepAllArmor))  then
-									UseContainerItem(bagIndex, slotIndex);
+									Lunar.API:UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
 								-- If it's a weapon and we're selling weapons, sell it and update the receipt
 								if ((itemType == weaponType) and not (keepAllWeapons))  then
-									UseContainerItem(bagIndex, slotIndex);
+									Lunar.API:UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
 								-- If it's not armor or a weapon, and we're selling non-equipment, sell it
 								-- and update the receipt
 								if ((not(itemType == armorType)) and (not(itemType == weaponType)) and not (keepNonEquip)) then
-									UseContainerItem(bagIndex, slotIndex);
+									Lunar.API:UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
@@ -2907,11 +2907,22 @@ function Lunar.API:GetBuildInfo()
     return t;
 end
 
-
 if ( Lunar.API:IsVersionClassic() ) then
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+---                                                                        ---
+---                            SoM Functions                               ---
+---                                                                        ---
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
     function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
         SplitContainerItem(containerIndex, slotIndex, amount)
+    end
+
+    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
+        UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
     end
 
 --
@@ -2934,8 +2945,20 @@ if ( Lunar.API:IsVersionClassic() ) then
 
 elseif Lunar.API:IsVersionWotLK() then
 
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+---                                                                        ---
+---                            WotLK Functions                             ---
+---                                                                        ---
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
     function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
         C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
+    end
+
+    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
+        C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
     end
 
     function Lunar.API:IsFlyableArea()
@@ -2962,8 +2985,21 @@ elseif Lunar.API:IsVersionWotLK() then
 
 else
 
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+---                                                                        ---
+---                           Retail Functions                             ---
+---                                                                        ---
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+
     function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
         C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
+    end
+
+    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
+        C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
     end
 
     function Lunar.API:IsFlyableArea()

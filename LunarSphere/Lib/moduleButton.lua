@@ -2536,7 +2536,6 @@ function Lunar.Button:ContinueTrade()
 
 							-- Pickup the item and drop it into the trade window
 							SplitContainerItem(bagID, slotID, count); 
-	--						PickupContainerItem(bagID, slotID);
 							ClickTradeButton(tradeSlot);
 
 							-- If we hit our limit, or ran out of this item, we stop messing
@@ -2558,19 +2557,11 @@ function Lunar.Button:ContinueTrade()
 			table.remove(Lunar.Button.tradingQueue, 1);
 		end
 		
---		PickupContainerItem(0,2);
---		ClickTradeButton(2);
 	else
 		-- Needs refresh first
 		Lunar.Button.tradingStage = 3
---		AcceptTrade();
---		end
 	end
 	Lunar.Button.tradingStage = 3
-
---	PickupContainerItem(0,1);
---	ClickTradeButton(1-7);
---	AcceptTrade();
 end
 
 function Lunar.Button:ButtonTypeClick(buttonType)
