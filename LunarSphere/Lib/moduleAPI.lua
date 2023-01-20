@@ -1124,11 +1124,11 @@ function Lunar.API:Load()
 														
 													-- From the bank	
 													if (itemIndex <= NUM_BANKGENERIC_SLOTS) then
-														SplitContainerItem(BANK_CONTAINER, itemIndex, restockCounter); 
+														Lunar.API:SplitContainerItem(BANK_CONTAINER, itemIndex, restockCounter); 
 
 													-- From a bank bag
 													else
-														SplitContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot, restockCounter);
+														Lunar.API:SplitContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot, restockCounter);
 													end
 
 													if (bagIndex == 0) then
@@ -2909,6 +2909,11 @@ end
 
 
 if ( Lunar.API:IsVersionClassic() ) then
+
+    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
+        SplitContainerItem(containerIndex, slotIndex, amount)
+    end
+
 --
 -- Lunar.API:IsFlyableArea()
 -- 
@@ -2928,6 +2933,10 @@ if ( Lunar.API:IsVersionClassic() ) then
     end
 
 elseif Lunar.API:IsVersionWotLK() then
+
+    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
+        C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
+    end
 
     function Lunar.API:IsFlyableArea()
         local zone_id = C_Map.GetBestMapForUnit("player")
@@ -2952,6 +2961,11 @@ elseif Lunar.API:IsVersionWotLK() then
     end
 
 else
+
+    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
+        C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
+    end
+
     function Lunar.API:IsFlyableArea()
         return IsFlyableArea()
     end
