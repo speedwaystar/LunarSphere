@@ -1,4 +1,11 @@
 LunarSphere Public Release
+Version 1.64 Changelog
+
+No changes, re-release of 1.63 because I originally made 1.63 an alpha release 
+on Curse.
+
+
+LunarSphere Public Release
 Version 1.63 Changelog
 
 ======================
