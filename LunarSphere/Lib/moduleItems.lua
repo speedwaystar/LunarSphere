@@ -2155,226 +2155,11 @@ function Lunar.Items:ClassicScanForSpellMounts()
 	end
 end
 
--- Replicates the functionality of C_MountJournal.GetMountInfoExtraByID for WotLK:
---
--- mountTypeID
--- number - a number indicating the capabilities of the mount; known values include:
--- 230 for most ground mounts
--- 231 for  [Riding Turtle] and  [Sea Turtle]
--- 232 for  [Vashj'ir Seahorse] (was named Abyssal Seahorse prior to Warlords of Draenor)
--- 241 for Blue, Green, Red, and Yellow Qiraji Battle Tank (restricted to use inside Temple of Ahn'Qiraj)
--- 242 for Swift Spectral Gryphon (hidden in the mount journal, used while dead in certain zones)
--- 247 for  [Disc of the Red Flying Cloud]
--- 248 for most flying mounts, including those that change capability based on riding skill
--- 254 for  [Reins of Poseidus],  [Brinedeep Bottom-Feeder] and  [Fathom Dweller]
--- 269 for  [Reins of the Azure Water Strider] and  [Reins of the Crimson Water Strider]
--- 284 for  [Chauffeured Chopper] and Chauffeured Mechano-Hog
--- 398 for  [Kua'fon's Harness]
--- 407 for  [Deepstar Polyp]
--- 408 for  [Unsuccessful Prototype Fleetpod]
-
-function Lunar.Items:WotLKGetMountType(mount)
-
-    local itemID = Lunar.Items:getMountID(mount)
-
-    if itemID >= 458 and itemID <= 25863 then -- Brown Horse -> Black Qiraji Battle Tank
-        return 230 -- most ground mounts
-    end
-    if itemID >= 25953 and itemID <= 26056 then -- Blue Qiraji Battle Tank -> Green Qiraji Battle Tank
-        return 241 -- Blue, Green, Red, and Yellow Qiraji Battle Tank (restricted to use inside Temple of Ahn'Qiraj)
-    end
-    if itemID >= 26655 and itemID <= 26656 then -- Black Qiraji Battle Tank -> Black Qiraji Battle Tank
-        return 230 -- most ground mounts
-    end
-    if itemID >= 28828 and itemID <= 28828 then -- Nether Drake -> Nether Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 30174 and itemID <= 30174 then -- Riding Turtle -> Riding Turtle
-        return 231 -- [Riding Turtle] and Sea Turtle
-    end
-    if itemID >= 32235 and itemID <= 32297 then -- Golden Gryphon -> Swift Purple Wind Rider
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 33630 and itemID <= 36702 then -- Blue Mechanostrider -> Fiery Warhorse
-        return 230 -- most ground mounts
-    end
-    if itemID >= 37015 and itemID <= 37015 then -- Swift Nether Drake -> Swift Nether Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 39315 and itemID <= 39319 then -- Cobalt Riding Talbuk -> White Riding Talbuk
-        return 230 -- most ground mounts
-    end
-    if itemID >= 39798 and itemID <= 40192 then -- Green Riding Nether Ray -> Ashes of Al'ar
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 41252 and itemID <= 41252 then -- Raven Lord -> Raven Lord
-        return 230 -- most ground mounts
-    end
-    if itemID >= 41513 and itemID <= 41518 then -- Onyx Netherwing Drake -> Violet Netherwing Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 42776 and itemID <= 43900 then -- Spectral Tiger -> Swift Brewfest Ram
-        return 230 -- most ground mounts
-    end
-    if itemID >= 43927 and itemID <= 46199 then -- Cenarion War Hippogryph -> X-51 Nether-Rocket X-TREME
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 46628 and itemID <= 46628 then -- Swift White Hawkstrider -> Swift White Hawkstrider
-        return 230 -- most ground mounts
-    end
-    if itemID >= 48025 and itemID <= 48025 then -- Headless Horseman's Mount -> Headless Horseman's Mount
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 48027 and itemID <= 48954 then -- Black War Elekk -> Swift Zhevra
-        return 230 -- most ground mounts
-    end
-    if itemID >= 49193 and itemID <= 49193 then -- Vengeful Nether Drake -> Vengeful Nether Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 49322 and itemID <= 51412 then -- Swift Zhevra -> Big Battle Bear
-        return 230 -- most ground mounts
-    end
-    if itemID >= 54729 and itemID <= 54729 then -- Winged Steed of the Ebon Blade -> Winged Steed of the Ebon Blade
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 54753 and itemID <= 54753 then -- White Polar Bear -> White Polar Bear
-        return 230 -- most ground mounts
-    end
-    if itemID >= 55164 and itemID <= 55164 then -- Swift Spectral Gryphon -> Swift Spectral Gryphon
-        return 242 -- Swift Spectral Gryphon (hidden in the mount journal, used while dead in certain zones)
-    end
-    if itemID >= 55531 and itemID <= 55531 then -- Mechano-Hog -> Mechano-Hog
-        return 230 -- most ground mounts
-    end
-    if itemID >= 58615 and itemID <= 58615 then -- Brutal Nether Drake -> Brutal Nether Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 58983 and itemID <= 58983 then -- Big Blizzard Bear -> Big Blizzard Bear
-        return 230 -- most ground mounts
-    end
-    if itemID >= 59567 and itemID <= 59571 then -- Azure Drake -> Twilight Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 59572 and itemID <= 59572 then -- Black Polar Bear -> Black Polar Bear
-        return 230 -- most ground mounts
-    end
-    if itemID >= 59650 and itemID <= 59650 then -- Black Drake -> Black Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 59785 and itemID <= 59799 then -- Black War Mammoth -> Ice Mammoth
-        return 230 -- most ground mounts
-    end
-    if itemID >= 59961 and itemID <= 60025 then -- Red Proto-Drake -> Albino Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 60114 and itemID <= 60424 then -- Armored Brown Bear -> Mekgineer's Chopper
-        return 230 -- most ground mounts
-    end
-    if itemID >= 61229 and itemID <= 61309 then -- Armored Snowy Gryphon -> Magnificent Flying Carpet
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 61425 and itemID <= 61447 then -- Traveler's Tundra Mammoth -> Traveler's Tundra Mammoth
-        return 230 -- most ground mounts
-    end
-    if itemID >= 61451 and itemID <= 61451 then -- Flying Carpet -> Flying Carpet
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 61465 and itemID <= 61470 then -- Grand Black War Mammoth -> Grand Ice Mammoth
-        return 230 -- most ground mounts
-    end
-    if itemID >= 61996 and itemID <= 62048 then -- Blue Dragonhawk -> Illidari Doomhawk
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 63232 and itemID <= 63643 then -- Stormwind Steed -> Forsaken Warhorse
-        return 230 -- most ground mounts
-    end
-    if itemID >= 63796 and itemID <= 63963 then -- Mimiron's Head -> Rusted Proto-Drake
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 64656 and itemID <= 64659 then -- Blue Skeletal Warhorse -> Venomhide Ravasaur
-        return 230 -- most ground mounts
-    end
-    if itemID >= 64731 and itemID <= 64731 then -- Sea Turtle -> Sea Turtle
-        return 231 -- [Riding Turtle] and Sea Turtle
-    end
-    if itemID >= 64927 and itemID <= 64927 then -- Deadly Gladiator's Frost Wyrm -> Deadly Gladiator's Frost Wyrm
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 64977 and itemID <= 64977 then -- Black Skeletal Horse -> Black Skeletal Horse
-        return 230 -- most ground mounts
-    end
-    if itemID >= 65439 and itemID <= 65439 then -- Furious Gladiator's Frost Wyrm -> Furious Gladiator's Frost Wyrm
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 65637 and itemID <= 65917 then -- Great Red Elekk -> Magic Rooster
-        return 230 -- most ground mounts
-    end
-    if itemID >= 66087 and itemID <= 66088 then -- Silver Covenant Hippogryph -> Sunreaver Dragonhawk
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 66090 and itemID <= 66906 then -- Quel'dorei Steed -> Argent Charger
-        return 230 -- most ground mounts
-    end
-    if itemID >= 67336 and itemID <= 67336 then -- Relentless Gladiator's Frost Wyrm -> Relentless Gladiator's Frost Wyrm
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 67466 and itemID <= 68188 then -- Argent Warhorse -> Crusader's Black Warhorse
-        return 230 -- most ground mounts
-    end
-    if itemID >= 69395 and itemID <= 72808 then -- Onyxian Drake -> Bloodbathed Frostbrood Vanquisher
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 73313 and itemID <= 73313 then -- Crimson Deathcharger -> Crimson Deathcharger
-        return 230 -- most ground mounts
-    end
-    if itemID >= 74856 and itemID <= 74856 then -- Blazing Hippogryph -> Blazing Hippogryph
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-    if itemID >= 74918 and itemID <= 74918 then -- Wooly White Rhino -> Wooly White Rhino
-        return 230 -- most ground mounts
-    end
-    if itemID >= 75596 and itemID <= 75973 then -- Frosty Flying Carpet -> X-53 Touring Rocket
-        return 248 -- most flying mounts, including those that change capability based on riding skill
-    end
-
-end
-
-function Lunar.Items:WotLKScanForSpellMounts()
-
-	local amount = GetNumCompanions("mount")
-	for i = 1, amount do
-		-- mountType is always nil, can't rely on it.
-	    local creatureID, creatureName, creatureSpellID, icon, issummoned, mountType = GetCompanionInfo("mount",i)
-
-		--print("1900 Lunar.Items:WotLKScanForSpellMounts() ", ", creatureID: ", creatureID, ", creatureName: ", creatureName, ", creatureSpellID: ", creatureSpellID, ", icon: ", icon, ", issummoned: ", issummoned, ", mountType: ", mountType )
-	    
-		local spellID = creatureSpellID
-
-		local name, rank, icon, castTime, minRange, maxRange, _id = GetSpellInfo(spellID)
-
-		--print("1907 Lunar.Items:WotLKScanForSpellMounts(): ", "spellID: ", spellID, ", name: ", name,", rank: ", rank,", icon: ", icon,", castTime: ", castTime,", minRange: ", minRange,", maxRange: ", maxRange, ", _id: ", _id)
-
-		local spellName = "**" .. spellID --.. "~" .. spellName .. "~" .. spellTexture; 
-
-		local mountType = Lunar.Items:WotLKGetMountType(spellID)
-		local itemLevel = UnitLevel("player")
-
-		--print("2113 Lunar.Items:WotLKScanForSpellMounts() ", ", creatureID: ", creatureID, ", creatureName: ", creatureName, ", creatureSpellID: ", creatureSpellID, ", icon: ", icon, ", issummoned: ", issummoned, ", mountType: ", mountType )
-
-		-- All mounts
-		Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
-	end
-
-end
-
 function Lunar.Items:ScanForSpellMounts()
-
-	if ( Lunar.API:IsVersionRetail() == true ) then
-		Lunar.Items:RetailScanForSpellMounts()
-	elseif ( Lunar.API:IsVersionWotLK()	== true) then
-		Lunar.Items:WotLKScanForSpellMounts()
-	else
+	if ( Lunar.API:IsVersionClassic() == true ) then
 		Lunar.Items:ClassicScanForSpellMounts()
+	else
+		Lunar.Items:RetailScanForSpellMounts()
 	end
 end
 
@@ -2429,41 +2214,41 @@ function Lunar.Items:GetHealthStoneStrength(itemId)
 
 end
 
+-- Wrapper function to handle the different clients (Retail, Classic, and WotLK).
+-- Classic got the C_Container API since patch 1.14.4. Keeping this function as
+-- not have to refactor the callers.
 function Lunar.Items:GetContainerNumSlots(bagID)
-	if( Lunar.API:IsVersionClassic() ) then
-		return GetContainerNumSlots(bagID);
-	else
-		return C_Container.GetContainerNumSlots(bagID);
-	end
+	return C_Container.GetContainerNumSlots(bagID);
 end
 
+-- Wrapper function to handle the different clients (Retail, Classic, and WotLK).
+-- Classic got the C_Container API since patch 1.14.4. Keeping this function as
+-- not have to refactor the callers.
 function Lunar.Items:GetContainerItemLink(bagID, slot)
-	if( Lunar.API:IsVersionClassic() ) then
-		return GetContainerItemLink(bagID, slot);
-	else
-		return C_Container.GetContainerItemLink(bagID, slot);
-	end
+	return C_Container.GetContainerItemLink(bagID, slot);
 end
 
+-- Wrapper function to handle the different clients (Retail, Classic, and WotLK).
+-- Classic got the C_Container API since patch 1.14.4. Keeping this function as
+-- not have to refactor the callers.
 function Lunar.Items:GetContainerItemInfo(bagID, slot)
-	if( Lunar.API:IsVersionClassic() ) then
-		return GetContainerItemInfo(bagID, slot);
-	else
+	--if( Lunar.API:IsVersionClassic() ) then
+	--	return GetContainerItemInfo(bagID, slot);
+	--else
 		-- Thanks Blizzard for fucking this up. GetContainerItemInfo returns 
 		-- an 11-tuple, but C_Container.GetContainerItemInfo returns _A TABLE_.
 		-- I honestly hope the Micro$oft deal goes throught and 80 % of the 
 		-- developers get fired. unpack() returns nil, so do it manually.
 		local _info = C_Container.GetContainerItemInfo(bagID, slot);
 		return _info.iconFileID, _info.stackCount, _info.isLocked, _info.quality, _info.isReadable, _info.hasLoot, _info.hyperlink, _info.isFiltered, _info.hasNoValue, _info.itemID, _info.isBound
-	end
+	--end
 end
 
+-- Wrapper function to handle the different clients (Retail, Classic, and WotLK).
+-- Classic got the C_Container API since patch 1.14.4. Keeping this function as
+-- not have to refactor the callers.
 function Lunar.Items:GetContainerNumFreeSlots(bagID)
-	if( Lunar.API:IsVersionClassic() ) then
-		return GetContainerNumFreeSlots(bagID);
-	else
-		return C_Container.GetContainerNumFreeSlots(bagID);
-	end
+	return C_Container.GetContainerNumFreeSlots(bagID);
 end
 
 -- /***********************************************
