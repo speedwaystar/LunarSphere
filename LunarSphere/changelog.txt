@@ -1,3 +1,13 @@
+LunarSphere Public Release
+Version 1.66 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed buttons for WotLK Classic patch 3.4.3 and Clasic patch 1.14.4
+
+=======================================================================================
 
 LunarSphere Public Release
 Version 1.64 Changelog
@@ -23,6 +33,8 @@ Bug Fixes
 
 * Fixed buttons for WotLK Classic patch 3.4.1
 
+=======================================================================================
+
 LunarSphere Public Release
 Version 1.62 Changelog
 
@@ -31,6 +43,8 @@ Bug Fixes
 ======================
 
 * Fixed LS for WotLK Classic patch 3.4.1
+
+=======================================================================================
 
 LunarSphere Public Release
 Version 1.61 Changelog

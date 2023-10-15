@@ -176,11 +176,11 @@ please make sure that you inform:
 The more specific the report is, the easier for me to find the problem and fix
 it.
 
-## Current Version: 1.64
+## Current Version: 1.66
 
-* Update to WoW 10.0.2 / Dragonflight for LunarSphere
-* Update to WoW 1.14.2 / Classic Era (SoM) for LunarSphere
-* Update to WoW 3.4.1  / WotLK-Classic for LunarSphere
+* Update to WoW 10.1.7 / Dragonflight for LunarSphere
+* Update to WoW 1.14.4 / Classic Era (SoM) for LunarSphere
+* Update to WoW 3.4.3  / WotLK-Classic for LunarSphere
 
 Updates for LunarSphere are distributed via WowUp and Curseforge. Be sure to
 get the latest version here:
