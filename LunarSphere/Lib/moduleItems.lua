@@ -594,6 +594,10 @@ function Lunar.Items:BuildLookupStrings()
 --	local tempWeapon,tempArmor,_,tempConsume;
 --	local _, tempReagent = C_AuctionHouse.GetAuctionItemSubClasses(10);
 
+	-- This is the most retarded thing ever. GetItemInfo will return on the
+	-- 12th value the classID and on the 13th the subclassID, both of which do
+	-- _NOT_ change with the locale. Talk about reinventing the wheel.
+
 	if (not searchData.weapon) or (searchData.weapon == "") then
 		searchData.weapon = tempWeapon;
 		if (not searchData.weapon) or (searchData.weapon == "") then

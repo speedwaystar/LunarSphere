@@ -2903,6 +2903,14 @@ function Lunar.API:GetBuildInfo()
     return t;
 end
 
+function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
+    C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
+end
+
+function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
+    C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
+end
+
 if ( Lunar.API:IsVersionClassic() ) then
 
 ------------------------------------------------------------------------------
@@ -2913,13 +2921,6 @@ if ( Lunar.API:IsVersionClassic() ) then
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
-    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
-        SplitContainerItem(containerIndex, slotIndex, amount)
-    end
-
-    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
-        UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
-    end
 
 --
 -- Lunar.API:IsFlyableArea()
@@ -2948,14 +2949,6 @@ elseif Lunar.API:IsVersionWotLK() then
 ---                                                                        ---
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-
-    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
-        C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
-    end
-
-    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
-        C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
-    end
 
     function Lunar.API:IsFlyableArea()
         local zone_id = C_Map.GetBestMapForUnit("player")
@@ -2988,15 +2981,6 @@ else
 ---                                                                        ---
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-
-
-    function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
-        C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
-    end
-
-    function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
-        C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
-    end
 
     function Lunar.API:IsFlyableArea()
         return IsFlyableArea()

@@ -2454,7 +2454,6 @@ function Lunar.Button:UpdateLastUsedSubmenu(menuButton, childButton, clickType, 
 							elseif (attributeType == "item") then
 								local objectType, stackTotal
 								_,_,_,_,_,objectType,_,stackTotal = GetItemInfo(attributeValue);
-
 								if (IsConsumableItem(attributeValue) or (stackTotal > 1) or (objectType == Lunar.Items.reagentString)) then
 									_G[menuButton:GetName() .. "Count"]:SetText(GetItemCount(attributeValue, nil, true));
 
@@ -3889,8 +3888,6 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 			else
 				objectName = Lunar.Items:GetItem(Lunar.Items:GetCatagoryName(buttonType - 109), 3, true);
 			end
-
-				--print("objectName (3893) : ", objectName)
 
 			-- Or grab our strongest
 --			elseif (math.fmod(buttonType, 10) == 1) then
@@ -5538,7 +5535,14 @@ function Lunar.Button:Update(self, countOnly)
 			end
 		end
 	elseif (self.buttonType) and ((self.buttonType == 130) or (self.buttonType == 131)) then
-		macroEquiped = IsEquippedItem(GetInventoryItemLink("player", self.buttonType - 117));
+		-- 130-117=13==INVSLOT_TRINKET1
+		-- 131-117=14==INVSLOT_TRINKET2
+		local ilink = GetInventoryItemLink("player", self.buttonType - 117)
+		if ilink then
+			macroEquiped = IsEquippedItem(ilink);
+		else
+			macroEquiped = false;
+		end
 	end
 
 	-- Now, if the button is an item button ...
@@ -7151,44 +7155,22 @@ function Lunar.Button:SetTooltip(self)
 
 --			buttonType = LunarSphereSettings.buttonData[self:GetID()]["buttonType" .. index];
 			itemCount = "";
-
-			--print("buttonType (7121):", buttonType)
-
 			if (buttonType) then
-
-				--print("actionType (7125):", actionType)
-
 				if (actionType == "item") then
-					_, itemLink, _, _, _, objectMainType, objectType, stackTotal = GetItemInfo(actionName);
-
+					local _, _, _, _, _, _, _, stackTotal, _, _, _, classID = GetItemInfo(actionName);
 					-- Make sure we have a stackTotal (meaning, we have it in our in our inventory)
 					-- Then, make sure the item is eligible for showing a count
 					if (stackTotal) then
-
-						if (IsConsumableItem(objectName) or (stackTotal > 1) or (objectType == Lunar.Items.reagentString) or (objectMainType == Lunar.Items:GetItemType("consume"))) then
-
-							-- Grab the item ID and use that to find the item count based
-							-- on charges left, or if that fails, the actual item count
-							itemID = Lunar.API:GetItemID(itemLink);
---							itemCount = Lunar.Items:GetCharges(itemID);
---							if (itemCount) then
---								itemCount = " (" .. itemCount .. ")";
---							else
-								itemCount = " (" .. GetItemCount(actionName, nil, true) .. ")";
---							end
+						-- classID == 0 is Consumable
+						if (IsConsumableItem(actionName) or (stackTotal > 1) or (classID == 0) ) then
+							itemCount = " (" .. GetItemCount(actionName, nil, true) .. ")";
 						end
 					end
 
 				end
 
 				if (buttonType == 1) or ((buttonType >= 3) and (buttonType <= 6)) then
-
-					--print("buttonType (7152):", buttonType, ", ", actionName)
-
 					if (actionName) and not ((actionName == "") or (actionName == " "))  then
-
-						--print("buttonType (7169):", buttonType, ", ", actionName, ", ", actionType)
-
 						if (buttonType == 5) then
 							itemCount = itemCount .. "  |cFF00EE00" .. "[" .. Lunar.Locale["_SELFCAST"] .. "]|r";
 						elseif (buttonType == 6) then
@@ -7217,11 +7199,7 @@ function Lunar.Button:SetTooltip(self)
 								myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
 							else
 								macroCommand = Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount .. keybindText);
-
-								--print("macroCommand : 7200, ", macroCommand)
 							end
-
-							--print("buttonType (7203):", buttonType, ", ", actionName, ", ", actionType)
 --						else
 --							Lunar.API:MultiAddToTooltip(actionType, actionName, index, itemCount);
 
@@ -7236,9 +7214,7 @@ function Lunar.Button:SetTooltip(self)
 								DrDamage:SetSpell(myGameTooltip, spellID);
 							end
 						end
-						--print("buttonType (7218):", buttonType, ", ", actionName, ", ", actionType)
 					else
-						--print("buttonType (7220):", buttonType, ", ", actionName, ", ", actionType)
 						if (buttonType == 3) then
 							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE  .. keybindText, 1, 1, 1);
 							myGameTooltip:AddTexture("Interface\\Addons\\LunarSphere\\art\\tooltipMouse" .. index);
@@ -7261,8 +7237,6 @@ function Lunar.Button:SetTooltip(self)
 --							myGameTooltip:AddLine(buttonName .. Lunar.Locale["BUTTON_LASTSUBMENU"] .. ": " .. NONE, 1, 1, 1);
 --						end
 --					end
-
-				--print("SetTooltip (7240)")
 
 				elseif (buttonType == 2) then
 					--print("SetTooltip (7243)")
