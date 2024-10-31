@@ -31,6 +31,16 @@ if (not Lunar.Object.dropdownData) then
 	Lunar.Object.dropdownData = {};	
 end
 
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = C_Spell.GetSpellInfo
+end
+
+local GetSpellBookItemName = GetSpellBookItemName
+if C_SpellBook.GetSpellBookItemName then
+	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+end
+
 -- Create our local dropdown menu info table to be reused multiple times
 local dropInfo = {};
 
@@ -1081,9 +1091,9 @@ function Lunar.Object.IconPlaceHolder_OnClick(self)
 --			nextSpellName = GetSpellBookItemName(updateID + 1, updateData);
 			spellRank = "(" .. spellRank .. ")";
 
-			--_, spellID = GetSpellBookItemInfo(updateID, updateData);
+			--_, spellID = C_SpellBook.GetSpellBookItemInfo(updateID, updateData);
 			actionName = GetSpellBookItemName(updateID, updateData);
-			objectTexture = GetSpellTexture(updateID, updateData);
+			objectTexture = C_Spell.GetSpellTexture(updateID, updateData);
 			spellName = GetSpellInfo(updateTrueSpellID);
 
 			-- Fix for Call Pet for hunters.
@@ -1198,7 +1208,7 @@ function Lunar.Object.SphereActionIconPlaceHolder_OnClick(self)
 
 		if (cursorType == "spell") then
 			actionName = GetSpellBookItemName(cursorID, cursorData);
-			objectTexture = GetSpellTexture(cursorID, cursorData);
+			objectTexture = C_Spell.GetSpellTexture(cursorID, cursorData);
 		elseif (updateType == "battlepet") then
 			-- Set the name of the spell and its texture
 			_, _, _, _, _, _, _, actionName, objectTexture, _, displayID = C_PetJournal.GetPetInfoByPetID(updateID);

@@ -403,9 +403,15 @@ end
 		{Lunar.Locale["EVENT_SPHERE_COOLDOWN"], "buttonCooldown"},
 		{Lunar.Locale["EVENT_SPHERE_COUNT"], "buttonCount"},
 --]]
+
 -- /***********************************************
 --   Locals
 --  *********************/
+
+local HasPetSpells = HasPetSpells
+if C_SpellBook.HasPetSpells then
+	HasPetSpells = C_SpellBook.HasPetSpells
+end
 
 -- Sphere object data, holds data for the art
 local sphereData = {};		
@@ -483,7 +489,7 @@ local dataTracking = {
 		[Enum.PowerType.Maelstrom] = LS_EVENT_MAELSTROM, --Croq Added in 1.30 -- 1.3 Croq Add Had to add for Mealstrome (shaman)
 		[Enum.PowerType.Chi] = LS_EVENT_CHI, --Croq Added in 1.30
 		[Enum.PowerType.Insanity] = LS_EVENT_INSANITY, --Croq Added in 1.30
-		[Enum.PowerType.Obsolete2] = LS_EVENT_ENERGY, --Croq Added in 1.30
+		-- [Enum.PowerType.Obsolete2] = LS_EVENT_ENERGY, --Croq Added in 1.30
 		[Enum.PowerType.ArcaneCharges] = LS_EVENT_ARCANE_CHARGE, --Croq Added in 1.30
 		[Enum.PowerType.Fury] = LS_EVENT_FURY, --Croq Added in 1.30 - for demon hunters
 		[Enum.PowerType.Pain] = LS_EVENT_ENERGY,
@@ -515,6 +521,10 @@ end
 if Enum.PowerType.Essence then
 	dataTracking["powerName"][Enum.PowerType.Essence] = LS_EVENT_ESSENCE --Croq Added in 1.30
 end
+
+-- if Enum.PowerType.Obsolete2 then
+-- 	dataTracking["powerName"][Enum.PowerType.Obsolete2] = LS_EVENT_ENERGY, --Croq Added in 1.30
+-- end
 
 -- /***********************************************
 --   Functions

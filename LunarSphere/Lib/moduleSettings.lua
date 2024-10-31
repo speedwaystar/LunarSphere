@@ -27,6 +27,11 @@ Lunar.Settings.version = 1.52;
 
 local GetCursorInfo = GetCursorInfo;
 
+local GetSpellBookItemName = GetSpellBookItemName
+if C_SpellBook.GetSpellBookItemName then
+	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+end
+
 -- Set our button ID for editing purposes
 Lunar.Settings.buttonEdit = nil;
 Lunar.Button.useStances = false; -- Here = nil
@@ -369,8 +374,8 @@ function Lunar.Settings:Initialize()
 		tempObject:SetScript("OnClick", Lunar.Object.SphereActionIconPlaceHolder_OnClick)
 		tempObject:SetScript("OnReceiveDrag", Lunar.Object.SphereActionIconPlaceHolder_OnClick);
 		if (LunarSphereSettings.sphereAction) then
-			if GetSpellInfo(LunarSphereSettings.sphereAction) then
-				objectTexture = GetSpellTexture(LunarSphereSettings.sphereAction);
+			if C_Spell.GetSpellInfo(LunarSphereSettings.sphereAction) then
+				objectTexture = C_Spell.GetSpellTexture(LunarSphereSettings.sphereAction);
 			else
 				objectTexture = GetItemIcon(LunarSphereSettings.sphereAction);	
 			end
@@ -4586,7 +4591,7 @@ function Lunar.Settings:StanceIconSetup(stanceIconName, stanceIconWidthBoundry, 
 
 					if (shiftIcon) then
 						if (shiftActive) then
-							shiftIcon = GetSpellTexture(shiftID);
+							shiftIcon = C_Spell.GetSpellTexture(shiftID);
 						end
 
 						iconObject:SetNormalTexture(shiftIcon);
@@ -4999,18 +5004,18 @@ if not (LunarSphereSettings.memoryDisableSpeech) then
 			if (Lunar.Button.CompanionType) then
 				cursorType = "companion";
 				actionName, objectTexture = select(3, GetCompanionInfo(Lunar.Button.CompanionType, Lunar.Button.CompanionID));
---				actionName = GetSpellInfo(actionName);
+--				actionName = C_Spell.GetSpellInfo(actionName);
 			end
 			Lunar.Button.CompanionType = nil;
 			Lunar.Button.CompanionID = nil;
 
 			if (cursorType == "spell") then
 				actionName, actionRank = GetSpellBookItemName(cursorID, cursorData);
-				objectTexture = GetSpellTexture(cursorID, cursorData);
+				objectTexture = C_Spell.GetSpellTexture(cursorID, cursorData);
 
 				-- Fix for Call Pet for hunters.
-				local _, spellID = GetSpellBookItemInfo(cursorID, cursorData);
-				local spellName = GetSpellInfo(spellID);
+				local _, spellID = C_SpellBook.GetSpellBookItemInfo(cursorID, cursorData);
+				local spellName = C_Spell.GetSpellInfo(spellID);
 				if (actionName ~= spellName) then
 					actionName = spellName;
 				end

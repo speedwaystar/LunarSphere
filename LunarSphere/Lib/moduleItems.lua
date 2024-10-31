@@ -52,6 +52,11 @@ Lunar.Items.itemSkillText = string.gsub(Lunar.Items.itemSkillText, "%(%%d%)", "%
 
 Lunar.Items.itemMinLevel = string.gsub(ITEM_MIN_LEVEL, "%%d", "(%%d+)");
 
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = C_Spell.GetSpellInfo
+end
+
 --"Benötigt %1$s (%2$d)"
 
 --Lunar.Items.itemSkillText2 = string.gsub("%s (%d) requies", "%%s", "(.*)");
@@ -1187,11 +1192,11 @@ end
 
 function Lunar.Items:IsMountEpic(mount)
 
-	if( Lunar.API:IsVersionWotLK() ) then
+	if( Lunar.API:IsVersionClassic() ) then
 		return Lunar.Items:WotLKIsMountEpic(mount)
 	end
 
-	if( Lunar.API:IsVersionClassic() ) then
+	if( Lunar.API:IsVersionClassicEra() ) then
 		return Lunar.Items:ClassicIsMountEpic(mount)
 	end
 
@@ -1490,7 +1495,7 @@ function Lunar.Items:UpdateLowHighItems()
 							end
 
 							-- Handle Classic and BCC mounts
-							if( Lunar.API:IsVersionClassic() == true ) then
+							if( Lunar.API:IsVersionClassicEra() == true ) then
 								-- Check if we can use the ground mount
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
@@ -2083,7 +2088,7 @@ function Lunar.Items:RetailScanForSpellMounts()
 
 	--local locKalimdor, locEastern, locOutland, locNorthrend, locMaelstrom, locPandaren, locDreanor = GetMapContinents();
 
-      local name, description, standingID, _ = GetFactionInfoByID(1271)
+    local name, description, standingID, _ = Lunar.API:GetFactionInfoByID(1271)
 	local LunarProfValue = Lunar.API:UserGetProfession();
 	local mountIDs;
 
@@ -2160,7 +2165,7 @@ function Lunar.Items:ClassicScanForSpellMounts()
 end
 
 function Lunar.Items:ScanForSpellMounts()
-	if ( Lunar.API:IsVersionClassic() == true ) then
+	if ( Lunar.API:IsVersionClassicEra() == true ) then
 		Lunar.Items:ClassicScanForSpellMounts()
 	else
 		Lunar.Items:RetailScanForSpellMounts()
@@ -2236,7 +2241,7 @@ end
 -- Classic got the C_Container API since patch 1.14.4. Keeping this function as
 -- not have to refactor the callers.
 function Lunar.Items:GetContainerItemInfo(bagID, slot)
-	--if( Lunar.API:IsVersionClassic() ) then
+	--if( Lunar.API:IsVersionClassicEra() ) then
 	--	return GetContainerItemInfo(bagID, slot);
 	--else
 		-- Thanks Blizzard for fucking this up. GetContainerItemInfo returns 
@@ -2572,7 +2577,7 @@ function Lunar.Items:UpdateBagContents(bagID, updateType)
 			elseif (itemSpell == searchData.hearthstone) then
 				Lunar.Items:ModifyItemDataTable("hearthstone", updateType, itemName, 1, itemLevel, itemMinLevel, itemLink);
 			-- Classic and BCC mounts are items, handle them here
-			elseif ( Lunar.API:IsVersionClassic() == true and Lunar.Items:ClassicIsMount(itemID) ) then
+			elseif ( Lunar.API:IsVersionClassicEra() == true and Lunar.Items:ClassicIsMount(itemID) ) then
 
 					-- I'm pretty sure all mounts are unique, but we'll count just in case
 					_, itemCount = Lunar.Items:GetContainerItemInfo(bagID, slot);
@@ -2669,7 +2674,7 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 					Lunar.Items.tooltip:ClearLines();
 					Lunar.Items.tooltip:SetOwner(UIParent, "ANCHOR_NONE");
 					Lunar.Items.tooltip:SetHyperlink(itemLink);
-					if( Lunar.API:IsVersionClassic() == false ) then
+					if( Lunar.API:IsVersionClassicEra() == false ) then
 						searchText = _G[Lunar.Items.tooltip:GetName() .. "TextLeft2"]:GetText();
 					else
 						searchText = nil

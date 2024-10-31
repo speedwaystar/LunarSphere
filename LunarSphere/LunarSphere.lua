@@ -126,6 +126,16 @@ Lunar.includedGauges = 6;
 
 local playerLoginCheck = {};
 
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = C_Spell.GetSpellInfo
+end
+
+local GetSpellBookItemName = GetSpellBookItemName
+if C_SpellBook.GetSpellBookItemName then
+	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+end
+
 -- /***********************************************
 --   LunarSphere Functions
 --  *********************/
@@ -177,7 +187,6 @@ function LunarSphere_OnEvent(self, event)
 		if (not Lunar.varLoaded) then
 			LunarSphere_VariablesLoaded();
 		end
---TWW
 		-- Load up our exporter and get our export database ready
 		local isLoaded = C_AddOns.IsAddOnLoaded("LunarSphereExporter");
 		if ( not isLoaded ) then
@@ -1578,7 +1587,7 @@ function LunarSphere_BackwardsCompatibility_PlayerLogin()
 								if (spellID) then 
 									if (spellID <= generalTabSkills) then
 										-- Just grab the name without rank and set it again
-										objectName = GetSpellBookItemName(objectName);
+										objectName = Lunar.API:GetSpellName(objectName);
 										Lunar.Button:SetButtonData(buttonID, stance, clickType, buttonType, cursorType, objectName, objectTexture);
 									end
 								end
@@ -1862,14 +1871,14 @@ end
 function Lunar.DrDamageFunc(button)
 	if LunarSphereSettings.enableDrDamage == true then
 		if (button.actionType == "spell" and button.buttonType == 1 and button.spellReagent == nil) then
-			local _, spellRank = GetSpellBookItemName(button.actionName);
+			local _, subName = GetSpellBookItemName(button.actionName);
 			local spellName;
 			if (string.find(button.actionName, "%(")) then
 				spellName = string.match(button.actionName, "(.*)%(");
 			else
 				spellName = button.actionName;
 			end
-			return nil, spellName, spellRank;
+			return nil, spellName, subName;
 		end
 	end
 	return nil;

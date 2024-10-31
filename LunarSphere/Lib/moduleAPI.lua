@@ -76,6 +76,21 @@ Lunar.API.debugTooltip = CreateFrame("GameTooltip", "LunarAPIDebugTooltip", UIPa
  
 Lunar.API.debugTooltipUpdater = CreateFrame("Frame", "LunarAPIDebugTooltipUpdater", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 
+local GetSpellLink = GetSpellLink
+if C_Spell.GetSpellLink then
+	GetSpellLink = C_Spell.GetSpellLink
+end
+
+local GetSpellBookItemName = GetSpellBookItemName
+if C_SpellBook.GetSpellBookItemName then
+	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+end
+
+local BOOKTYPE_SPELL = BOOKTYPE_SPELL
+if Enum.SpellBookSpellBank.Player then
+	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
+end
+
 Lunar.API.debugTooltipUpdater:SetScript("OnUpdate", function(self, arg1)
 	if not (LunarSphereSettings.showDebugTooltip == true) then
 		return;
@@ -417,6 +432,9 @@ function Lunar.API:FilterCooldown(startTime, duration)
 
 	end
 
+	print("Lunar.API:FilterCooldown 430")
+	print("tempCooldown: ", tempCooldown)
+
 	-- If we still have a tempCooldown to work with, continue
 	if (tempCooldown) then
 
@@ -475,10 +493,7 @@ function Lunar.API:GetSpellID(spellName)
 	end
 
 	-- Obtain the total number of spells the player knows
-	for index = 1, MAX_SKILLLINE_TABS do
-		_, _, _, spellsInTab = GetSpellTabInfo(index);
-		totalSpells = totalSpells + spellsInTab;
-	end
+	totalSpells = Lunar.API:CountTotalSpells()
 
 -- Fix for people who don't put the ";" at the end of the macro ... if I want to include it
 --
@@ -513,7 +528,6 @@ function Lunar.API:GetSpellID(spellName)
 	return spellID, spellRank;
 	
 end
-
 
 function Lunar.API:IsInAQ()
 	-- End now if we're not in an instance
@@ -781,7 +795,7 @@ function Lunar.API:MultiAddToTooltip(actionType, actionName, index, firstLineApp
 
 		spellID = GetSpellLink(actionName);
 		--_, spellRank = GetSpellBookItemName(actionName);
-		if (not Lunar.API:IsVersionClassic() and spellID and (spellID:len() > 0)) then
+		if (not Lunar.API:IsVersionClassicEra() and spellID and (spellID:len() > 0)) then
 			Lunar.Items.tooltip:SetHyperlink(spellID);
 		end
 
@@ -1124,11 +1138,11 @@ function Lunar.API:Load()
 														
 													-- From the bank	
 													if (itemIndex <= NUM_BANKGENERIC_SLOTS) then
-														Lunar.API:SplitContainerItem(BANK_CONTAINER, itemIndex, restockCounter); 
+														C_Container.SplitContainerItem(BANK_CONTAINER, itemIndex, restockCounter); 
 
 													-- From a bank bag
 													else
-														Lunar.API:SplitContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot, restockCounter);
+														C_Container.SplitContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot, restockCounter);
 													end
 
 													if (bagIndex == 0) then
@@ -1150,11 +1164,11 @@ function Lunar.API:Load()
 
 												-- From the bank	
 												if (itemIndex <= NUM_BANKGENERIC_SLOTS) then
-													Lunar.API:UseContainerItem(BANK_CONTAINER, itemIndex);
+													C_Container.UseContainerItem(BANK_CONTAINER, itemIndex);
 
 												-- From a bank bag
 												else
-													Lunar.API:UseContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot);
+													C_Container.UseContainerItem(currentBag + NUM_BAG_SLOTS, currentSlot);
 												end
 
 												restockCounter = 0 --restockCounter - maxBuyAmount
@@ -1301,20 +1315,20 @@ function Lunar.API:Load()
 
 								-- If it's armor and we're selling armor, sell it and update the receipt
 								if ((itemType == armorType) and not (keepAllArmor))  then
-									Lunar.API:UseContainerItem(bagIndex, slotIndex);
+									C_Container.UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
 								-- If it's a weapon and we're selling weapons, sell it and update the receipt
 								if ((itemType == weaponType) and not (keepAllWeapons))  then
-									Lunar.API:UseContainerItem(bagIndex, slotIndex);
+									C_Container.UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
 								-- If it's not armor or a weapon, and we're selling non-equipment, sell it
 								-- and update the receipt
 								if ((not(itemType == armorType)) and (not(itemType == weaponType)) and not (keepNonEquip)) then
-									Lunar.API:UseContainerItem(bagIndex, slotIndex);
+									C_Container.UseContainerItem(bagIndex, slotIndex);
 									sellReceipt = sellReceipt + Lunar.API.sellPrice;
 								end
 
@@ -2860,11 +2874,11 @@ end
 --   false - Client is BCC, WotLKC or Classic
 --
 function Lunar.API:IsVersionRetail()
-	_, _, _, t = GetBuildInfo();
+	local _, _, _, t = GetBuildInfo();
     return (t > 70000);
 end
 
--- Lunar.API:IsVersionClassic()
+-- Lunar.API:IsVersionClassicEra()
 -- 
 -- Returns `true` if the current `Interface` is under `20000`.
 --
@@ -2872,13 +2886,13 @@ end
 --   true - Client is Classic
 --   false - Client is Retail, BCC, or WotLKC.
 --
-function Lunar.API:IsVersionClassic()
-	_, _, _, t = GetBuildInfo();
+function Lunar.API:IsVersionClassicEra()
+	local _, _, _, t = GetBuildInfo();
     return (t < 20000);
 end
 
 --
--- Lunar.API:IsVersionWotLK()
+-- Lunar.API:IsVersionClassic()
 -- 
 -- Returns `true` if the current `Interface` is `> 20000` and `< 70000`.
 --
@@ -2886,8 +2900,8 @@ end
 --   true - Client is Retail
 --   false - Client is BCC, WotLKC or Classic
 --
-function Lunar.API:IsVersionWotLK()
-	_, _, _, t = GetBuildInfo();
+function Lunar.API:IsVersionClassic()
+	local _, _, _, t = GetBuildInfo();
     return (t > 20000) and (t < 70000);
 end
 
@@ -2899,19 +2913,11 @@ end
 --   The API build number the client is running.
 --
 function Lunar.API:GetBuildInfo()
-	_, _, _, t = GetBuildInfo();
+	local _, _, _, t = GetBuildInfo();
     return t;
 end
 
-function Lunar.API:SplitContainerItem(containerIndex, slotIndex, amount)
-    C_Container.SplitContainerItem(containerIndex, slotIndex, amount)
-end
-
-function Lunar.API:UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen)
-    C_Container.UseContainerItem(containerIndex, slotIndex, unitToken, reagentBankOpen);
-end
-
-if ( Lunar.API:IsVersionClassic() ) then
+if ( Lunar.API:IsVersionClassicEra() ) then
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
@@ -2920,7 +2926,6 @@ if ( Lunar.API:IsVersionClassic() ) then
 ---                                                                        ---
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
-
 
 --
 -- Lunar.API:IsFlyableArea()
@@ -2940,7 +2945,30 @@ if ( Lunar.API:IsVersionClassic() ) then
         return nil
     end
 
-elseif Lunar.API:IsVersionWotLK() then
+    function Lunar.API:GetFactionInfoByID(factionID)
+		return GetFactionInfoByID(factionID)
+    end
+
+	function Lunar.API:CountTotalSpells()
+		local totalSpells = 0
+		for i = 1, GetNumSpellTabs() do
+			local numSlots = select(4, GetSpellTabInfo(i))
+			totalSpells = totalSpells + numSlots
+		end
+		return totalSpells
+	end
+
+	function Lunar.API:IsSpellInRange(spellName)
+		return IsSpellInRange(spellName, "target")
+	end
+
+	function Lunar.API:GetSpellName(spellIdentifier)
+		local name = select(1, GetSpellInfo(spellIdentifier))
+		local subText = GetSpellSubtext(spellIdentifier)
+		return name, subText
+	end
+
+elseif Lunar.API:IsVersionClassic() then
 
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
@@ -2972,6 +3000,29 @@ elseif Lunar.API:IsVersionWotLK() then
         end
     end
 
+    function Lunar.API:GetFactionInfoByID(factionID)
+		return GetFactionInfoByID(factionID)
+    end
+
+	function Lunar.API:CountTotalSpells()
+		local totalSpells = 0
+		for i = 1, GetNumSpellTabs() do
+			local numSlots = select(4, GetSpellTabInfo(i))
+			totalSpells = totalSpells + numSlots
+		end
+		return totalSpells
+	end
+
+	function Lunar.API:IsSpellInRange(spellName)
+		return IsSpellInRange(spellName, "target")
+	end
+
+	function Lunar.API:GetSpellName(spellIdentifier)
+		local name = select(1, GetSpellInfo(spellIdentifier))
+		local subText = GetSpellSubtext(spellIdentifier)
+		return name, subText
+	end
+
 else
 
 ------------------------------------------------------------------------------
@@ -2985,4 +3036,30 @@ else
     function Lunar.API:IsFlyableArea()
         return IsFlyableArea()
     end
+
+    function Lunar.API:GetFactionInfoByID(factionID)
+		local data = C_Reputation.GetFactionDataByID(factionID)
+		if data == nil then
+			return nil
+		end
+		return unpack(data, 2)
+    end
+
+	function Lunar.API:CountTotalSpells()
+		local totalSpells = 0
+		for i = 1, C_SpellBook.GetNumSpellBookSkillLines() do
+			local numSlots = C_SpellBook.GetSpellBookSkillLineInfo(i).numSpellBookItems
+			totalSpells = totalSpells + numSlots
+		end
+		return totalSpells
+	end
+
+	function Lunar.API:IsSpellInRange(spellName)
+		return C_Spell.IsSpellInRange(spellName)
+	end
+
+	function Lunar.API:GetSpellName(spellIdentifier)
+		return C_Spell.GetSpellName(spellIdentifier), nil
+	end
+
 end
