@@ -112,6 +112,11 @@ if C_SpellBook.GetSpellBookItemName then
 	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
 end
 
+local GetSpellCooldown = GetSpellCooldown
+if C_Spell.GetSpellCooldown then
+	GetSpellCooldown = Lunar.API:Deconfabulate(C_Spell.GetSpellCooldown)
+end
+
 -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 if Enum.SpellBookSpellBank.Player then
@@ -5890,8 +5895,9 @@ function Lunar.Button.UpdateCooldown(self, filter)
 		-- Build the startTime and durations based on whether it is a spell, item, or macro
 		-- that we're looking at
 		enable = 1;
+
 		if (actionType == "spell") then
-			startTime, duration, enable = C_Spell.GetSpellCooldown(actionName);
+			startTime, duration, enable = GetSpellCooldown(actionName);
 		elseif (actionType == "item") then
 			startTime, duration = Lunar.API:GetItemCooldown(actionName);
 		elseif (actionType == "macro") or (actionType == "macrotext") then
@@ -5906,7 +5912,7 @@ function Lunar.Button.UpdateCooldown(self, filter)
 				if C_Item.GetItemInfo(actionName) then
 					startTime, duration = Lunar.API:GetItemCooldown(actionName);
 				else
-					startTime, duration, enable = C_Spell.GetSpellCooldown(actionName);
+					startTime, duration, enable = GetSpellCooldown(actionName);
 				end
 			end
 		elseif (actionType == "pet") then

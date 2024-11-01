@@ -432,9 +432,6 @@ function Lunar.API:FilterCooldown(startTime, duration)
 
 	end
 
-	print("Lunar.API:FilterCooldown 430")
-	print("tempCooldown: ", tempCooldown)
-
 	-- If we still have a tempCooldown to work with, continue
 	if (tempCooldown) then
 
@@ -3062,4 +3059,30 @@ else
 		return C_Spell.GetSpellName(spellIdentifier), nil
 	end
 
+end
+
+function Lunar.API:Deconfabulate(original_fn)
+	local return_type_db = {}
+	return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
+
+	local key_db = {}
+	key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
+
+	local return_type = return_type_db[original_fn]
+	local keys = key_db[return_type]
+
+	return function (...)
+		local tbl = original_fn(...)
+		if not tbl then
+			return nil
+		end
+		local tmp = {}
+		local idx = 1 -- 1-based count is idiotic.
+		for _, key in pairs(keys) do --actualcode
+			local value = tbl[key]
+			tmp[idx] = value
+			idx = idx+1
+		end
+		return unpack(tmp)
+	end
 end
