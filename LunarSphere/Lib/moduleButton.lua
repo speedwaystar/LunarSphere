@@ -104,7 +104,7 @@ end
 
 local GetSpellInfo = GetSpellInfo
 if C_Spell.GetSpellInfo then
-	GetSpellInfo = C_Spell.GetSpellInfo
+	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
 local GetSpellBookItemName = GetSpellBookItemName

@@ -48,8 +48,13 @@ if C_SpellBook.GetSpellBookSkillLineInfo then
 end
 
 local GetSpellBookItemName = GetSpellBookItemName
-if GetSpellBookItemName then
-	GetSpellBookItemName = GetSpellBookItemName
+if C_SpellBook.GetSpellBookItemName then
+	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+end
+
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
@@ -6111,7 +6116,7 @@ function Lunar.Template:ParseTemplateData()
 								-- special parse for spell mounts
 								local isCompanion;
 								if (tostring(tonumber(objectName)) == objectName) then
-									_, _, objectTexture = C_Spell.GetSpellInfo(tonumber(objectName));
+									_, _, objectTexture = GetSpellInfo(tonumber(objectName));
 									newName = objectName;
 									isCompanion = true;
 								end
@@ -6128,8 +6133,8 @@ function Lunar.Template:ParseTemplateData()
 										multiSpell = { strsplit(":::", objectTexture) }
 										for key, value in pairs(multiSpell) do
 											if (value) then
-												if C_Spell.GetSpellInfo(value) then
-													newName, rankFound, newIcon = C_Spell.GetSpellInfo(C_Spell.GetSpellInfo(value));
+												if GetSpellInfo(value) then
+													newName, rankFound, newIcon = GetSpellInfo(GetSpellInfo(value));
 													canBeUsed, isOutOfMana = IsUsableSpell(value);
 													if (not (canBeUsed and isOutOfMana)) then
 														isNotLearned = true;
@@ -6145,7 +6150,7 @@ function Lunar.Template:ParseTemplateData()
 										end
 									else
 										if (spellID) then
-											newName, rankFound, objectTexture = C_Spell.GetSpellInfo(C_Spell.GetSpellInfo(spellID));
+											newName, rankFound, objectTexture = GetSpellInfo(GetSpellInfo(spellID));
 											canBeUsed = C_SpellBook.GetSpellBookItemInfo(newName or (""));
 --											canBeUsed, isOutOfMana = IsUsableSpell(tonumber(spellID));
 											if (not newName) then
@@ -6164,7 +6169,7 @@ function Lunar.Template:ParseTemplateData()
 														if not (objectRank) then
 															newName = scanName;
 														end
-														if (objectRank == rankFound) or (scanName == C_Spell.GetSpellInfo(759)) then
+														if (objectRank == rankFound) or (scanName == GetSpellInfo(759)) then
 															newName = scanName .. "(" .. scanRank .. ")";
 															break;
 														end
@@ -6208,7 +6213,7 @@ function Lunar.Template:ParseTemplateData()
 												end
 											end
 										else
-											newName, rankFound, objectTexture = C_Spell.GetSpellInfo(C_Spell.GetSpellInfo(tonumber(objectTexture)));
+											newName, rankFound, objectTexture = GetSpellInfo(GetSpellInfo(tonumber(objectTexture)));
 										end	
 									end
 											
@@ -6230,7 +6235,7 @@ function Lunar.Template:ParseTemplateData()
 											if not (objectRank) then
 												newName = scanName;
 											end
-											if (objectRank == rankFound) or (scanName == C_Spell.GetSpellInfo(759)) then
+											if (objectRank == rankFound) or (scanName == GetSpellInfo(759)) then
 												newName = scanName .. "(" .. scanRank .. ")";
 												break;
 											end
@@ -6279,7 +6284,7 @@ function Lunar.Template:ParseTemplateData()
 								-- if we found a valid spell, add it. Otherwise, wipe it from this button
 								if (newName) then
 									-- Hack for mage gems
---									if (newName == C_Spell.GetSpellInfo(759)) then
+--									if (newName == GetSpellInfo(759)) then
 --										newName = newName .. "(" .. rankFound .. ")";
 --									end
 									Lunar.Button:SetButtonData(buttonID, stance, clickType, buttonType, cursorType, newName, objectTexture);

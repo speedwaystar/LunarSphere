@@ -3061,12 +3061,30 @@ else
 
 end
 
-function Lunar.API:Deconfabulate(original_fn)
-	local return_type_db = {}
-	return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
+-- List of functions that are OK
+-- * GetSpellBookItemName, C_SpellBook.GetSpellBookItemName
+-- * IsUsableSpell, C_Spell.IsSpellUsable (gotta love the name change)
+-- * IsAttackSpell, C_Spell.IsAutoAttackSpell
+-- * IsCurrentSpell, C_Spell.IsCurrentSpell
+-- * IsAutoRepeatSpell, C_Spell.IsAutoRepeatSpell
+-- * GetSpellBookItemName
+-- * GetSpellBookItemName
+-- * GetSpellBookItemName
+-- * GetSpellBookItemName
+-- * GetSpellBookItemName
+-- * GetSpellBookItemName
 
-	local key_db = {}
-	key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
+local return_type_db = {}
+return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
+return_type_db[C_Spell.GetSpellInfo] = "SpellInfo"
+return_type_db[C_SpellBook.GetSpellBookSkillLineInfo] = "SpellBookSkillLineInfo"
+
+local key_db = {}
+key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
+key_db["SpellInfo"] = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"}
+key_db["SpellBookSkillLineInfo"] = {"name", "iconID", "itemIndexOffset", "numSpellBookItems", "isGuild", "shouldHide", "specID", "offSpecID"}
+
+function Lunar.API:Deconfabulate(original_fn)
 
 	local return_type = return_type_db[original_fn]
 	local keys = key_db[return_type]

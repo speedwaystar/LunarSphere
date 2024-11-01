@@ -54,7 +54,7 @@ Lunar.Items.itemMinLevel = string.gsub(ITEM_MIN_LEVEL, "%%d", "(%%d+)");
 
 local GetSpellInfo = GetSpellInfo
 if C_Spell.GetSpellInfo then
-	GetSpellInfo = C_Spell.GetSpellInfo
+	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
 --"Benötigt %1$s (%2$d)"

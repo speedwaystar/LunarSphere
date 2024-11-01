@@ -12,6 +12,11 @@
 --  * Module Setup
 --  *********************
 
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
+end
+
 -- Create our Lunar object if it's not made
 if (not Lunar) then
 	Lunar = {};
@@ -374,7 +379,7 @@ function Lunar.Settings:Initialize()
 		tempObject:SetScript("OnClick", Lunar.Object.SphereActionIconPlaceHolder_OnClick)
 		tempObject:SetScript("OnReceiveDrag", Lunar.Object.SphereActionIconPlaceHolder_OnClick);
 		if (LunarSphereSettings.sphereAction) then
-			if C_Spell.GetSpellInfo(LunarSphereSettings.sphereAction) then
+			if GetSpellInfo(LunarSphereSettings.sphereAction) then
 				objectTexture = C_Spell.GetSpellTexture(LunarSphereSettings.sphereAction);
 			else
 				objectTexture = GetItemIcon(LunarSphereSettings.sphereAction);	
@@ -5004,7 +5009,7 @@ if not (LunarSphereSettings.memoryDisableSpeech) then
 			if (Lunar.Button.CompanionType) then
 				cursorType = "companion";
 				actionName, objectTexture = select(3, GetCompanionInfo(Lunar.Button.CompanionType, Lunar.Button.CompanionID));
---				actionName = C_Spell.GetSpellInfo(actionName);
+--				actionName = GetSpellInfo(actionName);
 			end
 			Lunar.Button.CompanionType = nil;
 			Lunar.Button.CompanionID = nil;
@@ -5015,7 +5020,7 @@ if not (LunarSphereSettings.memoryDisableSpeech) then
 
 				-- Fix for Call Pet for hunters.
 				local _, spellID = C_SpellBook.GetSpellBookItemInfo(cursorID, cursorData);
-				local spellName = C_Spell.GetSpellInfo(spellID);
+				local spellName = GetSpellInfo(spellID);
 				if (actionName ~= spellName) then
 					actionName = spellName;
 				end

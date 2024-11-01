@@ -58,6 +58,11 @@ if C_SpellBook.GetSpellBookItemName then
 	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
 end
 
+local GetSpellInfo = GetSpellInfo
+if C_Spell.GetSpellInfo then
+	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
+end
+
 --local speechDatabase	= {};	-- Deals with scripts and speeches in the library that are full of default data
 local trackedSpell	= {};	-- Deals with all the tracked spells and their respective script ids
 
@@ -176,7 +181,7 @@ function Lunar.Speech:Initialize()
 	Lunar.Speech:LoadLibrary();
 	Lunar.Speech:UpdateRegisteredSpells();
 
-	summonText = select(2, C_Spell.GetSpellInfo(23214));
+	summonText = select(2, GetSpellInfo(23214));
 	Lunar.Speech.summonText = summonText;
 
 end
@@ -194,7 +199,7 @@ function Lunar.Speech.OnEvent(self, event, unit, target, castGUID, spellID)
 	-- order to catch spells that have a cast time.
 
 	if (event == "UNIT_SPELLCAST_SENT") then
-		self.spellName, self.spellRank = C_Spell.GetSpellInfo(spellID);
+		self.spellName, self.spellRank = GetSpellInfo(spellID);
 		self.spellTarget = target;
 
 		-- If the target data doesn't exist, grab it from the player target if possible
