@@ -117,14 +117,19 @@ if C_Spell.GetSpellCooldown then
 	GetSpellCooldown = Lunar.API:Deconfabulate(C_Spell.GetSpellCooldown)
 end
 
+IsSpellInRange = IsSpellInRange
+if C_Spell.IsSpellInRange then
+	IsSpellInRange = C_Spell.IsSpellInRange
+end
+
 -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
-if Enum.SpellBookSpellBank.Player then
+if Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player then
 	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
 end
 
 local BOOKTYPE_PET = BOOKTYPE_PET
-if Enum.SpellBookSpellBank.Pet then
+if Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Pet then
 	BOOKTYPE_PET = Enum.SpellBookSpellBank.Pet
 end
 
@@ -347,7 +352,8 @@ function Lunar.Button:Initialize()
 	Lunar.Button:FixMenus()
 
 	-- Make our sphere be clickable
-	local buttonType, cursorType, objectName, objectTexture, stance;
+	--local buttonType, cursorType, objectName, objectTexture, stance;
+	local buttonType, cursorType, objectName, objectTexture, stance, spellInfo;
 	local sphere = _G["LSmain"];
 	sphere.currentStance = Lunar.Button.defaultStance;
 
@@ -4124,8 +4130,8 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 			objectName = buttonType - 139;
 		end
 
-		print("AssignByType (4108) buttonType: ", buttonType)
-		print("AssignByType (4084) : ", objectName, objectTexture, cursorType)
+		-- print("AssignByType (4108) buttonType: ", buttonType)
+		-- print("AssignByType (4084) : ", objectName, objectTexture, cursorType)
 
 		-- Save the texture data. If it's a left click (main) action, also assign the texture to 
 		-- the button icon
@@ -4228,20 +4234,16 @@ end
 --				button:SetAttribute("shift-clickbutton" .. clickType, _G["PetActionButton" .. objectName]);
 			elseif ((buttonType >= 80) and (buttonType < 90)) or (buttonType == 132) then
 
-				print("AssignByType (4180) : ", buttonName .. "Icon", objectName, objectTexture, cursorType, buttonType)
-				print("objectName (4180) : ", objectName, " ", objectTexture)
+				-- print("AssignByType (4180) : ", buttonName .. "Icon", objectName, objectTexture, cursorType, buttonType)
+				-- print("objectName (4180) : ", objectName, " ", objectTexture)
 				if (buttonType == 132) then
 					button:SetAttribute("*type-S" .. stance  .. clickType, cursorType)
 					button:SetAttribute("*"..cursorType .. "-S" .. stance .. clickType, objectName); -- tempName);
 					button:SetAttribute("*"..cursorType .. "2-S" .. stance .. clickType, GetSpellInfo(objectName)); -- tempName);
 				elseif ( Lunar.API:IsVersionRetail() or Lunar.API:IsVersionClassic() ) then
-					--print("4194 : ", "*type-S" .. stance  .. clickType, "macrotext")
+					-- print("4194 : ", "*type-S" .. stance  .. clickType, "macrotext")
 					button:SetAttribute("*type-S" .. stance  .. clickType, "macrotext")
 					local tempName = select(1, GetSpellInfo(objectName));
-					print("heeeereeee 4221")
-					print("objectName: ", objectName)
-					print("tempName: ", tempName)
-					-- print(debugstack())
 					button:SetAttribute("*macrotext-S" .. stance .. clickType, objectName); -- tempName);
 					-- button:SetAttribute("*macrotext2-S" .. stance .. clickType, "/stopcasting\n/cast [nomounted] " .. (GetSpellInfo(objectName) or "")  .. "\n/dismount"); -- tempName);
 					button:SetAttribute("*macrotext2-S" .. stance .. clickType, "/stopcasting\n/cast [nomounted] " .. (tempName or "")  .. "\n/dismount"); -- tempName);
@@ -6279,7 +6281,7 @@ function Lunar.Button:UpdateUsable(self, filter, rangeOnly)
 				end
 			end
 			-- print("Lunar.Button:UpdateUsable 6279 , name : ", name)
-			inRange = Lunar.API:IsSpellInRange(name); --self.actionName, "target");
+			inRange = IsSpellInRange(name, "target")
 		elseif (self.actionType == "item") then
 			if (not (rangeOnly == true)) then
 				isUsable, notEnoughMana = C_Item.IsUsableItem(self.actionName);
@@ -6317,7 +6319,7 @@ function Lunar.Button:UpdateUsable(self, filter, rangeOnly)
 						self.notEnoughMana = notEnoughMana;
 						self.isUsable = isUsable;
 					end
-					inRange = Lunar.API:IsSpellInRange(macroAction);
+					inRange = IsSpellInRange(macroAction, "target")
 				end
 			else
 				self.isUsable = isUsable;

@@ -87,8 +87,58 @@ if C_SpellBook.GetSpellBookItemName then
 end
 
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
-if Enum.SpellBookSpellBank.Player then
+if Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player then
 	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
+end
+
+local GetItemInfo = GetItemInfo
+if C_Item.GetItemInfo then
+	GetItemInfo = C_Item.GetItemInfo
+end
+
+-- List of functions that are OK
+-- * GetSpellBookItemName, C_SpellBook.GetSpellBookItemName
+-- * IsUsableSpell, C_Spell.IsSpellUsable (gotta love the name change)
+-- * IsAttackSpell, C_Spell.IsAutoAttackSpell
+-- * IsCurrentSpell, C_Spell.IsCurrentSpell
+-- * IsAutoRepeatSpell, C_Spell.IsAutoRepeatSpell
+
+function Lunar.API:Deconfabulate(original_fn)
+	if not C_Spell.GetSpellCooldown then
+		return original_fn
+	end
+	local return_type_db = {}
+	return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
+	return_type_db[C_Spell.GetSpellInfo] = "SpellInfo"
+	return_type_db[C_SpellBook.GetSpellBookSkillLineInfo] = "SpellBookSkillLineInfo"
+	return_type_db[C_Reputation.GetFactionDataByID] = "FactionData"
+
+	local key_db = {}
+	key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
+	key_db["SpellInfo"] = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"}
+	key_db["SpellBookSkillLineInfo"] = {"name", "iconID", "itemIndexOffset", "numSpellBookItems", "isGuild", "shouldHide", "specID", "offSpecID"}
+	key_db["FactionData"] = { 
+		"name", "description", "currentStanding", "currentReactionThreshold", "nextReactionThreshold",
+		"currentStanding", "atWarWith", "canToggleAtWar", "isHeader", "isCollapsed", "isHeaderWithRep", 
+		"isWatched", "isChild", "factionID", "hasBonusRepGain", "canSetInactive", "canSetInactive"}
+
+	local return_type = return_type_db[original_fn]
+	local keys = key_db[return_type]
+
+	return function (...)
+		local tbl = original_fn(...)
+		if not tbl then
+			return nil
+		end
+		local tmp = {}
+		local idx = 1 -- 1-based count is idiotic.
+		for _, key in pairs(keys) do
+			local value = tbl[key]
+			tmp[idx] = value
+			idx = idx+1
+		end
+		return unpack(tmp)
+	end
 end
 
 Lunar.API.debugTooltipUpdater:SetScript("OnUpdate", function(self, arg1)
@@ -2942,10 +2992,6 @@ if ( Lunar.API:IsVersionClassicEra() ) then
         return nil
     end
 
-    function Lunar.API:GetFactionInfoByID(factionID)
-		return GetFactionInfoByID(factionID)
-    end
-
 	function Lunar.API:CountTotalSpells()
 		local totalSpells = 0
 		for i = 1, GetNumSpellTabs() do
@@ -2953,10 +2999,6 @@ if ( Lunar.API:IsVersionClassicEra() ) then
 			totalSpells = totalSpells + numSlots
 		end
 		return totalSpells
-	end
-
-	function Lunar.API:IsSpellInRange(spellName)
-		return IsSpellInRange(spellName, "target")
 	end
 
 	function Lunar.API:GetSpellName(spellIdentifier)
@@ -2997,10 +3039,6 @@ elseif Lunar.API:IsVersionClassic() then
         end
     end
 
-    function Lunar.API:GetFactionInfoByID(factionID)
-		return GetFactionInfoByID(factionID)
-    end
-
 	function Lunar.API:CountTotalSpells()
 		local totalSpells = 0
 		for i = 1, GetNumSpellTabs() do
@@ -3010,16 +3048,11 @@ elseif Lunar.API:IsVersionClassic() then
 		return totalSpells
 	end
 
-	function Lunar.API:IsSpellInRange(spellName)
-		return IsSpellInRange(spellName, "target")
-	end
-
 	function Lunar.API:GetSpellName(spellIdentifier)
 		local name = select(1, GetSpellInfo(spellIdentifier))
 		local subText = GetSpellSubtext(spellIdentifier)
 		return name, subText
 	end
-
 else
 
 ------------------------------------------------------------------------------
@@ -3034,14 +3067,6 @@ else
         return IsFlyableArea()
     end
 
-    function Lunar.API:GetFactionInfoByID(factionID)
-		local data = C_Reputation.GetFactionDataByID(factionID)
-		if data == nil then
-			return nil
-		end
-		return unpack(data, 2)
-    end
-
 	function Lunar.API:CountTotalSpells()
 		local totalSpells = 0
 		for i = 1, C_SpellBook.GetNumSpellBookSkillLines() do
@@ -3051,56 +3076,9 @@ else
 		return totalSpells
 	end
 
-	function Lunar.API:IsSpellInRange(spellName)
-		return C_Spell.IsSpellInRange(spellName)
-	end
-
 	function Lunar.API:GetSpellName(spellIdentifier)
 		return C_Spell.GetSpellName(spellIdentifier), nil
 	end
 
 end
 
--- List of functions that are OK
--- * GetSpellBookItemName, C_SpellBook.GetSpellBookItemName
--- * IsUsableSpell, C_Spell.IsSpellUsable (gotta love the name change)
--- * IsAttackSpell, C_Spell.IsAutoAttackSpell
--- * IsCurrentSpell, C_Spell.IsCurrentSpell
--- * IsAutoRepeatSpell, C_Spell.IsAutoRepeatSpell
--- * GetSpellBookItemName
--- * GetSpellBookItemName
--- * GetSpellBookItemName
--- * GetSpellBookItemName
--- * GetSpellBookItemName
--- * GetSpellBookItemName
-
-local return_type_db = {}
-return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
-return_type_db[C_Spell.GetSpellInfo] = "SpellInfo"
-return_type_db[C_SpellBook.GetSpellBookSkillLineInfo] = "SpellBookSkillLineInfo"
-
-local key_db = {}
-key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
-key_db["SpellInfo"] = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"}
-key_db["SpellBookSkillLineInfo"] = {"name", "iconID", "itemIndexOffset", "numSpellBookItems", "isGuild", "shouldHide", "specID", "offSpecID"}
-
-function Lunar.API:Deconfabulate(original_fn)
-
-	local return_type = return_type_db[original_fn]
-	local keys = key_db[return_type]
-
-	return function (...)
-		local tbl = original_fn(...)
-		if not tbl then
-			return nil
-		end
-		local tmp = {}
-		local idx = 1 -- 1-based count is idiotic.
-		for _, key in pairs(keys) do --actualcode
-			local value = tbl[key]
-			tmp[idx] = value
-			idx = idx+1
-		end
-		return unpack(tmp)
-	end
-end

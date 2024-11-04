@@ -57,6 +57,11 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
+local IsUsableSpell = IsUsableSpell;
+if C_Spell.IsSpellUsable then
+	IsUsableSpell = C_Spell.IsSpellUsable
+end
+
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 if Enum.SpellBookSpellBank.Player then
 	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
@@ -6151,8 +6156,7 @@ function Lunar.Template:ParseTemplateData()
 									else
 										if (spellID) then
 											newName, rankFound, objectTexture = GetSpellInfo(GetSpellInfo(spellID));
-											canBeUsed = C_SpellBook.GetSpellBookItemInfo(newName or (""));
---											canBeUsed, isOutOfMana = IsUsableSpell(tonumber(spellID));
+											canBeUsed, isOutOfMana = IsUsableSpell(tonumber(spellID));
 											if (not newName) then
 												companionCheck = true;
 											elseif (not canBeUsed) then
@@ -6213,7 +6217,11 @@ function Lunar.Template:ParseTemplateData()
 												end
 											end
 										else
-											newName, rankFound, objectTexture = GetSpellInfo(GetSpellInfo(tonumber(objectTexture)));
+											local n = GetSpellInfo(tonumber(objectTexture))
+											-- C_Spell.GetSpellInfo returns nil for 8232 (Windfury)
+											if n then
+												newName, rankFound, objectTexture = GetSpellInfo(n);
+											end
 										end	
 									end
 											

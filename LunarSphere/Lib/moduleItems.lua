@@ -57,6 +57,11 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
+GetFactionInfoByID = GetFactionInfoByID
+if C_Reputation.GetFactionDataByID then
+	GetFactionInfoByID = Lunar.API:Deconfabulate(C_Reputation.GetFactionDataByID)
+end
+
 --"Benötigt %1$s (%2$d)"
 
 --Lunar.Items.itemSkillText2 = string.gsub("%s (%d) requies", "%%s", "(.*)");
@@ -748,7 +753,7 @@ end
 
 -- Global table used in ClassicIsMount
 -- According to wowhead, the IDs seem to hold across all three clients. 
-tableMountsIDNonEpic = {
+local tableMountsIDNonEpic = {
 	2414,  -- pinto-bridle
 	5656,  -- brown-horse-bridle
 	5655,  -- chestnut-mare-bridle
@@ -798,7 +803,7 @@ tableMountsIDNonEpic = {
 
 -- Global table used in ClassicIsMountEpic
 -- According to wowhead, the IDs seem to hold across all three clients. 
-tableMountsIDEpic = {
+local tableMountsIDEpic = {
 	18777,  -- swift-brown-steed
 	18776,  -- swift-palomino
 	18778,  -- swift-white-steed
@@ -1362,11 +1367,12 @@ end
 function Lunar.Items:UpdateLowHighItems()
 
 	-- Create our locals
-	local nameIndex, index, low, high, lowSpecial, highSpecial, lowCombo, highCombo, itemType
+	local low, high, lowSpecial, highSpecial, lowCombo, highCombo, itemType
 	local lowCooldown, highCooldown, lowNoCooldown, highNoCooldown, usableItem, bestRange;
 	local cooldown, isFavourite, minLevel;
 	local canFly = Lunar.API:IsFlyableArea()
 	local inAQ = Lunar.API:IsInAQ();
+	local submerged = IsSubmerged()
 	local Lunar_Seahorse = 0;
     local Lunar_AbyssalMount_Name, _ = GetSpellInfo(75207);
 
@@ -1400,6 +1406,15 @@ function Lunar.Items:UpdateLowHighItems()
 	end
 	for index = 1, table.getn(allMounts) do 
 		allMounts[index] = nil;
+	end
+
+	function SelectRandomMount(RndSwim, RndFly, RndGround)
+		if (submerged and RndSwim) then
+			return RndSwim
+		elseif (canFly and RndFly) then
+			return RndFly;
+		end
+		return RndGround;	-- Otherwise a Ground Mount
 	end
 
 	-- Scan each name catagory
@@ -1475,20 +1490,20 @@ function Lunar.Items:UpdateLowHighItems()
 --        254 for Subdued Seahorse
 --        269 for Azure and Crimson Water Strider
 --        284 for Chauffeured Mekgineer's Chopper and Chauffeured Mechano-Hog
-
-
+--        398 for  [Kua'fon's Harness]
+--        402 for Dragonriding
+--        407 for  [Deepstar Polyp] and  [Otterworldly Ottuk Carrier]
+--        408 for  [Unsuccessful Prototype Fleetpod]
+--        412 for Otto and Ottuk
+--        424 for Dragonriding mounts, including mounts that have dragonriding animations but are not yet enabled for dragonriding.
+--        436 for Wondrous Wavewhisker
 
 						if (itemType == "mount") then -- Sets up the various mount databases
 							local _mount = itemData["mount"][index]
 							local MountType = _mount.count;
 
-							--print("1184 Lunar.Items:UpdateLowHighItems MountType : ", MountType)
-							--print("    name: ", _mount.name, " (", index, ")")
-							--print("    itemID: ", _mount.itemID)
-							--print("    isFlying: ", _mount.isFlying)
-							--print("    isEpic: ", _mount.isEpic)
-							--print("    isEpic310: ", _mount.isEpic310)
-							--print("    isAQ40: ", _mount.isAQ40)
+-- print("1184 Lunar.Items:UpdateLowHighItems MountType : ", MountType, " name: ", _mount.name, " (", index, "), spell: ", _mount.spell)
+-- print("    itemID: ", _mount.itemID, " isFlying: ", _mount.isFlying, " isEpic: ", _mount.isEpic, " isEpic310: ", _mount.isEpic310, " isAQ40: ", _mount.isAQ40)
 
 							if (isFavourite) then
 								table.insert(favouriteMounts, index);
@@ -1524,7 +1539,12 @@ function Lunar.Items:UpdateLowHighItems()
 									end
 								end
 							-- Handle Retail and WotLK mounts
-							elseif (MountType == 230 or MountType == 241 or MountType == 269 or MountType == 284) then -- Ground Mounts Only.
+							elseif (MountType == 230 or 
+									MountType == 241 or
+									MountType == 269 or
+									MountType == 284 or
+									MountType == 408 or
+									MountType == 412) then -- Ground Mounts Only.
 
 								if( inAQ == true ) then
 									-- AQ mounts can only be used in AQ
@@ -1543,14 +1563,19 @@ function Lunar.Items:UpdateLowHighItems()
 
 							elseif ((MountType == 231) or (MountType == 232) or (MountType == 254)) then
 
-								if (itemData[itemType][index].spell == Lunar_AbyssalMount_Name) then
+								if (_mount.spell == Lunar_AbyssalMount_Name) then
 									Lunar_Seahorse = index;
 								else
 									table.insert(swimmingMounts, index);
 								end
 
-							elseif (MountType == 247 or MountType == 248) then -- Only when CanFly
-
+							elseif (MountType == 247 or 
+							        MountType == 248 or
+									MountType == 398 or 
+									MountType == 402 or 
+									MountType == 407 or 
+									MountType == 424 or 
+									MountType == 436 ) then -- Only when CanFly
 							  -- flying and Ground Mounts only
 								table.insert(flyingMounts, index);
 								if _mount.isEpic then
@@ -1678,6 +1703,18 @@ function Lunar.Items:UpdateLowHighItems()
 		end
 
 -- Mount Stuff is Here.
+
+-- *Sigh* this code is SO BAD. I have a immense respect for Moongaze for coding like this 
+-- (no, I'm not being sarcastic). The way it _should_ be done is to represent each item
+-- by a table with the required information. All the tables for the different item types
+-- will have the same layout. The table objects should be created by a function
+-- (factory pattern). The tables should be polymorphic. The addon should keep a list of 
+-- buttons that need to be updated for quantities, etc, instead of going over every single
+-- button.
+--
+-- See https://gamedevacademy.org/lua-polymorphism-tutorial-complete-guide/
+-- 
+
 		-- Assign our new higher and lower values. We do things differently if it's
 		-- the mount catagory though...
 		if (itemType == "mount") then
@@ -1692,6 +1729,22 @@ function Lunar.Items:UpdateLowHighItems()
 			RndFavourite = nil;
 			RndStrider = nil;
 			RndMount = nil;
+
+			function print_table(tbl, tbl_name)
+				print("Table ", tbl_name, " debug:")
+				for key, value in pairs(tbl) do --actualcode
+					print(key, value)
+				end
+			end
+
+			-- print_table(groundMountsEpic, "groundMountsEpic")
+			-- print_table(groundMounts, "groundMounts")
+			-- print_table(striderMounts, "striderMounts")
+			-- print_table(favouriteMounts, "favouriteMounts")
+			-- print_table(flyingMountsEpic310, "flyingMountsEpic310")
+			-- print_table(flyingMounts, "flyingMounts")
+			-- print_table(swimmingMounts, "swimmingMounts")
+			-- print_table(allMounts, "allMounts")
 
 			if (table.getn(groundMountsEpic) > 0) then
 				RndGround = groundMountsEpic[math.random(table.getn(groundMountsEpic))];
@@ -1736,20 +1789,14 @@ function Lunar.Items:UpdateLowHighItems()
 				RndMount = allMounts[math.random(table.getn(allMounts))];
 			end
 
-			if (IsSubmerged()) then
-				itemStrength[itemType][0] = RndSwim;	-- Or Swimming Mount
-			elseif (canFly) then
-				itemStrength[itemType][0] = RndFly;		-- Random Flying Mount
-			else
-				itemStrength[itemType][0] = RndGround;	-- Otherwise a Ground Mount
-			end
+			itemStrength[itemType][0] = SelectRandomMount(RndSwim, RndFly, RndGround)
 
-			--print("itemType: 1424 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
-			--print("RndGround:     ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
-			--print("RndFly:        ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
-			--print("RndSwim        ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
-			--print("RndStrider     ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
-			--print("RndFavourite   ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
+			-- print("itemType: 1424 ", itemType, ", ", itemStrength[itemType][0], "( ", type(itemStrength[itemType][0]), ")")
+			-- print("RndGround:     ", itemType, ", ", RndGround, "( ", type(RndGround), ")")
+			-- print("RndFly:        ", itemType, ", ", RndFly, "( ", type(RndFly), ")")
+			-- print("RndSwim        ", itemType, ", ", RndSwim, "( ", type(RndSwim), ")")
+			-- print("RndStrider     ", itemType, ", ", RndStrider, "( ", type(RndStrider), ")")
+			-- print("RndFavourite   ", itemType, ", ", RndFavourite, "( ", type(RndFavourite), ")")
 
 			itemStrength[itemType][1] = RndGround;		-- ground mounts
 			itemStrength[itemType][2] = RndFly;			-- flying mounts
@@ -2088,27 +2135,28 @@ function Lunar.Items:RetailScanForSpellMounts()
 
 	--local locKalimdor, locEastern, locOutland, locNorthrend, locMaelstrom, locPandaren, locDreanor = GetMapContinents();
 
-    local name, description, standingID, _ = Lunar.API:GetFactionInfoByID(1271)
+    local name, description, standingID, _ = GetFactionInfoByID(1271)
 	local LunarProfValue = Lunar.API:UserGetProfession();
 	local mountIDs;
 
 -- Mount Stuff is Here.
---	for index = 1, C_MountJournal.GetNumMounts() do 
 
 	for index,id in pairs(C_MountJournal.GetMountIDs()) do
 
-		local spellName, spellID, _, _, isUsable, _, isFavourite, _, _, charHidden, isOwned = C_MountJournal.GetMountInfoByID(id);
+		-- local name, spellID, icon, isActive, isUsable, sourceType, isFavorite, isFactionSpecific, faction, shouldHideOnChar, isCollected, mountID, isSteadyFlight = C_MountJournal.GetMountInfoByID(id);
+		-- print("2105 name: ", name, " spellID: ", spellID, " icon: ", icon, " isActive: ", isActive, " isUsable: ", isUsable, " sourceType: ", sourceType, " isFavorite: ", isFavorite, " isFactionSpecific: ", isFactionSpecific, " faction: ", faction, " shouldHideOnChar: ", shouldHideOnChar, " isCollected: ", isCollected, " mountID: ", mountID, " isSteadyFlight: ", isSteadyFlight)
 
+		local spellName, spellID, _, _, isUsable, _, isFavourite, _, _, charHidden, isOwned = C_MountJournal.GetMountInfoByID(id);
 		local spellTexture, _, _, _, mountType = C_MountJournal.GetMountInfoExtraByID(id);
 
 		speed = 60;
 		itemLevel = 20;
 		local playerLevel = UnitLevel("player");
 
-
 -- Abyssal seahorse = 75207
 
---mountType 
+-- See https://warcraft.wiki.gg/wiki/API_C_MountJournal.GetMountInfoExtraByID
+-- mountType 
 --    number - a number indicating the capabilities of the mount; known values include:
 
 --        230 for most ground mounts
@@ -2127,10 +2175,13 @@ function Lunar.Items:RetailScanForSpellMounts()
 			itemLevel = 520
 		end
 
+		-- GetMountInfoByID returns unusable mounts (!?), so filter those here
 		if (isUsable or spellID == 75207) then
 			spellName = "**" .. spellID --.. "~" .. spellName .. "~" .. spellTexture; 
-
 			-- All mounts
+			-- local name, spellID, icon, isActive, isUsable, sourceType, isFavorite, isFactionSpecific, faction, shouldHideOnChar, isCollected, mountID, isSteadyFlight = C_MountJournal.GetMountInfoByID(id);
+			-- print("2170 name: ", name, " spellID: ", spellID, " icon: ", icon, " isActive: ", isActive, " isUsable: ", isUsable, " sourceType: ", sourceType, " isFavorite: ", isFavorite, " isFactionSpecific: ", isFactionSpecific, " faction: ", faction, " shouldHideOnChar: ", shouldHideOnChar, " isCollected: ", isCollected, " mountID: ", mountID, " isSteadyFlight: ", isSteadyFlight)
+			-- print("2171 spellName: ", spellName, " mountType: ", mountType, " itemLevel: ", itemLevel)
 			Lunar.Items:ModifyItemDataTable("mount", "exists", spellName, mountType, 1, itemLevel, "spellMount");
 		end
 	end
@@ -2699,17 +2750,20 @@ function Lunar.Items:ModifyItemDataTable(tableName, modifyType, itemName, itemCo
 				-- some mounts).
 
 				if (tableName == "mount") then
+					-- print("Lunar.Items:ModifyItemDataTable 2735")
 					local pos = table.getn(itemData[tableName])
 					if (itemLink ~= "spellMount") then
-						--print("Lunar.Items:ModifyItemDataTable 2346", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, GetItemSpell(itemName))
-						itemData[tableName][pos].spell = GetItemSpell(itemName);
+-- print("Lunar.Items:ModifyItemDataTable 2346", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, C_Item.GetItemSpell(itemName))
+						itemData[tableName][pos].spell = C_Item.GetItemSpell(itemName);
 					else
-						--print("Lunar.Items:ModifyItemDataTable 2349", tableName, modifyType, itemName, itemCount, itemLevel, itemMinLevel, string.sub(itemName, 3))
+-- print("Lunar.Items:ModifyItemDataTable 2349 -> tableName: ", tableName, " modifyType: ", modifyType,  " itemName: ", itemName,  " itemCount: ", itemCount,  " itemLevel: ", itemLevel,  " itemMinLevel: ", itemMinLevel,  " string.sub(itemName, 3) : ", string.sub(itemName, 3))
 						itemData[tableName][pos].spell = GetSpellInfo(string.sub(itemName, 3));
 						itemData[tableName][pos].spellMount = true;
 						itemData[tableName][pos].itemID = "spellMount";
+-- print("Lunar.Items:ModifyItemDataTable 2354 ->  spell: ", itemData[tableName][pos].spell, " spellMount: ", itemData[tableName][pos].spellMount, " itemID: ", itemData[tableName][pos].itemID)
 					end
 					-- Update the mount properties that we use to select the random mounts.
+-- print("Lunar.Items:ModifyItemDataTable 2746")
 					itemData[tableName][pos].isEpic = Lunar.Items:IsMountEpic(itemData[tableName][pos])
 					itemData[tableName][pos].isFlying = Lunar.Items:BCCIsFlyingMount(itemData[tableName][pos])
 					itemData[tableName][pos].isAQ40 = Lunar.Items:IsMountAQ40(itemData[tableName][pos])
