@@ -57,13 +57,18 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
+local GetSpellBookItemInfo = GetSpellBookItemInfo
+if C_SpellBook.GetSpellBookItemInfo then
+	GetSpellBookItemInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellBookItemInfo)
+end
+
 local IsUsableSpell = IsUsableSpell;
 if C_Spell.IsSpellUsable then
 	IsUsableSpell = C_Spell.IsSpellUsable
 end
 
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
-if Enum.SpellBookSpellBank.Player then
+if Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player then
 	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
 end
 
@@ -6252,7 +6257,7 @@ function Lunar.Template:ParseTemplateData()
 										if (scanTexture ~= objectTexture) and (rankFound > 0) then
 											if not (objectRank) or (objectRank and (objectRank <= rankFound)) then
 												newName, rankFound = GetSpellBookItemName(i - 1, BOOKTYPE_SPELL);
-												isNotLearned = (C_SpellBook.GetSpellBookItemInfo(i - 1, BOOKTYPE_SPELL) == "FUTURESPELL");
+												isNotLearned = (GetSpellBookItemInfo(i - 1, BOOKTYPE_SPELL) == "FUTURESPELL");
 												if (isNotLearned) then
 													newName = nil;
 													break;

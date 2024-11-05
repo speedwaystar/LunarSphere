@@ -103,15 +103,24 @@ end
 -- * IsCurrentSpell, C_Spell.IsCurrentSpell
 -- * IsAutoRepeatSpell, C_Spell.IsAutoRepeatSpell
 
-function Lunar.API:Deconfabulate(original_fn)
-	if not C_Spell.GetSpellCooldown then
-		return original_fn
-	end
+do
 	local return_type_db = {}
-	return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
-	return_type_db[C_Spell.GetSpellInfo] = "SpellInfo"
-	return_type_db[C_SpellBook.GetSpellBookSkillLineInfo] = "SpellBookSkillLineInfo"
-	return_type_db[C_Reputation.GetFactionDataByID] = "FactionData"
+	if C_Spell.GetSpellCooldown then
+		return_type_db[C_Spell.GetSpellCooldown] = "SpellCooldownInfo"
+	end
+	if C_Spell.GetSpellInfo then
+		return_type_db[C_Spell.GetSpellInfo] = "SpellInfo"
+	end
+	if C_SpellBook.GetSpellBookSkillLineInfo then
+		return_type_db[C_SpellBook.GetSpellBookSkillLineInfo] = "SpellBookSkillLineInfo"
+	end
+	if C_Reputation.GetFactionDataByID then
+		return_type_db[C_Reputation.GetFactionDataByID] = "FactionData"
+	end
+
+	if C_SpellBook.GetSpellBookItemInfo then
+		return_type_db[C_SpellBook.GetSpellBookItemInfo] = "SpellBookItemInfo"
+	end
 
 	local key_db = {}
 	key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
@@ -121,23 +130,24 @@ function Lunar.API:Deconfabulate(original_fn)
 		"name", "description", "currentStanding", "currentReactionThreshold", "nextReactionThreshold",
 		"currentStanding", "atWarWith", "canToggleAtWar", "isHeader", "isCollapsed", "isHeaderWithRep", 
 		"isWatched", "isChild", "factionID", "hasBonusRepGain", "canSetInactive", "canSetInactive"}
+	key_db["SpellBookItemInfo"] = {"actionID", "itemType"}
 
-	local return_type = return_type_db[original_fn]
-	local keys = key_db[return_type]
+	function Lunar.API:Deconfabulate(original_fn)
 
-	return function (...)
-		local tbl = original_fn(...)
-		if not tbl then
-			return nil
+		local return_type = return_type_db[original_fn]
+		local keys = key_db[return_type]
+
+		return function (...)
+			local tbl = original_fn(...)
+			if not tbl then
+				return nil
+			end
+			local tmp = {}
+			for idx, key in ipairs(keys) do
+				tmp[idx] = tbl[key]
+			end
+			return unpack(tmp)
 		end
-		local tmp = {}
-		local idx = 1 -- 1-based count is idiotic.
-		for _, key in pairs(keys) do
-			local value = tbl[key]
-			tmp[idx] = value
-			idx = idx+1
-		end
-		return unpack(tmp)
 	end
 end
 
@@ -165,7 +175,11 @@ Lunar.API.debugTooltipUpdater:SetScript("OnUpdate", function(self, arg1)
 
 	if (Lunar.API.debugTooltipTimer > 0.3) then
 		Lunar.API.debugTooltipTimer = 0;
-		Lunar.API.debugFrameOver = GetMouseFocus();
+		if GetMouseFocus then
+			Lunar.API.debugFrameOver = GetMouseFocus();
+		else
+			Lunar.API.debugFrameOver =  GetMouseFoci()[1]
+		end
 		Lunar.API.debugTooltip:Hide();
 		if (IsControlKeyDown() and IsAltKeyDown() and Lunar.API.debugFrameOver) then
 			Lunar.API.debugTooltip:ClearLines();

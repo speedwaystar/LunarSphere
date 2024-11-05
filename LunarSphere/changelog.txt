@@ -1,4 +1,24 @@
 LunarSphere Public Release
+Version 1.68 Changelog
+
+======================
+Feature Changes
+======================
+
+* Added support for The War Within expansion
+* Added Classic ToC file.
+
+======================
+Bug Fixes
+======================
+
+* Fixed bug in the logic when selecting the random mount if no flying or swimming mounts 
+are available. LS now correctly fallbacks to using a ground mount.
+* Added support for mount types 398, 402, 407, 408, 412, 424, and 436. 
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.67 Changelog
 
 ======================
