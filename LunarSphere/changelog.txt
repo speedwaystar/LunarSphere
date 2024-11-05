@@ -16,6 +16,8 @@ Bug Fixes
 are available. LS now correctly fallbacks to using a ground mount.
 * Added support for mount types 398, 402, 407, 408, 412, 424, and 436. 
 
+Many thanks to Crystyl and Murph for updating LS to TWW.
+
 =======================================================================================
 
 LunarSphere Public Release
