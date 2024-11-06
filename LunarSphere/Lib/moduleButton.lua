@@ -117,9 +117,19 @@ if C_Spell.GetSpellCooldown then
 	GetSpellCooldown = Lunar.API:Deconfabulate(C_Spell.GetSpellCooldown)
 end
 
-IsSpellInRange = IsSpellInRange
+local GetSpellTabInfo = GetSpellTabInfo
+if C_SpellBook.GetSpellBookSkillLineInfo then
+	GetSpellTabInfo = Lunar.API:Deconfabulate(C_SpellBook.GetSpellBookSkillLineInfo)
+end
+
+local IsSpellInRange = IsSpellInRange
 if C_Spell.IsSpellInRange then
 	IsSpellInRange = C_Spell.IsSpellInRange
+end
+
+local GetSpellTexture = GetSpellTexture
+if C_Spell.GetSpellTexture then
+	GetSpellTexture = C_Spell.GetSpellTexture
 end
 
 -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
@@ -3250,7 +3260,7 @@ function Lunar.Button:ConvertToMenu(self, clickType)
 	end
 
 	-- Create our locals and store the data that's in the player's cursor
-	local cursorType, objectID, objectData = GetCursorInfo();
+	local cursorType, objectID, objectData, objectSpellID = GetCursorInfo();
 
 	-- If the cursor isn't holding something, check our cached data
 	if (not cursorType) then
@@ -3316,7 +3326,7 @@ function Lunar.Button:ConvertToMenu(self, clickType)
 		if ((cursorType == "spell") and (objectID)) then
 
 			-- Attach the texture of the spell to the icon
-			objectTexture = C_Spell.GetSpellTexture(objectID, objectData);
+			objectTexture = GetSpellTexture(objectSpellID);
 
 		-- If it was an item drag ...
 		elseif (cursorType == "item") then
@@ -3385,7 +3395,7 @@ function Lunar.Button:Assign(self, clickType, stance)
 
 	
 	-- Create our locals and store the data that's in the player's cursor
-	local cursorType, objectID, objectData, objectSpellID = GetCursorInfo();
+	local cursorType, objectID, objectData, objectSpellID, baseSpellID = GetCursorInfo();
 	local buttonID = self:GetID();
 	local secondCursorType = nil;
 
@@ -3561,9 +3571,8 @@ function Lunar.Button:Assign(self, clickType, stance)
 		if (cursorType == "spell") then
 
 			-- Get the name of the spell and its texture
-			--_, spellID = C_SpellBook.GetSpellBookItemInfo(objectSpellID, objectData);
-			objectName = GetSpellBookItemName(objectID, objectData);
-			objectTexture = C_Spell.GetSpellTexture(objectSpellID);
+			objectName = Lunar.API:GetSpellBookItemName(objectID, objectData)
+			objectTexture = GetSpellTexture(objectSpellID);
 			spellName = Lunar.API:GetSpellName(objectSpellID);
 
 			-- Fix for Call Pet for hunters.

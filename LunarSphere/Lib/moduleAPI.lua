@@ -125,7 +125,7 @@ do
 	local key_db = {}
 	key_db["SpellCooldownInfo"] = {"startTime", "duration", "isEnabled", "modRate"}
 	key_db["SpellInfo"] = {"name", "rank", "iconID", "castTime", "minRange", "maxRange", "spellID", "originalIconID"}
-	key_db["SpellBookSkillLineInfo"] = {"name", "iconID", "itemIndexOffset", "numSpellBookItems", "isGuild", "shouldHide", "specID", "offSpecID"}
+	key_db["SpellBookSkillLineInfo"] = {"name", "iconID", "itemIndexOffset", "numSpellBookItems", "isGuild", "offSpecID"}
 	key_db["FactionData"] = { 
 		"name", "description", "currentStanding", "currentReactionThreshold", "nextReactionThreshold",
 		"currentStanding", "atWarWith", "canToggleAtWar", "isHeader", "isCollapsed", "isHeaderWithRep", 
@@ -3093,6 +3093,20 @@ else
 	function Lunar.API:GetSpellName(spellIdentifier)
 		return C_Spell.GetSpellName(spellIdentifier), nil
 	end
-
 end
 
+if Enum.SpellBookSpellBank then
+	function Lunar.API:GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)
+		local x
+		if spellBookItemSpellBank == "spell" then
+			x = Enum.SpellBookSpellBank.Player
+		else
+			x = Enum.SpellBookSpellBank.Pet
+		end
+		return C_SpellBook.GetSpellBookItemName(spellBookItemSlotIndex, x)
+	end
+else
+	function Lunar.API:GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)
+		return GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)
+	end
+end
