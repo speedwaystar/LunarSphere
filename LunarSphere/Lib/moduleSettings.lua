@@ -17,6 +17,11 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
+local GetSpellTexture = GetSpellTexture
+if C_Spell.GetSpellTexture then
+	GetSpellTexture = C_Spell.GetSpellTexture
+end
+
 -- Create our Lunar object if it's not made
 if (not Lunar) then
 	Lunar = {};
@@ -31,11 +36,6 @@ end
 Lunar.Settings.version = 1.52;
 
 local GetCursorInfo = GetCursorInfo;
-
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
 
 -- Set our button ID for editing purposes
 Lunar.Settings.buttonEdit = nil;
@@ -380,7 +380,7 @@ function Lunar.Settings:Initialize()
 		tempObject:SetScript("OnReceiveDrag", Lunar.Object.SphereActionIconPlaceHolder_OnClick);
 		if (LunarSphereSettings.sphereAction) then
 			if GetSpellInfo(LunarSphereSettings.sphereAction) then
-				objectTexture = C_Spell.GetSpellTexture(LunarSphereSettings.sphereAction);
+				objectTexture = GetSpellTexture(LunarSphereSettings.sphereAction);
 			else
 				objectTexture = GetItemIcon(LunarSphereSettings.sphereAction);	
 			end
@@ -4596,7 +4596,7 @@ function Lunar.Settings:StanceIconSetup(stanceIconName, stanceIconWidthBoundry, 
 
 					if (shiftIcon) then
 						if (shiftActive) then
-							shiftIcon = C_Spell.GetSpellTexture(shiftID);
+							shiftIcon = GetSpellTexture(shiftID);
 						end
 
 						iconObject:SetNormalTexture(shiftIcon);
@@ -5015,7 +5015,7 @@ if not (LunarSphereSettings.memoryDisableSpeech) then
 			Lunar.Button.CompanionID = nil;
 
 			if (cursorType == "spell") then
-				actionName, actionRank = GetSpellBookItemName(cursorID, cursorData);
+				actionName, actionRank = Lunar.API:GetSpellBookItemName(cursorID, cursorData);
 				objectTexture = C_Spell.GetSpellTexture(cursorID, cursorData);
 
 				-- Fix for Call Pet for hunters.

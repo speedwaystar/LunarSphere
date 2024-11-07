@@ -131,11 +131,6 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
-
 -- /***********************************************
 --   LunarSphere Functions
 --  *********************/
@@ -1871,7 +1866,7 @@ end
 function Lunar.DrDamageFunc(button)
 	if LunarSphereSettings.enableDrDamage == true then
 		if (button.actionType == "spell" and button.buttonType == 1 and button.spellReagent == nil) then
-			local _, subName = GetSpellBookItemName(button.actionName);
+			local _, subName = Lunar.API:GetSpellBookItemName(button.actionName);
 			local spellName;
 			if (string.find(button.actionName, "%(")) then
 				spellName = string.match(button.actionName, "(.*)%(");

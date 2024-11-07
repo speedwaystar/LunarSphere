@@ -107,19 +107,24 @@ if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
-
 local GetSpellCooldown = GetSpellCooldown
 if C_Spell.GetSpellCooldown then
 	GetSpellCooldown = Lunar.API:Deconfabulate(C_Spell.GetSpellCooldown)
 end
 
-IsSpellInRange = IsSpellInRange
+local GetSpellTabInfo = GetSpellTabInfo
+if C_SpellBook.GetSpellBookSkillLineInfo then
+	GetSpellTabInfo = Lunar.API:Deconfabulate(C_SpellBook.GetSpellBookSkillLineInfo)
+end
+
+local IsSpellInRange = IsSpellInRange
 if C_Spell.IsSpellInRange then
 	IsSpellInRange = C_Spell.IsSpellInRange
+end
+
+local GetSpellTexture = GetSpellTexture
+if C_Spell.GetSpellTexture then
+	GetSpellTexture = C_Spell.GetSpellTexture
 end
 
 -- https://warcraft.wiki.gg/wiki/Patch_11.0.0/API_changes
@@ -3250,7 +3255,7 @@ function Lunar.Button:ConvertToMenu(self, clickType)
 	end
 
 	-- Create our locals and store the data that's in the player's cursor
-	local cursorType, objectID, objectData = GetCursorInfo();
+	local cursorType, objectID, objectData, objectSpellID = GetCursorInfo();
 
 	-- If the cursor isn't holding something, check our cached data
 	if (not cursorType) then
@@ -3316,7 +3321,7 @@ function Lunar.Button:ConvertToMenu(self, clickType)
 		if ((cursorType == "spell") and (objectID)) then
 
 			-- Attach the texture of the spell to the icon
-			objectTexture = C_Spell.GetSpellTexture(objectID, objectData);
+			objectTexture = GetSpellTexture(objectSpellID);
 
 		-- If it was an item drag ...
 		elseif (cursorType == "item") then
@@ -3360,7 +3365,11 @@ function Lunar.Button:ConvertToMenu(self, clickType)
 
 		-- Make our icon fully visible and cut it into a circle
 		self:SetAlpha(1);
-		SetPortraitToTexture(_G[buttonName .. "Icon"], _G[buttonName .. "Icon"]:GetTexture());
+
+		-- Retail blows up if GetTexture() is nil
+		if _G[buttonName .. "Icon"]:GetTexture() then
+			SetPortraitToTexture(_G[buttonName .. "Icon"], _G[buttonName .. "Icon"]:GetTexture());
+		end
 
 		-- Clear our cursor of what its holding and hide all the left over empty buttons
 		ClearCursor();
@@ -3385,7 +3394,7 @@ function Lunar.Button:Assign(self, clickType, stance)
 
 	
 	-- Create our locals and store the data that's in the player's cursor
-	local cursorType, objectID, objectData, objectSpellID = GetCursorInfo();
+	local cursorType, objectID, objectData, objectSpellID, baseSpellID = GetCursorInfo();
 	local buttonID = self:GetID();
 	local secondCursorType = nil;
 
@@ -3561,9 +3570,8 @@ function Lunar.Button:Assign(self, clickType, stance)
 		if (cursorType == "spell") then
 
 			-- Get the name of the spell and its texture
-			--_, spellID = C_SpellBook.GetSpellBookItemInfo(objectSpellID, objectData);
-			objectName = GetSpellBookItemName(objectID, objectData);
-			objectTexture = C_Spell.GetSpellTexture(objectSpellID);
+			objectName = Lunar.API:GetSpellBookItemName(objectID, objectData)
+			objectTexture = GetSpellTexture(objectSpellID);
 			spellName = Lunar.API:GetSpellName(objectSpellID);
 
 			-- Fix for Call Pet for hunters.
@@ -3981,7 +3989,7 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 			if (string.sub(objectName, 1, 2) == "**") then
 				objectName = string.sub(objectName, 3);
 --				objectName, _, objectTexture = string.match(objectName, "%*%*(.*)~(.*)~(.*)") --string.sub(objectName, 3);
-				objectTexture = C_Spell.GetSpellTexture(objectName)
+				objectTexture = GetSpellTexture(objectName)
 				cursorType = "spell";
 			end
 
@@ -4056,12 +4064,10 @@ function Lunar.Button:AssignByType(button, clickType, buttonType, stance, lastUs
 				
 				-- If it was a spell drag ...
 				if (cursorType == "spell") then
-					print("AssignByType (4035)")
 					if (objectData) then
-						print("AssignByType (4037) ", strmatch(debugstack(2),":(%d):"))
 						-- Get the name of the spell and its texture
 						objectName = GetSpellBookItemName(objectID, objectData);
-						objectTexture = C_Spell.GetSpellTexture(objectID, objectData);
+						objectTexture = GetSpellTexture(objectID, objectData);
 					end
 
 				-- If it was an item drag ...
@@ -4630,7 +4636,7 @@ function Lunar.Button:LoadButtonData(buttonID)
 							if (macroAction) then
 								_,_,_,_,_,_,_,_,_,newTexture = C_Item.GetItemInfo(macroAction);
 								if not newTexture then
-									newTexture = C_Spell.GetSpellTexture(macroAction);
+									newTexture = GetSpellTexture(macroAction);
 								end
 							end
 							if string.find(macroBody, "#show") and not string.find(macroBody, "#showt") then
@@ -6061,7 +6067,7 @@ function Lunar.Button.OnUpdate(self, elapsed, button)
 		local actionType = self:GetAttribute("updateIconType");
 		local actionName = self:GetAttribute("updateIconName");
 		if (actionType == "spell") then
-			self.texture:SetTexture(C_Spell.GetSpellTexture(actionName));
+			self.texture:SetTexture(GetSpellTexture(actionName));
 		end
 	end
 
@@ -6244,7 +6250,7 @@ function Lunar.Button:UpdateUsable(self, filter, rangeOnly)
 		if (self.actionType == "spell") then
 			-- spellLink actually means the spell ID :-(
 			spellLink = C_Spell.GetSpellIDForSpellIdentifier(self.actionName);
-			texture = C_Spell.GetSpellTexture(self.actionName);
+			texture = GetSpellTexture(self.actionName);
 			name, rank = Lunar.API:GetSpellName(self.actionName)
 			if (rank) then
 				name = name .. "(" .. rank .. ")";
@@ -6542,7 +6548,7 @@ function Lunar.Button:UpdateIcon(button)
 					if (objectName) then
 						_,_,_,_,_,_,_,_,_,newTexture = C_Item.GetItemInfo(objectName); --GetActionFromMacroText(macroBody));
 						if not newTexture then
-							newTexture = C_Spell.GetSpellTexture(objectName);
+							newTexture = GetSpellTexture(objectName);
 						end
 					end
 				end
@@ -6569,7 +6575,7 @@ function Lunar.Button:UpdateIcon(button)
 		if (not newTexture) then
 			local spellID = Lunar.API:GetSpellID(objectName);
 			if (spellID) then
-				newTexture = C_Spell.GetSpellTexture(spellID, "spell");
+				newTexture = GetSpellTexture(spellID, "spell");
 			end
 		end
 --]]
@@ -6599,7 +6605,7 @@ function Lunar.Button:GetIconTexture(cursorType, objectID, objectData)
 
 		-- Get the name of the spell and its texture
 --		objectName = GetSpellBookItemName(objectID, objectData);
-		objectTexture = C_Spell.GetSpellTexture(objectID, objectData);
+		objectTexture = GetSpellTexture(objectID, objectData);
 
 	-- If it was an item drag ...
 	elseif (cursorType == "item") then

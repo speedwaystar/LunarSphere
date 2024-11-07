@@ -47,11 +47,6 @@ if C_SpellBook.GetSpellBookSkillLineInfo then
 	GetSpellTabInfo = C_SpellBook.GetSpellBookSkillLineInfo
 end
 
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
-
 local GetSpellInfo = GetSpellInfo
 if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
@@ -65,6 +60,11 @@ end
 local IsUsableSpell = IsUsableSpell;
 if C_Spell.IsSpellUsable then
 	IsUsableSpell = C_Spell.IsSpellUsable
+end
+
+local GetSpellTexture = GetSpellTexture
+if C_Spell.GetSpellTexture then
+	GetSpellTexture = C_Spell.GetSpellTexture
 end
 
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
@@ -6170,8 +6170,8 @@ function Lunar.Template:ParseTemplateData()
 											else
 												rankFound = 0;
 												for i = 1, totalSpells do
-													scanName, scanRank = GetSpellBookItemName(i, BOOKTYPE_SPELL);
-													scanTexture = string.lower(C_Spell.GetSpellTexture(i, BOOKTYPE_SPELL) or (""));
+													scanName, scanRank = Lunar.API:GetSpellBookItemName(i, BOOKTYPE_SPELL);
+													scanTexture = string.lower(GetSpellTexture(i, BOOKTYPE_SPELL) or (""));
 
 													if (scanName == newName and scanTexture == objectTexture) then
 														rankFound = rankFound + 1;
@@ -6186,7 +6186,7 @@ function Lunar.Template:ParseTemplateData()
 
 													if (scanTexture ~= objectTexture) and (rankFound > 0) then
 														if not (objectRank) or (objectRank and (objectRank <= rankFound)) then
-															newName, rankFound = GetSpellBookItemName(i - 1, BOOKTYPE_SPELL);
+															newName, rankFound = Lunar.API:GetSpellBookItemName(i - 1, BOOKTYPE_SPELL);
 														end
 														break;
 													end
@@ -6239,7 +6239,7 @@ function Lunar.Template:ParseTemplateData()
 
 									objectTexture = string.lower(objectTexture or (""));
 									for i = 1, totalSpells do
-										scanName, scanRank = GetSpellBookItemName(i, BOOKTYPE_SPELL);
+										scanName, scanRank = Lunar.API:GetSpellBookItemName(i, BOOKTYPE_SPELL);
 
 										scanTexture = string.lower(C_Spell.GetSpellTexture(i, BOOKTYPE_SPELL) or (""));
 
@@ -6256,7 +6256,7 @@ function Lunar.Template:ParseTemplateData()
 
 										if (scanTexture ~= objectTexture) and (rankFound > 0) then
 											if not (objectRank) or (objectRank and (objectRank <= rankFound)) then
-												newName, rankFound = GetSpellBookItemName(i - 1, BOOKTYPE_SPELL);
+												newName, rankFound = Lunar.API:GetSpellBookItemName(i - 1, BOOKTYPE_SPELL);
 												isNotLearned = (GetSpellBookItemInfo(i - 1, BOOKTYPE_SPELL) == "FUTURESPELL");
 												if (isNotLearned) then
 													newName = nil;
