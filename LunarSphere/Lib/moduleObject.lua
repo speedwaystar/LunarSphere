@@ -31,14 +31,19 @@ if (not Lunar.Object.dropdownData) then
 	Lunar.Object.dropdownData = {};	
 end
 
+local GetSpellTabInfo = GetSpellTabInfo
+if C_SpellBook.GetSpellBookSkillLineInfo then
+	GetSpellTabInfo = Lunar.API:Deconfabulate(C_SpellBook.GetSpellBookSkillLineInfo)
+end
+
 local GetSpellInfo = GetSpellInfo
 if C_Spell.GetSpellInfo then
 	GetSpellInfo = Lunar.API:Deconfabulate(C_Spell.GetSpellInfo)
 end
 
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
+local GetSpellTexture = GetSpellTexture
+if C_Spell.GetSpellTexture then
+	GetSpellTexture = C_Spell.GetSpellTexture
 end
 
 -- Create our local dropdown menu info table to be reused multiple times
@@ -1034,7 +1039,7 @@ function Lunar.Object.IconPlaceHolder_OnClick(self)
 				
 		local typeName = UIDropDownMenu_GetSelectedName(_G["LSSettings" .. objectName .. "Type" .. clickType]);
 
-		updateType, updateID, updateData, updateTrueSpellID = GetCursorInfo();
+		local updateType, updateID, updateData, updateTrueSpellID = GetCursorInfo();
 
 		-- NO. No flyouts for you!
 		if (updateType == "flyout") then
@@ -1087,13 +1092,14 @@ function Lunar.Object.IconPlaceHolder_OnClick(self)
 
 		if (updateType == "spell") then
 
-			_, spellRank = GetSpellBookItemName(updateID, updateData);
+			_, spellRank = Lunar.API:GetSpellBookItemName(updateID, updateData);
 --			nextSpellName = GetSpellBookItemName(updateID + 1, updateData);
 			spellRank = "(" .. spellRank .. ")";
 
 			--_, spellID = C_SpellBook.GetSpellBookItemInfo(updateID, updateData);
-			actionName = GetSpellBookItemName(updateID, updateData);
-			objectTexture = C_Spell.GetSpellTexture(updateID, updateData);
+			actionName = Lunar.API:GetSpellBookItemName(updateID, updateData);
+			objectTexture = GetSpellTexture(updateTrueSpellID);
+
 			spellName = GetSpellInfo(updateTrueSpellID);
 
 			-- Fix for Call Pet for hunters.
@@ -1207,8 +1213,8 @@ function Lunar.Object.SphereActionIconPlaceHolder_OnClick(self)
 		local actionName, objectTexture;
 
 		if (cursorType == "spell") then
-			actionName = GetSpellBookItemName(cursorID, cursorData);
-			objectTexture = C_Spell.GetSpellTexture(cursorID, cursorData);
+			actionName = Lunar.API:GetSpellBookItemName(cursorID, cursorData);
+			objectTexture = GetSpellTexture(cursorID, cursorData);
 		elseif (updateType == "battlepet") then
 			-- Set the name of the spell and its texture
 			_, _, _, _, _, _, _, actionName, objectTexture, _, displayID = C_PetJournal.GetPetInfoByPetID(updateID);

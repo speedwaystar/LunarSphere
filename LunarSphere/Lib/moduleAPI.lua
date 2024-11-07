@@ -81,11 +81,6 @@ if C_Spell.GetSpellLink then
 	GetSpellLink = C_Spell.GetSpellLink
 end
 
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
-
 local BOOKTYPE_SPELL = BOOKTYPE_SPELL
 if Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player then
 	BOOKTYPE_SPELL = Enum.SpellBookSpellBank.Player
@@ -565,7 +560,7 @@ function Lunar.API:GetSpellID(spellName)
 	-- Search every spell in player's spellbook. If the name matches our
 	-- spell that we're searching for, save the ID...
 	for index = 1, totalSpells do
-		scanName, scanRank = GetSpellBookItemName(index, BOOKTYPE_SPELL);
+		scanName, scanRank = Lunar.API:GetSpellBookItemName(index, BOOKTYPE_SPELL);
 		if (string.lower(scanName) == filterName) then
 
 			spellID = index;
@@ -3097,13 +3092,14 @@ end
 
 if Enum.SpellBookSpellBank then
 	function Lunar.API:GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)
-		local x
+		-- "default" value if we were called with a single argument (Classic or Classic era API)
+		spellBookItemSpellBank = spellBookItemSpellBank or "spell"
 		if spellBookItemSpellBank == "spell" then
-			x = Enum.SpellBookSpellBank.Player
-		else
-			x = Enum.SpellBookSpellBank.Pet
+			spellBookItemSpellBank = Enum.SpellBookSpellBank.Player
+		elseif spellBookItemSpellBank == "pet" then
+			spellBookItemSpellBank = Enum.SpellBookSpellBank.Pet
 		end
-		return C_SpellBook.GetSpellBookItemName(spellBookItemSlotIndex, x)
+		return C_SpellBook.GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)
 	end
 else
 	function Lunar.API:GetSpellBookItemName(spellBookItemSlotIndex, spellBookItemSpellBank)

@@ -53,10 +53,6 @@ speechLibrary[>4 ] = speech text. If nil, and the index is within range of the s
 --]]
 
 -- Create our some local databases
-local GetSpellBookItemName = GetSpellBookItemName
-if C_SpellBook.GetSpellBookItemName then
-	GetSpellBookItemName = C_SpellBook.GetSpellBookItemName
-end
 
 local GetSpellInfo = GetSpellInfo
 if C_Spell.GetSpellInfo then
@@ -884,7 +880,7 @@ function Lunar.Speech.ParseSpeech(self, speech)
 	speech = string.gsub(speech, "<focus>", (UnitName("focus") or self.spellTarget or UnitName("target") or ""));
 	if string.find(speech, "<mount>") then
 		-- Wipe the "summon" from the name, if it exists, for all locales (in theory)
-		local spellName, spellRank = GetSpellBookItemName(self.spellName)
+		local spellName, spellRank = Lunar.API:GetSpellBookItemName(self.spellName)
 		if spellName and spellRank and (spellRank ~= "")  then
 			spellName = string.gsub(spellName, spellRank, "");
 			spellName = string.gsub(spellName, string.lower(spellRank), "");
