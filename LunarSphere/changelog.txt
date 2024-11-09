@@ -1,4 +1,16 @@
 LunarSphere Public Release
+Version 1.69 Changelog
+
+======================
+Bug Fixes
+======================
+
+* Fixed spell drag
+* Fixed dragging icons into menu buttons.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.68 Changelog
 
 ======================
