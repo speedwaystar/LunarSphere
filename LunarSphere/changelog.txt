@@ -1,4 +1,11 @@
 LunarSphere Public Release
+Version 1.70 Changelog
+
+* Re-releasing 1.69 as 1.70 because CurseForge is stupid.
+
+=======================================================================================
+
+LunarSphere Public Release
 Version 1.69 Changelog
 
 ======================
