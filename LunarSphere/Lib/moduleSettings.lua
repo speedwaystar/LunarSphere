@@ -5016,18 +5016,18 @@ if not (LunarSphereSettings.memoryDisableSpeech) then
 
 			if (cursorType == "spell") then
 				actionName, actionRank = Lunar.API:GetSpellBookItemName(cursorID, cursorData);
-				objectTexture = C_Spell.GetSpellTexture(cursorID, cursorData);
+				objectTexture = C_SpellBook.GetSpellBookItemTexture(cursorID, Enum.SpellBookSpellBank.Player);
 
 				-- Fix for Call Pet for hunters.
-				local _, spellID = C_SpellBook.GetSpellBookItemInfo(cursorID, cursorData);
-				local spellName = GetSpellInfo(spellID);
-				if (actionName ~= spellName) then
-					actionName = spellName;
+				local spellBookItemInfo = C_SpellBook.GetSpellBookItemInfo(cursorID, Enum.SpellBookSpellBank.Player);
+				local spellInfo = GetSpellInfo(spellBookItemInfo.spellID);
+				if spellInfo and actionName ~= spellInfo.name then
+					actionName = spellInfo.name;
 				end
 
 			elseif (cursorType == "item") then
-				actionName, _, _, _, _, _, _, _, _, objectTexture = GetItemInfo(cursorID);
-				actionName = GetItemSpell(actionName);
+				actionName, _, _, _, _, _, _, _, _, objectTexture = C_Item.GetItemInfo(cursorID);
+				actionName = C_Item.GetItemSpell(actionName);
 			end
 
 			if (actionName) then
